@@ -19,7 +19,7 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({
+export default function Button({
   title,
   onPress,
   backgroundColor = '#4F8FF7',
@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
   disabled = false,
-}) => {
+}: ButtonProps) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor }, style, disabled && styles.disabled]}
@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
       <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -56,5 +56,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#A0A0A0',
   },
 });
-
-export default Button;

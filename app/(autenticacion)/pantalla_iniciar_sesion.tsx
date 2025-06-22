@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import FormularioLogin from '../../components/autenticacion/FormularioLogin';
+
+
 const PantallaInicioSesion = () => {
-  const onLogin = (email: string, password: string) => {
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const onLogin = () => {
+
+    console.log('Usuario ha iniciado sesión');
   };
 
   return (
@@ -17,8 +19,9 @@ const PantallaInicioSesion = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
-    },
+    backgroundColor: '#fff',
+
+  },
 });
 
 export default PantallaInicioSesion;

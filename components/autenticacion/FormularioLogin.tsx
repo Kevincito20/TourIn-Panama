@@ -13,6 +13,10 @@ import Logo from '../ui/logo';
 import { Card } from '../ui/cardLogin';
 import { Input } from '../ui/input';
 import Button from '../ui/boton';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export default function PantallaInicioSesion({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState('');
@@ -34,7 +38,7 @@ export default function PantallaInicioSesion({ onLogin }: { onLogin: () => void 
       >
         <View style={styles.container}>
           <View style={styles.header}>
-            <Logo size={100} showText={false} variant="icon" />
+            <Logo size={hp('12%')} showText={false} variant="icon" />
             <Text style={styles.appName}>TourIn-Panama</Text>
             <Text style={styles.motivationalText}>Descubre la magia Panameña</Text>
           </View>
@@ -97,68 +101,68 @@ export default function PantallaInicioSesion({ onLogin }: { onLogin: () => void 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: hp('2.5%'),
   },
   keyboardAvoiding: {
     flex: 1,
   },
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingHorizontal: wp('6%'),
+    paddingVertical: hp('2.5%'),
     justifyContent: 'space-between',
   },
   header: {
     alignItems: 'center',
   },
   appName: {
-    fontSize: 48,
+    fontSize: wp('10%'),
     fontWeight: 'bold',
-    marginTop: 12,
+    marginTop: hp('1.5%'),
     color: '#4F8FF7',
   },
   motivationalText: {
-    fontSize: 20,
-    marginTop: 6,
+    fontSize: wp('4.5%'),
+    marginTop: hp('0.8%'),
     color: '#757575',
   },
   card: {
-    paddingVertical: 30,
-    paddingHorizontal: 24,
-    borderRadius: 16,
+    paddingVertical: hp('4%'),
+    paddingHorizontal: wp('6%'),
+    borderRadius: wp('4%'),
     elevation: 5,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    gap: 16,
+    gap: hp('2%'),
   },
   welcome: {
-    fontSize: 32,
+    fontSize: wp('8%'),
     fontWeight: '700',
     color: '#000000',
-    marginTop: 12,
-    marginBottom: 8,
+    marginTop: hp('1%'),
+    marginBottom: hp('1%'),
     textAlign: 'center',
   },
   subWelcome: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: 'bold',
     color: '#757575',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: hp('3%'),
   },
   buttonContainer: {
-    marginTop: 12,
-    marginBottom: 16,
+    marginTop: hp('1.5%'),
+    marginBottom: hp('2%'),
   },
   registerText: {
     textAlign: 'center',
     color: '#3c6382',
-    fontSize: 16,
+    fontSize: wp('4%'),
   },
   registerLink: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: 'bold',
     color: '#4F8FF7',
   },
@@ -166,20 +170,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: hp('1.5%'),
   },
   footerText: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: '600',
     color: '#3c6382',
   },
   footerSeparator: {
-    fontSize: 18,
-    marginHorizontal: 8,
+    fontSize: wp('4.5%'),
+    marginHorizontal: wp('2%'),
     color: '#0a3d62',
   },
   footerIcon: {
-    fontSize: 18,
-    marginHorizontal: 6,
+    fontSize: wp('4.5%'),
+    marginHorizontal: wp('1.5%'),
   },
 });
