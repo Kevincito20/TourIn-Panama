@@ -44,6 +44,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol name="person-circle-outline" size={28} color={color} />,
         }}
       />
+
     </Tabs>
   );
 }

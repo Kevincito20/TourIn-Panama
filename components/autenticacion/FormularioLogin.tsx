@@ -1,189 +1,180 @@
+// components/autenticacion/FormularioLogin.tsx
 import React, { useState } from 'react';
 import {
-  Alert,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  ImageBackground,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
-import Logo from '../ui/logo';
-import { Card } from '../ui/cardLogin';
+import { router } from 'expo-router';
 import { Input } from '../ui/input';
-import Button from '../ui/boton';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import { loginUsuario, propLogin } from './authService';
+import Button from '../ui/boton'; 
+import { Ionicons } from '@expo/vector-icons'; 
 
-export default function PantallaInicioSesion({ onLogin }: { onLogin: () => void }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function FormularioLogin() {
+  const [correo, setCorreo] = useState('');
+  const [contraseña, setContraseña] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Por favor ingresa correo y contraseña.');
+  const handleLogin = async () => {
+    setError(null);
+    if (!correo.trim() || !contraseña.trim()) {
+      setError('Por favor ingresa correo y contraseña');
       return;
     }
-    onLogin();
+
+    setLoading(true);
+
+    const payload: propLogin = { correo, contraseña };
+    const success = await loginUsuario(payload);
+
+    setLoading(false);
+
+    if (success) {
+      Alert.alert('Login exitoso', '¡Bienvenido!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            router.replace('/(tabs)/pantalla_home');
+          },
+        },
+      ]);
+    } else {
+      setError('Correo o contraseña incorrectos');
+    }
+  };
+
+  const handleRegistro = () => {
+    router.push('/(autenticacion)/pantalla_registrarse');
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoiding}
-      >
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Logo size={hp('12%')} showText={false} variant="icon" />
-            <Text style={styles.appName}>TourIn-Panama</Text>
-            <Text style={styles.motivationalText}>Descubre la magia Panameña</Text>
+    <ImageBackground
+      source={require('../../assets/images/fondo_login.webp')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.overlay}>
+          <View>
+            <Text style={styles.titulo}>TourIn-Panama</Text>
+            <Text style={styles.subtitulo}>Descubre la magia Panameña</Text>
           </View>
 
-          <Card style={styles.card}>
-            <Text style={styles.welcome}>¡Bienvenido!</Text>
-            <Text style={styles.subWelcome}>Inicia tu aventura panameña</Text>
-
-            <Input
-              placeholder="Correo electrónico"
-              type="email"
-              iconName="mail"
-              value={email}
-              onChangeText={setEmail}
-            />
-
-            <Input
-              placeholder="Contraseña"
-              type="password"
-              iconName="lock-closed"
-              value={password}
-              onChangeText={setPassword}
-            />
-
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Iniciar sesión"
-                onPress={handleLogin}
-                backgroundColor="#4F8FF7"
-                textColor="#fff"
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={() =>
-                Alert.alert('Registro', 'Funcionalidad de registro próximamente.')
-              }
+          <View style={styles.botones}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             >
-              <Text style={styles.registerText}>
-                ¿Primera vez? <Text style={styles.registerLink}>¡Regístrate aquí!</Text>
-              </Text>
-            </TouchableOpacity>
-          </Card>
+              <Input
+                type="email"
+                placeholder="Correo Electrónico"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                iconName="mail"
+                placeholderTextColor="#999"
+                value={correo}
+                onChangeText={setCorreo}
+                error={error && !correo.trim() ? error : undefined}
+              />
 
-          <View style={styles.footer}>
-            <Text style={styles.footerIcon}>⭐</Text>
-            <Text style={styles.footerText}>Explora </Text>
-            <Text style={styles.footerSeparator}>·</Text>
-            <Text style={styles.footerText}>Descubre </Text>
-            <Text style={styles.footerSeparator}>·</Text>
-            <Text style={styles.footerText}>Vive Panamá </Text>
-            <Text style={styles.footerIcon}>🌴</Text>
+              <Input
+                type="password"
+                placeholder="Contraseña"
+                iconName="lock-closed"
+                secureTextEntry={true}
+                placeholderTextColor="#999"
+                value={contraseña}
+                onChangeText={setContraseña}
+                error={error && !contraseña.trim() ? error : undefined}
+              />
+
+              {error && correo.trim() && contraseña.trim() && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
+
+              <Text
+                style={{ color: '#fff', textAlign: 'right', marginBottom: 20 }}
+              >
+                ¿Olvidaste tu contraseña?
+              </Text>
+
+              <Button
+                title="Ingresar"
+                onPress={handleLogin}
+                loading={loading}
+                disabled={!correo || !contraseña}
+                style={{ marginTop: 5 }}
+              />
+            </KeyboardAvoidingView>
+
+            <Button
+              title="Continuar con Google"
+              onPress={() => {}}
+              backgroundColor="#fff"
+              textColor="#000"
+              icon={<Ionicons name="logo-google" size={18} color="#000" />}
+              style={{ marginTop: 15 }}
+            />
+          </View>
+
+          <View>
+            <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
+              ¿No tienes cuenta?{' '}
+              <Text style={{ color: '#007AFF' }} onPress={handleRegistro}>
+                Regístrate aquí
+              </Text>
+            </Text>
           </View>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   safeArea: {
     flex: 1,
-    paddingVertical: hp('2.5%'),
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 0,
+    paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
-  keyboardAvoiding: {
+  overlay: {
     flex: 1,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: wp('6%'),
-    paddingVertical: hp('2.5%'),
-    justifyContent: 'space-between',
-  },
-  header: {
-    alignItems: 'center',
-  },
-  appName: {
-    fontSize: wp('10%'),
-    fontWeight: 'bold',
-    marginTop: hp('1.5%'),
-    color: '#4F8FF7',
-  },
-  motivationalText: {
-    fontSize: wp('4.5%'),
-    marginTop: hp('0.8%'),
-    color: '#757575',
-  },
-  card: {
-    paddingVertical: hp('4%'),
-    paddingHorizontal: wp('6%'),
-    borderRadius: wp('4%'),
-    elevation: 5,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    gap: hp('2%'),
-  },
-  welcome: {
-    fontSize: wp('8%'),
-    fontWeight: '700',
-    color: '#000000',
-    marginTop: hp('1%'),
-    marginBottom: hp('1%'),
-    textAlign: 'center',
-  },
-  subWelcome: {
-    fontSize: wp('4%'),
-    fontWeight: 'bold',
-    color: '#757575',
-    textAlign: 'center',
-    marginBottom: hp('3%'),
-  },
-  buttonContainer: {
-    marginTop: hp('1.5%'),
-    marginBottom: hp('2%'),
-  },
-  registerText: {
-    textAlign: 'center',
-    color: '#3c6382',
-    fontSize: wp('4%'),
-  },
-  registerLink: {
-    fontSize: wp('4%'),
-    fontWeight: 'bold',
-    color: '#4F8FF7',
-  },
-  footer: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: hp('1.5%'),
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  footerText: {
-    fontSize: wp('4%'),
-    fontWeight: '600',
-    color: '#3c6382',
+  titulo: {
+    color: '#007AFF',
+    fontSize: 48,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
   },
-  footerSeparator: {
-    fontSize: wp('4.5%'),
-    marginHorizontal: wp('2%'),
-    color: '#0a3d62',
+  botones: {
+    padding: 20,
   },
-  footerIcon: {
-    fontSize: wp('4.5%'),
-    marginHorizontal: wp('1.5%'),
+  subtitulo: {
+    color: '#fff',
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#f44336',
+    marginBottom: 10,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

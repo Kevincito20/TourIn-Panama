@@ -21,19 +21,19 @@ export function Input({ type = 'text', iconName, error, ...rest }: InputProps) {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.inputContainer, error && styles.inputError]}>
+      <View style={[styles.inputWrapper, error && styles.inputError]}>
         {iconName && (
           <Ionicons
             name={iconName}
-            size={24}
-            color="#999"
+            size={20}
+            color="#aaa"
             style={styles.icon}
           />
         )}
 
         <TextInput
           style={styles.input}
-          placeholderTextColor="#999"
+          placeholderTextColor="#aaa"
           secureTextEntry={type === 'password' ? isSecure : false}
           keyboardType={type === 'email' ? 'email-address' : 'default'}
           autoCapitalize={type === 'email' ? 'none' : 'sentences'}
@@ -43,8 +43,8 @@ export function Input({ type = 'text', iconName, error, ...rest }: InputProps) {
         {type === 'password' && (
           <Ionicons
             name={isSecure ? 'eye-off' : 'eye'}
-            size={22}
-            color="#999"
+            size={20}
+            color="#aaa"
             style={styles.eyeIcon}
             onPress={toggleSecure}
           />
@@ -60,30 +60,27 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     marginBottom: 16,
-    alignItems: 'center',
   },
-  inputContainer: {
-    width: '100%',
-    maxWidth: 350,
-    height: 60,
-    backgroundColor: '#F2F2F2',
-    borderColor: '#E7E7E7',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 16,
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    paddingVertical: 6,
+    paddingHorizontal: 4,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#000',
+    color: '#fff',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
   icon: {
-    marginRight: 12,
+    marginRight: 6,
   },
   eyeIcon: {
-    marginLeft: 8,
+    marginLeft: 6,
   },
   inputError: {
     borderColor: '#f44336',
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     color: '#f44336',
     fontSize: 12,
-    alignSelf: 'flex-start',
-    paddingLeft: 16,
+    paddingLeft: 4,
   },
 });

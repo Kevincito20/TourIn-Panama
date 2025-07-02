@@ -7,6 +7,8 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  ActivityIndicator,
+  View,
 } from 'react-native';
 
 interface ButtonProps {
@@ -16,26 +18,43 @@ interface ButtonProps {
   textColor?: string;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  loading?: boolean;
   disabled?: boolean;
+  icon?: React.ReactNode;
 }
 
 export default function Button({
   title,
   onPress,
-  backgroundColor = '#4F8FF7',
+  backgroundColor = '#007AFF',
   textColor = '#fff',
   style,
   textStyle,
+  loading = false,
   disabled = false,
+  icon,
 }: ButtonProps) {
+  const isDisabled = disabled || loading;
+
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor }, style, disabled && styles.disabled]}
+      style={[
+        styles.button,
+        { backgroundColor: isDisabled ? '#A0A0A0' : backgroundColor },
+        style,
+      ]}
       onPress={onPress}
-      activeOpacity={0.7}
-      disabled={disabled}
+      activeOpacity={0.8}
+      disabled={isDisabled}
     >
-      <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
+      {loading ? (
+        <ActivityIndicator size="small" color="#fff" />
+      ) : (
+        <View style={styles.content}>
+          {icon && <View style={styles.iconContainer}>{icon}</View>}
+          <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -46,13 +65,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+    width: '100%',
+    maxWidth: 350,
+    alignSelf: 'center',
   },
   text: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
-  disabled: {
-    backgroundColor: '#A0A0A0',
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    marginRight: 8,
   },
 });

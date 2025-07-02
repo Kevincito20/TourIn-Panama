@@ -7,7 +7,7 @@ import Recomendaciones from '@/components/inicio/recomendaciones';
 
 export default function PantallaHome() {
   const handleMenuPress = () => {
-    // Aquí va la lógica para abrir menú o mostrar alerta
+
     alert('Menú presionado');
   };
 
@@ -18,7 +18,6 @@ export default function PantallaHome() {
         <HeaderInicio userName="Kevin" onMenuPress={handleMenuPress} />
         <Itinerario />
         <Recomendaciones />
-        {/* Aquí puedes agregar más componentes o secciones */}
       </ScrollView>
     </SafeAreaView>
   );

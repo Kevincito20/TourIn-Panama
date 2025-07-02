@@ -8,8 +8,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router'; // ✅ Importa el router
 
 const Itinerario = () => {
+  const router = useRouter(); // ✅ Usa el hook del router
+
   const actividades = [
     {
       id: 1,
@@ -61,10 +64,10 @@ const Itinerario = () => {
             <View style={styles.actividadCard}>
               <View style={styles.iconContainer}>
                 <View style={[styles.iconBackground, { backgroundColor: actividad.iconColor + '20' }]}>
-                  <Ionicons 
-                    name={actividad.icon as any} 
-                    size={24} 
-                    color={actividad.iconColor} 
+                  <Ionicons
+                    name={actividad.icon as any}
+                    size={24}
+                    color={actividad.iconColor}
                   />
                 </View>
               </View>
@@ -78,17 +81,16 @@ const Itinerario = () => {
                     </View>
                   )}
                 </View>
-                
+
                 <View style={styles.detalleContainer}>
                   <Ionicons name="time-outline" size={14} color="#6B7280" />
                   <Text style={styles.detalleText}>
-                    {actividad.horario} • <Ionicons name="location-outline" size={14} color="#6B7280" /> {actividad.ubicacion}
+                    {actividad.horario} • {actividad.ubicacion}
                   </Text>
                 </View>
               </View>
             </View>
 
-            {/* Línea conectora (excepto en el último elemento) */}
             {index < actividades.length - 1 && (
               <View style={styles.conectorLinea} />
             )}
@@ -96,7 +98,10 @@ const Itinerario = () => {
         ))}
       </ScrollView>
 
-      <TouchableOpacity style={styles.verCompleto}>
+      <TouchableOpacity
+        style={styles.verCompleto}
+        onPress={() => router.push('./autenticacion/pantalla_iniciar_sesion')}
+      >
         <Text style={styles.verCompletoText}>Ver itinerario completo</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
