@@ -1,3 +1,5 @@
+// Este archivo contiene la lógica para autenticar usuarios en la aplicación.
+// Utiliza la API de tu backend para verificar las credenciales del usuario.
 export interface propLogin {
   correo: string;
   contraseña: string;
@@ -20,7 +22,7 @@ export const loginUsuario = async (datos: propLogin): Promise<boolean> => {
 
     const data = await response.json();
 
-    // Manejo más explícito si la API devuelve estructura compleja
+
     if (data?.success === true) {
       return true;
     } else {
