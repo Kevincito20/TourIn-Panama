@@ -14,47 +14,47 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Input } from '../ui/input';
-import { registrarUsuario } from './registroService';
+import { RegistrarUsuario } from './registroService';
 
 export default function FormularioRegistro() {
   const [nombre, setNombre] = useState('');
-  const [username, setUsername] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [confirmarContraseña, setConfirmarContraseña] = useState('');
-  const [celular, setCelular] = useState('');
-  const [nacionalidad, setNacionalidad] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
+  const [identificacion, setIdentificacion] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleRegistro = async () => {
     setError(null);
 
-    // Validación de campos
-    if (!nombre.trim() || !username.trim() || !contraseña.trim() || 
-        !confirmarContraseña.trim() || !celular.trim() || !nacionalidad.trim()) {
+    if (
+      !nombre.trim() ||
+      !apellido.trim() ||
+      !correo.trim() ||
+      !identificacion.trim() ||
+      !contrasena.trim() ||
+      !confirmarContrasena.trim()
+    ) {
       setError('Por favor completa todos los campos');
       return;
     }
 
-    if (contraseña !== confirmarContraseña) {
+    if (contrasena !== confirmarContrasena) {
       setError('Las contraseñas no coinciden');
-      return;
-    }
-
-    if (celular.length < 8) {
-      setError('El número de celular debe tener al menos 8 dígitos');
       return;
     }
 
     setLoading(true);
 
     try {
-      const success = await registrarUsuario({
+      const success = await RegistrarUsuario({
         nombre,
-        username,
-        contraseña,
-        celular,
-        nacionalidad
+        apellido,
+        correo,
+        contrasena,
+        identificacion,
       });
 
       if (success) {
@@ -63,8 +63,8 @@ export default function FormularioRegistro() {
             text: 'OK',
             onPress: () => {
               router.replace('/(tabs)/pantalla_home');
-            }
-          }
+            },
+          },
         ]);
       } else {
         setError('Error al registrar. Intenta nuevamente.');
@@ -89,7 +89,7 @@ export default function FormularioRegistro() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.overlay}>
           <View>
-            <Text style={styles.titulo}>TourIn-Panama</Text>
+            <Text style={styles.titulo}>Registrate</Text>
             <Text style={styles.subtitulo}>Únete a nuestra comunidad</Text>
           </View>
 
@@ -99,7 +99,7 @@ export default function FormularioRegistro() {
             >
               <Input
                 type="text"
-                placeholder="Nombre completo"
+                placeholder="Nombre"
                 autoCapitalize="words"
                 placeholderTextColor="#999"
                 value={nombre}
@@ -109,51 +109,53 @@ export default function FormularioRegistro() {
 
               <Input
                 type="text"
-                placeholder="Nombre de usuario"
-                autoCapitalize="none"
+                placeholder="Apellido"
+                autoCapitalize="words"
                 placeholderTextColor="#999"
-                value={username}
-                onChangeText={setUsername}
-                error={error && !username.trim() ? error : undefined}
+                value={apellido}
+                onChangeText={setApellido}
+                error={error && !apellido.trim() ? error : undefined}
+              />
+
+              <Input
+                type="email"
+                placeholder="Correo electrónico"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                placeholderTextColor="#999"
+                value={correo}
+                onChangeText={setCorreo}
+                error={error && !correo.trim() ? error : undefined}
               />
 
               <Input
                 type="password"
                 placeholder="Contraseña"
-                secureTextEntry={true}
+                secureTextEntry
                 placeholderTextColor="#999"
-                value={contraseña}
-                onChangeText={setContraseña}
-                error={error && !contraseña.trim() ? error : undefined}
+                value={contrasena}
+                onChangeText={setContrasena}
+                error={error && !contrasena.trim() ? error : undefined}
               />
 
               <Input
                 type="password"
                 placeholder="Confirmar contraseña"
-                secureTextEntry={true}
+                secureTextEntry
                 placeholderTextColor="#999"
-                value={confirmarContraseña}
-                onChangeText={setConfirmarContraseña}
-                error={error && contraseña !== confirmarContraseña ? 'Las contraseñas no coinciden' : undefined}
+                value={confirmarContrasena}
+                onChangeText={setConfirmarContrasena}
+                error={error && contrasena !== confirmarContrasena ? 'Las contraseñas no coinciden' : undefined}
               />
 
               <Input
                 type="text"
-                placeholder="Número de celular"
-                keyboardType="phone-pad"
+                placeholder="Identificación"
+                keyboardType="numeric"
                 placeholderTextColor="#999"
-                value={celular}
-                onChangeText={setCelular}
-                error={error && !celular.trim() ? error : undefined}
-              />
-
-              <Input
-                type="text"
-                placeholder="Nacionalidad"
-                placeholderTextColor="#999"
-                value={nacionalidad}
-                onChangeText={setNacionalidad}
-                error={error && !nacionalidad.trim() ? error : undefined}
+                value={identificacion}
+                onChangeText={setIdentificacion}
+                error={error && !identificacion.trim() ? error : undefined}
               />
 
               {error && (
@@ -181,7 +183,7 @@ export default function FormularioRegistro() {
           <View>
             <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
               ¿Ya tienes cuenta?{' '}
-              <Text 
+              <Text
                 style={{ color: '#007AFF' }}
                 onPress={handleLogin}
               >
@@ -214,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   titulo: {
-    color: '#007AFF',
+    color: '#fff',
     fontSize: 48,
     fontWeight: 'bold',
     textAlign: 'center',

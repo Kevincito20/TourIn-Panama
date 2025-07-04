@@ -14,3 +14,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#000', // fondo negro para que combine con el login si quieres
   },
 });
+ 

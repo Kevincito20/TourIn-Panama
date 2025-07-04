@@ -34,7 +34,7 @@ export default function ListaActividades({
                         <View style={styles.overlay}>
                             <Text style={styles.title}>{titulo}</Text>
                             <Text style={styles.location}>{ubicacion}</Text>
-                            <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
+                            <Text style={styles.rating}>{rating.toFixed(1)}</Text>
                         </View>
                     </ImageBackground>
                 </View>

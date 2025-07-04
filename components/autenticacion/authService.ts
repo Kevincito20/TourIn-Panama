@@ -1,13 +1,14 @@
 // Este archivo contiene la lógica para autenticar usuarios en la aplicación.
 // Utiliza la API de tu backend para verificar las credenciales del usuario.
+// NO TOCAR
 export interface propLogin {
-  correo: string;
-  contraseña: string;
+  email: string;
+  password: string;
 }
 
 export const loginUsuario = async (datos: propLogin): Promise<boolean> => {
   try {
-    const response = await fetch('https://tu-api.com/api/login', {
+    const response = await fetch('https://apitourinpanama.onrender.com/user/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,11 +20,8 @@ export const loginUsuario = async (datos: propLogin): Promise<boolean> => {
       console.warn(`Error de servidor: ${response.status}`);
       return false;
     }
-
     const data = await response.json();
-
-
-    if (data?.success === true) {
+    if (data?.autenticado === true) {
       return true;
     } else {
       console.warn('Respuesta inesperada del backend:', data);

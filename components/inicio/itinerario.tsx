@@ -8,10 +8,10 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router'; // ✅ Importa el router
+import { useRouter } from 'expo-router'; 
 
 const Itinerario = () => {
-  const router = useRouter(); // ✅ Usa el hook del router
+  const router = useRouter(); 
 
   const actividades = [
     {

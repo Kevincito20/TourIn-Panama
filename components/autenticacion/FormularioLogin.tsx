@@ -17,21 +17,21 @@ import Button from '../ui/boton';
 import { Ionicons } from '@expo/vector-icons'; 
 
 export default function FormularioLogin() {
-  const [correo, setCorreo] = useState('');
-  const [contraseña, setContraseña] = useState('');
+  const [email, setCorreo] = useState('');
+  const [password, setContraseña] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
     setError(null);
-    if (!correo.trim() || !contraseña.trim()) {
+    if (!email.trim() || !password.trim()) {
       setError('Por favor ingresa correo y contraseña');
       return;
     }
 
     setLoading(true);
 
-    const payload: propLogin = { correo, contraseña };
+    const payload: propLogin = { email, password };
     const success = await loginUsuario(payload);
 
     setLoading(false);
@@ -63,7 +63,7 @@ export default function FormularioLogin() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.overlay}>
           <View>
-            <Text style={styles.titulo}>TourIn-Panama</Text>
+            <Text style={styles.titulo}>Iniciar Sesión</Text>
             <Text style={styles.subtitulo}>Descubre la magia Panameña</Text>
           </View>
 
@@ -78,9 +78,9 @@ export default function FormularioLogin() {
                 autoCapitalize="none"
                 iconName="mail"
                 placeholderTextColor="#999"
-                value={correo}
+                value={email}
                 onChangeText={setCorreo}
-                error={error && !correo.trim() ? error : undefined}
+                error={error && !email.trim() ? error : undefined}
               />
 
               <Input
@@ -89,12 +89,12 @@ export default function FormularioLogin() {
                 iconName="lock-closed"
                 secureTextEntry={true}
                 placeholderTextColor="#999"
-                value={contraseña}
+                value={password}
                 onChangeText={setContraseña}
-                error={error && !contraseña.trim() ? error : undefined}
+                error={error && !password.trim() ? error : undefined}
               />
 
-              {error && correo.trim() && contraseña.trim() && (
+              {error && email.trim() && password.trim() && (
                 <Text style={styles.errorText}>{error}</Text>
               )}
 
@@ -108,7 +108,7 @@ export default function FormularioLogin() {
                 title="Ingresar"
                 onPress={handleLogin}
                 loading={loading}
-                disabled={!correo || !contraseña}
+                disabled={!email || !password}
                 style={{ marginTop: 5 }}
               />
             </KeyboardAvoidingView>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   titulo: {
-    color: '#007AFF',
+    color: '#fff',
     fontSize: 48,
     fontWeight: 'bold',
     textAlign: 'center',

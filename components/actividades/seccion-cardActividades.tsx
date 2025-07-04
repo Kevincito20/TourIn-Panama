@@ -58,7 +58,7 @@ export function CardsActividades() {
     return (
             <FlatList
                 data={actividades}
-                key={'2col'} // 👈 Esto fuerza un nuevo render si se cambia `numColumns`
+                key={'2col'}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <ListaActividades
