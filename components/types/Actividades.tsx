@@ -6,5 +6,7 @@ export interface ActividadesProps {
     ubicacion: string;
     rating: number;
     imagen: string;
+    longitud?: number;
+    latitud?: number;
     onPress: () => void;
 }
