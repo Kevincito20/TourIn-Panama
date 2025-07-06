@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Input } from '../ui/input';
-import { loginUsuario, propLogin } from './authService';
+import { loginUsuario, propLogin } from '../services/authService';
 import Button from '../ui/boton'; 
 import { Ionicons } from '@expo/vector-icons'; 
 

@@ -6,12 +6,14 @@ import {
     Text,
     ImageBackground
 } from 'react-native';
-import { ActividadesProps } from './actividadesPopulares';
+import { ActividadesProps } from '../types/Actividades';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
 export default function ListaActividades({
+    id,
+    categoria,
     titulo,
     ubicacion,
     rating,

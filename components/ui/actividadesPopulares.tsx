@@ -9,16 +9,9 @@ import {
   Dimensions,
 } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+import { ActividadesProps } from '../types/Actividades';
 
-export interface ActividadesProps {
-  titulo: string;
-  descripcion?: string;
-  ubicacion: string;
-  rating: number;
-  imagen: string;
-  onPress: () => void;
-}
+const { width, height } = Dimensions.get('window');
 
 export default function CarruselActividades({
   titulo,
@@ -66,7 +59,7 @@ const styles = StyleSheet.create({
   
   darkOverlay: {
   ...StyleSheet.absoluteFillObject,
-  backgroundColor: 'rgba(0, 0, 0, 0.4)', // Ajusta opacidad a tu gusto
+  backgroundColor: 'rgba(0, 0, 0, 0.4)', 
   borderRadius: 0,
 },
 

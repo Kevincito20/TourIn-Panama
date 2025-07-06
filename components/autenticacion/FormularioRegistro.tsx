@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Input } from '../ui/input';
-import { RegistrarUsuario } from './registroService';
+import { RegistrarUsuario } from '../services/registroService';
 
 export default function FormularioRegistro() {
   const [nombre, setNombre] = useState('');

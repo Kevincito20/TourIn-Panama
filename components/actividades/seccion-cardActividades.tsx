@@ -2,8 +2,13 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, Text, SafeAreaView } from 'react-native';
 import ListaActividades from '@/components/ui/cardActividades';
+import { useState } from 'react';
 
 export function CardsActividades() {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
+
     const actividades = [
         {
             id: '1',
@@ -62,6 +67,8 @@ export function CardsActividades() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <ListaActividades
+                    id={item.id}
+                        categoria="Actividades"
                         titulo={item.titulo}
                         ubicacion={item.ubicacion}
                         rating={item.rating}
