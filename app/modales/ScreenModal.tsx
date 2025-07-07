@@ -19,8 +19,7 @@ export default function ScreenModal({ visible, actividad, onClose }: ScreenModal
                     {actividad && (
                         <>
                             <ModalHeader
-                                titulo={actividad.titulo}
-                                ubicacion={actividad.ubicacion}
+                                actividad={actividad}
                                 onClose={onClose}
                             />
                             <ModalContenido actividad={actividad} />
@@ -40,10 +39,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalBox: {
-        width: '90%',
+        width: '99%',
+        height: '90%',
+
         backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 20,
-        elevation: 10,
+        borderTopColor: '#ccc',
+        borderRadius: 20,
     },
 });
