@@ -1,33 +1,56 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator, View, Text } from 'react-native';
 import ListaActividades from '@/components/ui/cardActividades';
-import { actividadesCardsData } from './data';
+import { ActividadesProps } from '../types/Actividades';
+import { useActividadesPorCategoria } from '../services/filtrosCategoria';
 
 interface CardsActividadesProps {
-  openModal: (actividad: any) => void;
+  openModal: (actividad: ActividadesProps) => void;
+  categoriaId: number | null;
 }
 
-export function CardsActividades({ openModal }: CardsActividadesProps) {
-  // Ahora sí usamos openModal que viene de props
-  const actividadesConOnPress = actividadesCardsData.map((actividad) => ({
-    ...actividad,
-    onPress: () => openModal(actividad),
-  }));
+export function CardsActividades({ openModal, categoriaId }: CardsActividadesProps) {
+  const { actividades, loading, error } = useActividadesPorCategoria(
+    categoriaId ? categoriaId.toString() : null
+  );
+
+  console.log('Actividades recibidas:', actividades);  
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.loader}>
+        <Text style={{ color: 'red' }}>{error}</Text>
+      </View>
+    );
+  }
+
+  if (actividades.length === 0) {
+    return (
+      <View style={styles.loader}>
+        <Text>No hay actividades para esta categoría.</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
-      data={actividadesConOnPress}
+      data={actividades}
       key={'2col'}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => item.id?.toString() ?? item.encabezado ?? index.toString()}
       renderItem={({ item }) => (
         <ListaActividades
-          id={item.id}
-          categoria={item.categoria}
-          titulo={item.titulo}
-          ubicacion={item.ubicacion}
+          encabezado={item.encabezado}
+          foto_url={item.foto_url}
           rating={item.rating}
-          imagen={item.imagen}
-          onPress={item.onPress}
+          onPress={() => openModal(item)}
         />
       )}
       numColumns={2}
@@ -38,10 +61,12 @@ export function CardsActividades({ openModal }: CardsActividadesProps) {
   );
 }
 
+
 const styles = StyleSheet.create({
-  container: {
+  loader: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
   },
 });

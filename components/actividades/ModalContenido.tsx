@@ -22,7 +22,7 @@ const ActividadModalContent: React.FC<Props> = ({ actividad }) => {
       url = `https://www.google.com/maps/search/?api=1&query=${actividad.latitud},${actividad.longitud}`;
     } else {
       url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        actividad.ubicacion
+        actividad.encabezado
       )}`;
     }
 
@@ -34,7 +34,7 @@ const ActividadModalContent: React.FC<Props> = ({ actividad }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Descripción</Text>
         <Text style={styles.descripcion}>
-          {actividad.descripcion || 'Sin descripción disponible para esta actividad.'}
+          {actividad.descp || 'Sin descripción disponible para esta actividad.'}
         </Text>
       </View>
 

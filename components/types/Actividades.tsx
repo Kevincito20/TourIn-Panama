@@ -1,12 +1,10 @@
 export interface ActividadesProps {
-    id: string;
-    categoria: string;
-    titulo: string;
-    descripcion?: string;
-    ubicacion: string;
+    id?: number;
+    encabezado: string;
+    descp?: string;
     rating: number;
-    imagen: string;
-    longitud?: number;
     latitud?: number;
+    longitud?: number;
+    foto_url: string;
     onPress: () => void;
 }
