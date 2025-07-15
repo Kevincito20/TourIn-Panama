@@ -76,10 +76,9 @@ export function CardsActividades() {
                         onPress={item.onPress}
                     />
                 )}
-                numColumns={2}
                 contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 20 }}
-                columnWrapperStyle={{ justifyContent: 'space-between' }}
-                showsVerticalScrollIndicator={false}
+                // columnWrapperStyle={{ justifyContent: 'space-between' }}
+                showsVerticalScrollIndicator={true}
             />
     );
 }

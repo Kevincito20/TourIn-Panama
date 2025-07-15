@@ -33,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="pantalla_conocer_panama"
         options={{
-          title: 'Panamá',
+          title: 'Conocer Panamá',
           tabBarIcon: ({ color }) => <IconSymbol name="book" size={28} color={color} />,
         }}
       />

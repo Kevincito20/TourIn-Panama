@@ -1,5 +1,4 @@
 // app/(tabs)/ScreenActividades.tsx
-
 import React from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import HeaderSeccionActividades from '@/components/actividades/seccion-actividades';

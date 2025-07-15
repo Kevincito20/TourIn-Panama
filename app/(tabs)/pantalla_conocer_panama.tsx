@@ -1,146 +1,175 @@
-//EN ESTA PANTALLA PUEDEN GUIARSE DEL CODIGO DE AQUI, ES UNA PANTALLA QUE MUESTRA TARJETAS
-//  CON DIFERENTES SECCIONES DE INFORMACION SOBRE PANAMA.
-// PARA LA NAVEGACION SE PUEDEN GUIAR DEL CODIGO de abajo
+
+// COMPONENTES DE DISEÑO REACT 
+//useCallback
+import { useMemo, useRef, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import MapboxGL from '@rnmapbox/maps';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+// COMPONENTES CREADOS POR MI 
+import { CardsConocerPanama } from '@/components/conocer-panama/card-conocerPanamá/card_conocerPanama';
+import { CardsInformacionPanama } from '@/components/conocer-panama/card-conocerPanamá/card_informacionCompleta';
+
+// COMPONENTES DE INFORMACION.
+import provinciasPanama from '../../assets/provincias-Panama.json'
+import { puntosDeInteres } from '../../assets/contentPuntosPanama';
 
 
-/* import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useState } from 'react';
+// COMPONENTES DE MAPAS
+import '../../assets/configuracionMapbox.ts'
 
-// Importa tus componentes de contenido
-import Historia from '../conocer-panama/Historia';
-import Geografia from '../conocer-panama/Geografia';
-import DatosCuriosos from '../conocer-panama/DatosCuriosos';
-import Cultura from '../conocer-panama/Cultura';
 
-export default function ConocerPanama() {
-  const [selectedSection, setSelectedSection] = useState<string | null>(null);
+export default function ScreenConocerPanama() {
 
-  const cards = [
-    {
-      id: 1,
-      title: 'Historia',
-      description: 'Descubre la rica historia de Panamá',
-      section: 'historia',
-      icon: '🏛️'
-    },
-    {
-      id: 2,
-      title: 'Geografía',
-      description: 'Explora la geografía panameña',
-      section: 'geografia',
-      icon: '🗺️'
-    },
-    {
-      id: 3,
-      title: 'Datos Curiosos',
-      description: 'Conoce datos interesantes',
-      section: 'datos-curiosos',
-      icon: '💡'
-    },
-    {
-      id: 4,
-      title: 'Cultura',
-      description: 'Sumérgete en la cultura local',
-      section: 'cultura',
-      icon: '🎭'
-    }
-  ];
+  const provinciasPanamaLimpio = provinciasPanama as GeoJSON.FeatureCollection;
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['4%', '4%', '95%'], []);
 
-  const handleCardPress = (section: string) => {
-    setSelectedSection(section);
-  };
 
-  const handleBack = () => {
-    setSelectedSection(null);
-  };
+  const [coordenadaSeleccionada, setCoordenadaSeleccionada] = useState([-79.5167, 8.9833]);
+  const [zoom, setZoom] = useState(5);
 
-  const renderContent = () => {
-    switch (selectedSection) {
-      case 'historia':
-        return <Historia onBack={handleBack} />;
-      case 'geografia':
-        return <Geografia onBack={handleBack} />;
-      case 'datos-curiosos':
-        return <DatosCuriosos onBack={handleBack} />;
-      case 'cultura':
-        return <Cultura onBack={handleBack} />;
-      default:
-        return null;
-    }
-  };
 
-  if (selectedSection) {
-    return renderContent();
-  }
+  const [provinciaSeleccionada, setProvinciaSeleccionada] = useState<string>('panama');
+
+  const renderizarMapa = () => (
+    <View style={styles.page}>
+      <View style={styles.Mapcontainer}>
+
+        {/*ESTILOS DEL MAPA */}
+        <MapboxGL.MapView
+          style={styles.map}
+          zoomEnabled={true}
+          rotateEnabled={true}
+          styleURL='mapbox://styles/mapbox/streets-v12'
+        >
+          {/* CONFIGURACION DE LA CAMARA. OSEA PERSPECTIVA DEL MAPA  */}
+
+          <MapboxGL.Camera
+            centerCoordinate={coordenadaSeleccionada}
+            zoomLevel={zoom}
+            pitch={0}
+            animationDuration={1500}
+          />
+
+          {/* CREACION DE PUNTOS DE INTEREZ DEL MAPA. */}
+
+          {puntosDeInteres.map(({ id, coord }) => (
+            <MapboxGL.PointAnnotation key={id} id={id} coordinate={coord}
+              onSelected={() => {
+                setCoordenadaSeleccionada(coord);
+                setZoom(8);
+                setProvinciaSeleccionada(id);
+                bottomSheetRef.current?.snapToIndex(2);
+              }}
+              onDeselected={
+                () => {
+                  setCoordenadaSeleccionada([-79.5167, 8.9833]);
+                  setZoom(5);
+                }
+              }
+
+
+            >
+              <View style={[styles.markerStyle]} />
+
+            </MapboxGL.PointAnnotation>
+          ))}
+
+
+          {/* EXTRACCION DE DATOS DEL GEOJSON */}
+          <MapboxGL.ShapeSource id="provincias" shape={provinciasPanamaLimpio}>
+
+
+            {/* VAINA DEL FONDO NO SE COMO SE TRADUCE AL ESPAÑOL */}
+            <MapboxGL.FillLayer
+              id="fill"
+              style={{ fillColor: 'rgba(255, 255, 255, 0)' }}
+            />
+
+            {/* LINEAS QUE DIVIDEN LAS PROVINCIAS */}
+
+            <MapboxGL.LineLayer
+              id="lines"
+              style={{ lineColor: 'rgba(0, 0, 0, 0.88)', lineWidth: 0.5 }}
+
+            />
+
+
+
+
+          </MapboxGL.ShapeSource>
+
+
+        </MapboxGL.MapView>
+
+      </View>
+    </View>
+  );
+
+
+  // const handleSheetChanges = useCallback((index: number) => {
+  //   console.log('handleSheetChanges', index);
+  // }, []);
+
+  // const handleOpenBottomSheet = () => {
+  //   bottomSheetRef.current?.snapToIndex(0);
+  // };
+
+
+
+
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Conocer Panamá</Text>
-      
-      <View style={styles.cardsContainer}>
-        {cards.map((card) => (
-          <TouchableOpacity
-            key={card.id}
-            style={styles.card}
-            onPress={() => handleCardPress(card.section)}
-          >
-            <Text style={styles.cardIcon}>{card.icon}</Text>
-            <Text style={styles.cardTitle}>{card.title}</Text>
-            <Text style={styles.cardDescription}>{card.description}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
-  );
-}
+    <GestureHandlerRootView  >
+      {renderizarMapa()}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+      // enablePanDownToClose
+      >
+        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
 
+          {/* <CardsConocerPanama provinciaSeleccionada={provinciaSeleccionada} />  */}
+
+
+          <CardsInformacionPanama provinciaSeleccionada={provinciaSeleccionada} />
+
+        </BottomSheetScrollView>
+      </BottomSheet>
+    </GestureHandlerRootView>
+  )
+
+}
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 30,
-    color: '#333',
-  },
-  cardsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  card: {
-    width: '48%',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 15,
+  page: {
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  cardIcon: {
-    fontSize: 40,
-    marginBottom: 10,
+  Mapcontainer: {
+    height: '100%',
+    width: '100%',
+    alignSelf: 'center',
+    overflow: 'hidden',
+    marginBottom: 20,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#333',
+  map: {
+    height: '100%',
+    width: '100%',
   },
-  cardDescription: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: '#666',
+  markerStyle: {
+    width: 15,
+    height: 15,
+    borderRadius: 10,
+    borderColor: '#fff',
+    borderWidth: 2,
+    backgroundColor: 'red'
   },
-}); */
+  contentContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+});
