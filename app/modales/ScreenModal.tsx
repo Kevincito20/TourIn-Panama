@@ -13,7 +13,7 @@ interface ScreenModalProps {
 
 export default function ScreenModal({ visible, actividad, onClose }: ScreenModalProps) {
     return (
-        <Modal visible={visible} animationType="slide" transparent>
+        <Modal visible={visible} animationType="slide" transparent >
             <View style={styles.modalBackground}>
                 <View style={styles.modalBox}>
                     {actividad && (
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalBox: {
-        width: '99%',
-        height: '90%',
+        width: '100%',
+        height: '100%',
 
         backgroundColor: '#fff',
         borderTopColor: '#ccc',

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Filtros from '@/components/actividades/filtros';
 import { CardsActividades } from '@/components/actividades/seccion-cardActividades';
-import { useModal } from '@/hooks/useActividades'; // tu hook modal
+import { useModal } from '@/hooks/useActividades';
 import ScreenModal from '../modales/ScreenModal';
 
 export default function ScreenActividades() {

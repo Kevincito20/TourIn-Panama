@@ -41,7 +41,7 @@ export default function HeaderSeccionActividades({ openModal }: HeaderSeccionAct
           onPress={() => openModal(item)}
         />
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
       horizontal
       showsHorizontalScrollIndicator={false}
       pagingEnabled

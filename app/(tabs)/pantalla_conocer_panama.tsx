@@ -1,9 +1,5 @@
-//EN ESTA PANTALLA PUEDEN GUIARSE DEL CODIGO DE AQUI, ES UNA PANTALLA QUE MUESTRA TARJETAS
-//  CON DIFERENTES SECCIONES DE INFORMACION SOBRE PANAMA.
-// PARA LA NAVEGACION SE PUEDEN GUIAR DEL CODIGO de abajo
-
-
-/* import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+/* 
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useState } from 'react';
 
 // Importa tus componentes de contenido
@@ -143,4 +139,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
   },
-}); */
+});  */
+

@@ -25,7 +25,6 @@ export default function CarruselActividades({
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={1}>
       <ImageBackground source={{ uri: foto_url }} style={styles.imagen} imageStyle={{ borderRadius: 0 }}>
         
-        {/* Capa de opacidad sobre la imagen */}
         <View style={styles.darkOverlay} />
 
         <View style={styles.overlay}>

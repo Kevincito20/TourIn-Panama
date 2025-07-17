@@ -1,164 +1,202 @@
-/* import React from 'react';
+import React, { useState } from 'react';
 import {
-  View,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Linking,
-  Image,
+  View,
 } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { ActividadesProps } from '@/components/types/Actividades';
 
-interface Props {
-  actividad: ActividadesProps;
-  onClose: () => void;
-}
+const colores = {
+  fondo: '#F9FAFB',
+  primario: '#1E40AF',
+  primarioClaro: '#60A5FA',
+  texto: '#1F2937',
+  gris: '#6B7280',
+  blanco: '#FFFFFF',
+  borde: '#E5E7EB',
+};
 
-const ActividadModalContent: React.FC<Props> = ({ actividad, onClose }) => {
-  const handleOpenMap = () => {
-    if (actividad.latitud && actividad.longitud) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${actividad.latitud},${actividad.longitud}`;
-      Linking.openURL(url);
-    } else {
-      alert('No hay ubicación disponible para esta actividad.');
-    }
+export default function PerfilRediseñado() {
+  const [ubicacion, setUbicacion] = useState(true);
+  const [notificaciones, setNotificaciones] = useState(false);
+  const [modoOscuro, setModoOscuro] = useState(false);
+
+  const manejarCambioPermiso = (nombre: string, valor: boolean) => {
+    const estado = valor ? 'activado' : 'desactivado';
+    Alert.alert('Permiso actualizado', `${nombre} ha sido ${estado}.`);
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.imageContainer}>
+    <ScrollView contentContainerStyle={estilos.contenedor}>
+      {/* Perfil */}
+      <View style={estilos.cartaPerfil}>
         <Image
-          source={{ uri: actividad.foto_url }}
-          style={styles.image}
-          resizeMode="cover"
+          source={{ uri: 'https://i.pravatar.cc/150?img=11' }}
+          style={estilos.avatar}
         />
-        <View style={styles.overlay}>
-          <View style={styles.topBar}>
-            <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close-circle" size={28} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Ionicons name="heart-outline" size={28} color="white" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.imageInfo}>
-            <Text style={styles.location}>
-              <Ionicons name="location-outline" size={16} /> {actividad.encabezado}
-            </Text>
-            <Text style={styles.rating}>
-              <MaterialIcons name="star-rate" size={16} color="gold" /> {actividad.rating}
-            </Text>
-          </View>
-        </View>
+        <Text style={estilos.nombre}>Johnson Roy</Text>
+        <Text style={estilos.rol}>Usuario Premium</Text>
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.sectionTitle}>Descripción</Text>
-        <Text style={styles.descripcion}>
-          {actividad.descp || 'Sin descripción disponible para esta actividad.'}
-        </Text>
+      {/* Sección de permisos */}
+      <Seccion titulo="Configuración de permisos">
+        <Permiso label="Ubicación" valor={ubicacion} onCambiar={(val) => {
+          setUbicacion(val);
+          manejarCambioPermiso('Ubicación', val);
+        }} />
+        <Permiso label="Notificaciones" valor={notificaciones} onCambiar={(val) => {
+          setNotificaciones(val);
+          manejarCambioPermiso('Notificaciones', val);
+        }} />
+        <Permiso label="Modo Oscuro" valor={modoOscuro} onCambiar={(val) => {
+          setModoOscuro(val);
+          manejarCambioPermiso('Modo Oscuro', val);
+        }} />
+      </Seccion>
 
-        <TouchableOpacity style={styles.mapaBtn} onPress={handleOpenMap}>
-          <Ionicons name="map-outline" size={20} color="white" />
-          <Text style={styles.mapaText}> Ver ubicación en el mapa</Text>
-        </TouchableOpacity>
+      {/* Accesos rápidos */}
+      <Seccion titulo="Mis accesos">
+        <Acceso texto="Favoritos" />
+        <Acceso texto="Editar perfil" />
+      </Seccion>
 
-        <TouchableOpacity style={styles.guardarBtn}>
-          <Ionicons name="bookmark-outline" size={20} color="white" />
-          <Text style={styles.guardarText}> Agregar a itinerario</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Botón de cierre de sesión */}
+      <TouchableOpacity style={estilos.botonSalir}>
+        <Text style={estilos.textoBotonSalir}>Cerrar sesión</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+// Componentes reutilizables
+const Seccion = ({ titulo, children }: { titulo: string; children: React.ReactNode }) => (
+  <View style={estilos.seccion}>
+    <Text style={estilos.seccionTitulo}>{titulo}</Text>
+    {children}
+  </View>
+);
+
+const Permiso = ({
+  label,
+  valor,
+  onCambiar,
+}: {
+  label: string;
+  valor: boolean;
+  onCambiar: (val: boolean) => void;
+}) => (
+  <View style={estilos.filaPermiso}>
+    <Text style={estilos.textoPermiso}>{label}</Text>
+    <Switch
+      value={valor}
+      onValueChange={onCambiar}
+      trackColor={{ false: '#D1D5DB', true: colores.primarioClaro }}
+      thumbColor={valor ? colores.primario : '#f4f3f4'}
+    />
+  </View>
+);
+
+const Acceso = ({ texto }: { texto: string }) => (
+  <TouchableOpacity style={estilos.itemAcceso}>
+    <Text style={estilos.textoAcceso}>{texto}</Text>
+    <Text style={estilos.flecha}>›</Text>
+  </TouchableOpacity>
+);
+
+// Estilos
+const estilos = StyleSheet.create({
+  contenedor: {
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    backgroundColor: colores.fondo,
+    alignItems: 'center',
   },
-  imageContainer: {
-    position: 'relative',
-    height: 250,
+  cartaPerfil: {
+    backgroundColor: colores.blanco,
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'space-between',
-    padding: 16,
+  nombre: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: colores.texto,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  imageInfo: {
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    padding: 10,
-    borderRadius: 12,
-  },
-  location: {
-    color: 'white',
-    fontWeight: 'bold',
+  rol: {
     fontSize: 14,
-  },
-  rating: {
-    color: 'white',
+    color: colores.gris,
     marginTop: 4,
   },
-  content: {
+  seccion: {
+    width: '100%',
+    backgroundColor: colores.blanco,
+    borderRadius: 16,
     padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  descripcion: {
-    fontSize: 15,
-    color: '#4B5563',
-    lineHeight: 22,
-    marginBottom: 20,
-  },
-  mapaBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
-    paddingVertical: 12,
-    borderRadius: 10,
-    justifyContent: 'center',
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
-  mapaText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 15,
-    marginLeft: 8,
-  },
-  guardarBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#10B981',
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-  guardarText: {
-    color: 'white',
+  seccionTitulo: {
     fontSize: 16,
     fontWeight: '600',
-    marginLeft: 8,
+    marginBottom: 12,
+    color: colores.texto,
+  },
+  filaPermiso: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  textoPermiso: {
+    fontSize: 15,
+    color: colores.gris,
+  },
+  itemAcceso: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomColor: colores.borde,
+    borderBottomWidth: 1,
+  },
+  textoAcceso: {
+    fontSize: 16,
+    color: colores.texto,
+  },
+  flecha: {
+    fontSize: 20,
+    color: colores.gris,
+  },
+  botonSalir: {
+    marginTop: 30,
+    backgroundColor: colores.primario,
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 14,
+  },
+  textoBotonSalir: {
+    color: colores.blanco,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
-
-export default ActividadModalContent;
- */

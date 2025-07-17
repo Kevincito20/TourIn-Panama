@@ -3,170 +3,124 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  TouchableOpacity,
+  FlatList,
   Dimensions,
+  TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
-const Recomendaciones = () => {
-  const actividades = [
-    {
-      id: 1,
-      titulo: 'Casco Viejo',
-      descripcion: 'Arquitectura colonial',
-      categoria: 'Historia',
-      rating: 4.9,
-      duracion: '2h',
-      precio: 'Gratis',
-      precioColor: '#10B981',
-      icon: 'business-outline',
-      iconColor: '#F59E0B',
-      categoriaColor: '#F59E0B',
-      imagenFondo: '#FEF3C7',
-    },
-    {
-      id: 2,
-      titulo: 'Festival Cinta Costera',
-      descripcion: 'Música y cultura',
-      categoria: 'Evento',
-      rating: 4.7,
-      duracion: 'Todo el día',
-      precio: 'B/.10',
-      precioColor: '#6B7280',
-      icon: 'musical-notes-outline',
-      iconColor: '#8B5CF6',
-      categoriaColor: '#8B5CF6',
-      imagenFondo: '#F3E8FF',
-    },
-    {
-      id: 3,
-      titulo: 'Cerro Ancón',
-      descripcion: 'Vista panorámica',
-      categoria: 'Aventura',
-      rating: 4.6,
-      duracion: '1h',
-      precio: 'Gratis',
-      precioColor: '#10B981',
-      icon: 'musical-notes-outline',
-      iconColor: '#10B981',
-      categoriaColor: '#10B981',
-      imagenFondo: '#D1FAE5',
-    },
-    {
-      id: 4,
-      titulo: 'Mercado de Mariscos',
-      descripcion: 'Gastronomía local',
-      categoria: 'Gastronomía',
-      rating: 4.8,
-      duracion: '1.5h',
-      precio: 'B/.25',
-      precioColor: '#6B7280',
-      icon: 'restaurant-outline',
-      iconColor: '#EF4444',
-      categoriaColor: '#EF4444',
-      imagenFondo: '#FEE2E2',
-    },
-    {
-      id: 5,
-      titulo: 'Biomuseo',
-      descripcion: 'Ciencia y naturaleza',
-      categoria: 'Cultura',
-      rating: 4.5,
-      duracion: '2.5h',
-      precio: 'B/.22',
-      precioColor: '#6B7280',
-      icon: 'leaf-outline',
-      iconColor: '#06B6D4',
-      categoriaColor: '#06B6D4',
-      imagenFondo: '#CFFAFE',
-    },
-  ];
+const actividades = [
+  {
+    id: '1',
+    nombreActividad: 'Tour Histórico',
+    titulo: 'Casco Viejo',
+    rating: 4.9,
+    imagen: 'https://www.freetour.com/images/tours/33927/free-walking-tour-in-casco-viejo-05.jpg',
+    kmCercanos: 1.2,
+  },
+  {
+    id: '2',
+    nombreActividad: 'Mirador',
+    titulo: 'Cerro Ancón',
+    rating: 4.7,
+    imagen: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/e9/f5/b3/ancon-hill.jpg?w=1200&h=-1&s=1',
+    kmCercanos: 3.8,
+  },
+  {
+    id: '3',
+    nombreActividad: 'Biomuseo',
+    titulo: 'Calzada de Amador',
+    rating: 4.8,
+    imagen: 'https://meetingspanama.com/wp-content/uploads/cache/images/Biomuseo-Gehry-Partners-2/Biomuseo-Gehry-Partners-2-306163389.jpg',
+    kmCercanos: 2.5,
+  },
+  {
+    id: '4',
+    nombreActividad: 'Comida Rápida',
+    titulo: 'Wendy´s',
+    rating: 5.0,
+    imagen: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/ac/9f/96/wendy-s-dover-oh.jpg?w=900&h=500&s=1',
+    kmCercanos: 10.5,
+  },
+  {
+    id: '5',
+    nombreActividad: 'Play Land Park',
+    titulo: 'Villa Lucre',
+    rating: 4.8,
+    imagen: 'https://aprende.guatemala.com/wp-content/uploads/2024/07/Play-Land-Park-en-Guatemala-Datos-curiosos-sobre-estos-juegos-mecanicos-1.jpg',
+    kmCercanos: 0.5,
+  },
+];
 
+const Recomendaciones = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Ionicons name="sparkles" size={24} color="#F59E0B" />
-          <Text style={styles.headerTitle}>Recomendaciones</Text>
+          <Text style={styles.headerTitle}>Actividades cerca de ti</Text>
         </View>
         <TouchableOpacity>
           <Text style={styles.verTodas}>Ver todas</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView
+      <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
-        decelerationRate="fast"
-        snapToInterval={width * 0.7 + 16}
+        snapToInterval={width * 0.8 + 16}
         snapToAlignment="start"
-      >
-        {actividades.map((actividad, index) => (
-          <TouchableOpacity key={actividad.id} style={[
-            styles.actividadCard,
-            index === 0 && styles.firstCard,
-            index === actividades.length - 1 && styles.lastCard
-          ]}>
-            {/* Imagen de fondo con ícono */}
-            <View style={[styles.imagenContainer, { backgroundColor: actividad.imagenFondo }]}>
-              <View style={styles.iconContainer}>
-                <Ionicons 
-                  name={actividad.icon as any} 
-                  size={32} 
-                  color={actividad.iconColor} 
-                />
-              </View>
-              
-              {/* Badge de categoría */}
-              <View style={[styles.categoriaBadge, { backgroundColor: actividad.categoriaColor }]}>
-                <Text style={styles.categoriaText}>{actividad.categoria}</Text>
+        decelerationRate="fast"
+        contentContainerStyle={styles.listContent}
+        data={actividades}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity activeOpacity={0.9} style={styles.card}>
+            <ImageBackground
+              source={{ uri: item.imagen }}
+              style={styles.image}
+              imageStyle={styles.imageStyle}
+            >
+              <View style={styles.distanceBadge}>
+                <Ionicons name="location-outline" size={14} color="#fff" />
+                <Text style={styles.badgeText}> {item.kmCercanos} km</Text>
               </View>
 
-              {/* Rating */}
-              <View style={styles.ratingContainer}>
-                <Ionicons name="star" size={16} color="#F59E0B" />
-                <Text style={styles.ratingText}>{actividad.rating}</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.nombreActividad}>{item.nombreActividad}</Text>
+                <Text style={styles.title}>{item.titulo}</Text>
               </View>
-            </View>
 
-            {/* Información de la actividad */}
-            <View style={styles.infoContainer}>
-              <Text style={styles.titulo}>{actividad.titulo}</Text>
-              <Text style={styles.descripcion}>{actividad.descripcion}</Text>
-
-              <View style={styles.detallesContainer}>
-                <View style={styles.duracionContainer}>
-                  <Ionicons name="time-outline" size={14} color="#6B7280" />
-                  <Text style={styles.duracionText}>{actividad.duracion}</Text>
-                </View>
-                
-                <Text style={[styles.precio, { color: actividad.precioColor }]}>
-                  {actividad.precio}
-                </Text>
+              <View style={styles.ratingBadge}>
+                <Ionicons name="star" size={14} color="#FCD34D" />
+                <Text style={styles.badgeText}>{item.rating}</Text>
               </View>
-            </View>
+            </ImageBackground>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 16,
-  },
+container: {
+  backgroundColor: '#F8FAFC',
+  marginTop: 12,
+},
+header: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingHorizontal: 20,
+  marginBottom: 16,
+  paddingTop: 8,
+  backgroundColor: 'transparent', 
+},
+
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -177,118 +131,83 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginLeft: 8,
   },
-  verTodas: {
-    fontSize: 16,
-    color: '#4F46E5',
-    fontWeight: '500',
-  },
-  scrollContainer: {
+verTodas: {
+  fontSize: 14,
+  color: '#4F46E5',
+  fontWeight: '500',
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  borderRadius: 12,
+  backgroundColor: '#EEF2FF',
+},
+  listContent: {
     paddingLeft: 20,
   },
-  actividadCard: {
-    width: width * 0.7,
-    backgroundColor: 'white',
+  card: {
+    width: width * 0.8,
+    height: 150,
     borderRadius: 16,
+    overflow: 'hidden',
     marginRight: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  firstCard: {
-    // marginLeft: 20, // Ya se maneja con paddingLeft del ScrollView
-  },
-  lastCard: {
-    marginRight: 20,
-  },
-  imagenContainer: {
-    height: 120,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -16 }, { translateY: -16 }],
-  },
-  categoriaBadge: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  categoriaText: {
-    fontSize: 12,
-    color: 'white',
-    fontWeight: '500',
-  },
-  ratingContainer: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  ratingText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginLeft: 2,
-  },
-  infoContainer: {
-    padding: 16,
-  },
-  titulo: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  descripcion: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 12,
-  },
-  detallesContainer: {
-    flexDirection: 'row',
+  image: {
+    flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
-  duracionContainer: {
+  imageStyle: {
+    borderRadius: 16,
+  },
+  distanceBadge: {
+    marginTop: 10,
+    marginLeft: 10,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+  titleContainer: {
+    position: 'absolute',
+    left: 10,
+    bottom: 10,
+  },
+nombreActividad: {
+  color: 'white',
+  fontSize: 18, 
+  fontWeight: 'bold',
+  marginBottom: 2,
+  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+  textShadowOffset: { width: 0, height: 1 },
+  textShadowRadius: 2,
+},
+title: {
+  color: 'white',
+  fontSize: 14, 
+  fontWeight: '500',
+  textShadowColor: 'rgba(0, 0, 0, 0.5)',
+  textShadowOffset: { width: 0, height: 1 },
+  textShadowRadius: 2,
+},
+
+  ratingBadge: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  duracionText: {
-    fontSize: 14,
-    color: '#6B7280',
+  badgeText: {
+    color: 'white',
+    fontSize: 12,
     marginLeft: 4,
   },
-  precio: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
+
 });
 
 export default Recomendaciones;
