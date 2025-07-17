@@ -1,64 +1,85 @@
 import React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator, View, Text } from 'react-native';
 import ListaActividades from '@/components/ui/cardActividades';
-import { ActividadesProps } from '../types/Actividades';
-import { useActividadesPorCategoria } from '../services/filtrosCategoria';
+import { useState } from 'react';
 
-interface CardsActividadesProps {
-  openModal: (actividad: ActividadesProps) => void;
-  categoriaId: number | null;
-}
+export function CardsActividades() {
 
-export function CardsActividades({ openModal, categoriaId }: CardsActividadesProps) {
-  const { actividades, loading, error } = useActividadesPorCategoria(
-    categoriaId ? categoriaId.toString() : null
-  );
+    const [modalVisible, setModalVisible] = useState(false);
+    const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
 
-  console.log('Actividades recibidas:', actividades);  
+    const actividades = [
+        {
+            id: '1',
+            titulo: 'Tour al Canal',
+            ubicacion: 'Ciudad de Panamá',
+            rating: 4.7,
+            imagen: 'https://elfarodelcanal.com/wp-content/uploads/2022/09/2022-07-01-003-ElCanaldePanama-108-operacion-2.jpg',
+            onPress: () => console.log('Ir al Tour al Canal'),
+        },
+        {
+            id: '2',
+            titulo: 'Isla Taboga',
+            ubicacion: 'Archipiélago de las Perlas',
+            rating: 4.9,
+            imagen: 'https://th.bing.com/th/id/R.ef82c38849ac1e843425a5c659d3a39b?rik=%2bz%2fJC5dtBdC6LA&pid=ImgRaw&r=0',
+            onPress: () => console.log('Ir a Isla Taboga'),
+        },
+        {
+            id: '3',
+            titulo: 'Cerro Ancón',
+            ubicacion: 'Ciudad de Panamá',
+            rating: 4.5,
+            imagen: 'https://th.bing.com/th/id/R.ef82c38849ac1e843425a5c659d3a39b?rik=%2bz%2fJC5dtBdC6LA&pid=ImgRaw&r=0',
+            onPress: () => console.log('Ir a Cerro Ancón'),
+        },
+        {
+            id: '4',
+            titulo: 'Biomuseo',
+            ubicacion: 'Calzada de Amador',
+            rating: 4.6,
+            imagen: 'https://elfarodelcanal.com/wp-content/uploads/2022/09/2022-07-01-003-ElCanaldePanama-108-operacion-2.jpg',
+            onPress: () => console.log('Ir al Biomuseo'),
+        },
+        {
+            id: '5',
+            titulo: 'Casco Antiguo',
+            ubicacion: 'Ciudad de Panamá',
+            rating: 4.8,
+            imagen: 'https://elfarodelcanal.com/wp-content/uploads/2022/09/2022-07-01-003-ElCanaldePanama-108-operacion-2.jpg',
+            onPress: () => console.log('Ir al Casco Antiguo'),
+        },
+        {
+            id: '6',
+            titulo: 'Isla Contadora',
+            ubicacion: 'Archipiélago de las Perlas',
+            rating: 4.9,
+            imagen: 'https://th.bing.com/th/id/R.ef82c38849ac1e843425a5c659d3a39b?rik=%2bz%2fJC5dtBdC6LA&pid=ImgRaw&r=0',
+            onPress: () => console.log('Ir a Isla Contadora'),
+        },
+    ];
 
-  if (loading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+            <FlatList
+                data={actividades}
+                key={'2col'}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <ListaActividades
+                    id={item.id}
+                        categoria="Actividades"
+                        titulo={item.titulo}
+                        ubicacion={item.ubicacion}
+                        rating={item.rating}
+                        imagen={item.imagen}
+                        onPress={item.onPress}
+                    />
+                )}
+                contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 20 }}
+                // columnWrapperStyle={{ justifyContent: 'space-between' }}
+                showsVerticalScrollIndicator={true}
+            />
     );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.loader}>
-        <Text style={{ color: 'red' }}>{error}</Text>
-      </View>
-    );
-  }
-
-  if (actividades.length === 0) {
-    return (
-      <View style={styles.loader}>
-        <Text>No hay actividades para esta categoría.</Text>
-      </View>
-    );
-  }
-
-  return (
-    <FlatList
-      data={actividades}
-      key={'2col'}
-      keyExtractor={(item, index) => item.id?.toString() ?? item.encabezado ?? index.toString()}
-      renderItem={({ item }) => (
-        <ListaActividades
-          encabezado={item.encabezado}
-          foto_url={item.foto_url}
-          rating={item.rating}
-          onPress={() => openModal(item)}
-        />
-      )}
-      numColumns={2}
-      contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 20 }}
-      columnWrapperStyle={{ justifyContent: 'space-between' }}
-      showsVerticalScrollIndicator={false}
-    />
-  );
 }
 
 

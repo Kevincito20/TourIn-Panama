@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import Filtros from '@/components/actividades/filtros';
+// app/(tabs)/ScreenActividades.tsx
+import React from 'react';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
+import HeaderSeccionActividades from '@/components/actividades/seccion-actividades';
 import { CardsActividades } from '@/components/actividades/seccion-cardActividades';
 import { useModal } from '@/hooks/useActividades';
 import ScreenModal from '../modales/ScreenModal';
