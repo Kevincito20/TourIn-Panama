@@ -32,5 +32,6 @@
         <data android:scheme="exp+tourin-panama"/>
       </intent-filter>
     </activity>
+    <uses-library android:name="org.apache.http.legacy" android:required="false"/>
   </application>
 </manifest>
