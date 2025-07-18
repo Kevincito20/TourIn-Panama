@@ -34,12 +34,10 @@
         }
       ],
       [
-        // highlight-start
         "@rnmapbox/maps",
         {
           "RNMapboxMapsDownloadToken": "sk.eyJ1IjoidmljdG9yc3h4eHAiLCJhIjoiY21kMTltMmU0MGNsYjJscTM5NmFlNTYxMSJ9.9nmqIMici_9NeWUlP-nxlg"
         }
-        // highlight-end
       ]
     ],
     "experiments": {
@@ -48,8 +46,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "cf4187b1-211f-4f83-ac68-f1794dcc8eae"
+        "projectId": "348484c3-3eeb-4849-8980-5924f5f8e0dc"
       }
     },
+    "owner": "kevin_2003"
   }
 }
