@@ -9,14 +9,31 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "config":{
+        "googleMapsApiKey":"AIzaSyChaSCcvas9UNfnvyJRW1sF5MiPRcqzH78"
+        },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Necesitamos tu ubicación para mostrar tu posición en el mapa."
+      },
       "supportsTablet": true
     },
     "android": {
+      "config":{
+        "googleMaps":{
+          "apiKey":"AIzaSyChaSCcvas9UNfnvyJRW1sF5MiPRcqzH78"
+        }
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.electricforce.TourInPanama"
     },
     "web": {
       "bundler": "metro",
@@ -24,11 +41,32 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion"
+        }
+      ],
+        [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permitir que TourIn-Panama utilice su ubicación."
+        }
+      ],
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": [
+            "Camera",
+            "Microphone"
+          ]
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/logo_Tour.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
