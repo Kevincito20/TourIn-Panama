@@ -6,7 +6,7 @@ export default function RootLayout() {
     <>
       <StatusBar style="light" />
       <Stack>
-
+        {/* Pantallas de autenticación */}
         <Stack.Screen 
           name="(autenticacion)" 
           options={{ 
@@ -14,14 +14,25 @@ export default function RootLayout() {
           }} 
         />
         
-
+        {/* Pantallas principales con tabs */}
         <Stack.Screen 
           name="(tabs)" 
           options={{ 
             headerShown: false
           }} 
         />
+
+       
+        
       </Stack>
     </>
   );
 }
+
+/* 
+        <Stack.Screen 
+          name="pantalla_mapa" 
+          options={{ 
+            headerShown: false
+          }} 
+        />*/
