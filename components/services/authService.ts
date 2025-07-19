@@ -32,3 +32,39 @@ export const loginUsuario = async (datos: propLogin): Promise<boolean> => {
     return false;
   }
 };
+
+
+/* // components/services/authService.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export interface propLogin {
+  email: string;
+  password: string;
+}
+
+export const loginUsuario = async ({ email, password }: propLogin): Promise<boolean> => {
+  try {
+    const response = await fetch('https://tu-api.com/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+
+    if (data?.token) {
+      await AsyncStorage.setItem('userToken', data.token); // guarda token real
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    return false;
+  }
+}; */
+

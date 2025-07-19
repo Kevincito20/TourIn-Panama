@@ -121,8 +121,10 @@ export default function FormularioLogin() {
               icon={<Ionicons name="logo-google" size={18} color="#000" />}
               style={{ marginTop: 15 }}
             />
+
           </View>
 
+      
           <View>
             <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
               ¿No tienes cuenta?{' '}

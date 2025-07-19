@@ -1,0 +1,16 @@
+export const puntosDeInteres = [
+    { id: 'chiriqui', coord: [-82.4410, 8.4378] },
+    { id: 'cocle', coord: [-80.4273, 8.6664] },
+    { id: 'bocas', coord: [-82.2437, 9.3408] },
+    { id: 'colon', coord: [-79.9009, 9.3547] },
+    { id: 'darien', coord: [-77.7173, 7.9336] },
+    { id: 'herrera', coord: [-80.4033, 7.9573] },
+    { id: 'lossantos', coord: [-80.4592, 7.5207] },
+    { id: 'panama', coord: [-79.5199, 8.9824] },
+    { id: 'panamaoeste', coord: [-79.9500, 8.7500] },
+    { id: 'veraguas', coord: [-81.1327, 8.1154] },
+    { id: 'gunayala', coord: [-78.8500, 9.2500] },
+    { id: 'embera', coord: [-78.1800, 7.8500] },
+    { id: 'ngabe', coord: [-81.8600, 8.7200] },
+    // { id: 'naso', coord: [-82.5200, 9.0800] },
+];

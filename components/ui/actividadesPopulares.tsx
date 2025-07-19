@@ -1,4 +1,3 @@
-// components/ui/actividadesPopulares.tsx
 import React from 'react';
 import {
   View,
@@ -14,33 +13,35 @@ import { ActividadesProps } from '../types/Actividades';
 const { width, height } = Dimensions.get('window');
 
 export default function CarruselActividades({
-  titulo,
-  descripcion,
-  ubicacion,
+  encabezado,
+  descp,
+  latitud,
+  longitud,
   rating,
-  imagen,
+  foto_url,
   onPress,
 }: ActividadesProps) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={1}>
-      <ImageBackground source={{ uri: imagen }} style={styles.imagen} imageStyle={{ borderRadius: 0 }}>
+      <ImageBackground source={{ uri: foto_url }} style={styles.imagen} imageStyle={{ borderRadius: 0 }}>
         
-        {/* Capa de opacidad sobre la imagen */}
         <View style={styles.darkOverlay} />
 
         <View style={styles.overlay}>
-          <Text style={styles.titulo}>{titulo}</Text>
+          <Text style={styles.titulo}>{encabezado}</Text>
 
           <Text
             style={styles.descripcion}
             numberOfLines={3}
             ellipsizeMode="tail"
           >
-            {descripcion}
+            {descp}
           </Text>
 
           <View style={styles.infoRow}>
-            <Text style={styles.ubicacion}>{ubicacion}</Text>
+            <Text style={styles.ubicacion}>
+              Lat: {latitud ?? '---'} / Lon: {longitud ?? '---'}
+            </Text>
             <Text style={styles.rating}>⭐ {rating.toFixed(1)}</Text>
           </View>
         </View>
@@ -50,7 +51,6 @@ export default function CarruselActividades({
   );
 }
 
-
 const styles = StyleSheet.create({
   card: {
     width: width,
@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
   },
   
   darkOverlay: {
-  ...StyleSheet.absoluteFillObject,
-  backgroundColor: 'rgba(0, 0, 0, 0.4)', 
-  borderRadius: 0,
-},
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', 
+    borderRadius: 0,
+  },
 
   imagen: {
     flex: 1,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   ubicacion: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    padding:8,
+    padding: 8,
     borderRadius: 8,
     fontSize: 16,
     color: '#ccc',
@@ -100,12 +100,10 @@ const styles = StyleSheet.create({
   },
   rating: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    padding:8,
+    padding: 8,
     borderRadius: 8,
     fontSize: 16,
     color: '#ccc',
     flexShrink: 1,
   },
 });
-
-
