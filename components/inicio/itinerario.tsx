@@ -100,7 +100,7 @@ const Itinerario = () => {
 
       <TouchableOpacity
         style={styles.verCompleto}
-        onPress={() => router.push('./autenticacion/pantalla_iniciar_sesion')}
+        onPress={() => router.push('/modales/ScreenRadio')}
       >
         <Text style={styles.verCompletoText}>Ver itinerario completo</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />

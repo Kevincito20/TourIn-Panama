@@ -1,4 +1,4 @@
-package com.electricforce.TourInPanama
+package com.anonymous.TourInPanama
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

@@ -5,18 +5,17 @@ import Recomendaciones from '@/components/inicio/recomendaciones';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { HeaderInicio } from '../../components/inicio/header-inicio';
+import InicioScreen from '@/components/inicio/Screen-header';
 
 
 export default function PantallaHome() {
-  const handleMenuPress = () => {
-    alert('Menú presionado');
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <HeaderInicio userName="Javier" onMenuPress={handleMenuPress} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{backgroundColor: 'white'}}>
+        
+        <InicioScreen />
+        
 
         <View style={styles.section}>
           <Recomendaciones />
@@ -42,9 +41,11 @@ export default function PantallaHome() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '#000000ff',
   },
   section: {
-    paddingTop: 1,
+    paddingTop: 0,
   },
+
+  
 });

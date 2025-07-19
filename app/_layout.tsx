@@ -4,7 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 export default function RootLayout() {
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar 
+      backgroundColor='black'
+      style="light"
+
+      />
       <Stack>
         {/* Pantallas de autenticación */}
         <Stack.Screen 
@@ -22,8 +26,13 @@ export default function RootLayout() {
           }} 
         />
 
-       
-        
+        <Stack.Screen
+        name='modales'
+        options={{
+          headerShown: false,
+        }}
+        />
+ 
       </Stack>
     </>
   );

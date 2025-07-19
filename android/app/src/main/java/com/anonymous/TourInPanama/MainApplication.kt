@@ -1,4 +1,4 @@
-package com.electricforce.TourInPanama
+package com.anonymous.TourInPanama
 
 import android.app.Application
 import android.content.res.Configuration

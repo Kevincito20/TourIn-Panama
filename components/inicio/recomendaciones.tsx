@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,61 +7,65 @@ import {
   Dimensions,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { fetchActividadesCercanas } from '../services/ActividadesCercanas';
 
 const { width } = Dimensions.get('window');
 
-const actividades = [
-  {
-    id: '1',
-    nombreActividad: 'Tour Histórico',
-    titulo: 'Casco Viejo',
-    rating: 4.9,
-    imagen: 'https://www.freetour.com/images/tours/33927/free-walking-tour-in-casco-viejo-05.jpg',
-    kmCercanos: 1.2,
-  },
-  {
-    id: '2',
-    nombreActividad: 'Mirador',
-    titulo: 'Cerro Ancón',
-    rating: 4.7,
-    imagen: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/e9/f5/b3/ancon-hill.jpg?w=1200&h=-1&s=1',
-    kmCercanos: 3.8,
-  },
-  {
-    id: '3',
-    nombreActividad: 'Biomuseo',
-    titulo: 'Calzada de Amador',
-    rating: 4.8,
-    imagen: 'https://meetingspanama.com/wp-content/uploads/cache/images/Biomuseo-Gehry-Partners-2/Biomuseo-Gehry-Partners-2-306163389.jpg',
-    kmCercanos: 2.5,
-  },
-  {
-    id: '4',
-    nombreActividad: 'Comida Rápida',
-    titulo: 'Wendy´s',
-    rating: 5.0,
-    imagen: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/ac/9f/96/wendy-s-dover-oh.jpg?w=900&h=500&s=1',
-    kmCercanos: 10.5,
-  },
-  {
-    id: '5',
-    nombreActividad: 'Play Land Park',
-    titulo: 'Villa Lucre',
-    rating: 4.8,
-    imagen: 'https://aprende.guatemala.com/wp-content/uploads/2024/07/Play-Land-Park-en-Guatemala-Datos-curiosos-sobre-estos-juegos-mecanicos-1.jpg',
-    kmCercanos: 0.5,
-  },
-];
+type Actividad = {
+  id: number;
+  encabezado: string;
+  descp: string;
+  rating: number;
+  latitud: number;
+  longitud: number;
+  distancia_m: number;
+  foto_url: string;
+  id_cat: number;
+};
+
 
 const Recomendaciones = () => {
+  const [actividades, setActividades] = useState<Actividad[]>([]);
+  const [loading, setLoading] = useState(true);
+  const lat = 8.935871;
+  const lon = -79.548104;
+  const distancia = 10000; 
+
+  useEffect(() => {
+    async function cargarActividades() {
+      setLoading(true);
+      const datos = await fetchActividadesCercanas(lat, lon, distancia);
+      setActividades(datos);
+      setLoading(false);
+    }
+
+    cargarActividades();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#4F46E5" />
+      </View>
+    );
+  }
+
+  if (actividades.length === 0) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: '#666' }}>No se encontraron actividades cercanas.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Ionicons name="sparkles" size={24} color="#F59E0B" />
-          <Text style={styles.headerTitle}>Actividades cerca de ti</Text>
+          <Text style={styles.headerTitle}>Actividades cerca de ti </Text>
         </View>
         <TouchableOpacity>
           <Text style={styles.verTodas}>Ver todas</Text>
@@ -76,22 +80,21 @@ const Recomendaciones = () => {
         decelerationRate="fast"
         contentContainerStyle={styles.listContent}
         data={actividades}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity activeOpacity={0.9} style={styles.card}>
             <ImageBackground
-              source={{ uri: item.imagen }}
+              source={{ uri: item.foto_url }}
               style={styles.image}
               imageStyle={styles.imageStyle}
             >
               <View style={styles.distanceBadge}>
                 <Ionicons name="location-outline" size={14} color="#fff" />
-                <Text style={styles.badgeText}> {item.kmCercanos} km</Text>
+                <Text style={styles.badgeText}> {(item.distancia_m / 1000).toFixed(1)} km</Text>
               </View>
 
               <View style={styles.titleContainer}>
-                <Text style={styles.nombreActividad}>{item.nombreActividad}</Text>
-                <Text style={styles.title}>{item.titulo}</Text>
+                <Text style={styles.nombreActividad}>{item.encabezado}</Text>
               </View>
 
               <View style={styles.ratingBadge}>
@@ -107,19 +110,20 @@ const Recomendaciones = () => {
 };
 
 const styles = StyleSheet.create({
-container: {
-  backgroundColor: '#F8FAFC',
-  marginTop: 12,
-},
-header: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingHorizontal: 20,
-  marginBottom: 16,
-  paddingTop: 8,
-  backgroundColor: 'transparent', 
-},
+  container: {
+    backgroundColor: '#F8FAFC',
+    marginTop: 12,
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 16,
+    paddingTop: 8,
+    backgroundColor: 'transparent',
+  },
 
   headerLeft: {
     flexDirection: 'row',
@@ -131,15 +135,15 @@ header: {
     color: '#1F2937',
     marginLeft: 8,
   },
-verTodas: {
-  fontSize: 14,
-  color: '#4F46E5',
-  fontWeight: '500',
-  paddingVertical: 6,
-  paddingHorizontal: 12,
-  borderRadius: 12,
-  backgroundColor: '#EEF2FF',
-},
+  verTodas: {
+    fontSize: 14,
+    color: '#4F46E5',
+    fontWeight: '500',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: '#EEF2FF',
+  },
   listContent: {
     paddingLeft: 20,
   },
@@ -173,23 +177,15 @@ verTodas: {
     left: 10,
     bottom: 10,
   },
-nombreActividad: {
-  color: 'white',
-  fontSize: 18, 
-  fontWeight: 'bold',
-  marginBottom: 2,
-  textShadowColor: 'rgba(0, 0, 0, 0.5)',
-  textShadowOffset: { width: 0, height: 1 },
-  textShadowRadius: 2,
-},
-title: {
-  color: 'white',
-  fontSize: 14, 
-  fontWeight: '500',
-  textShadowColor: 'rgba(0, 0, 0, 0.5)',
-  textShadowOffset: { width: 0, height: 1 },
-  textShadowRadius: 2,
-},
+  nombreActividad: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
 
   ratingBadge: {
     position: 'absolute',
@@ -207,7 +203,6 @@ title: {
     fontSize: 12,
     marginLeft: 4,
   },
-
 });
 
 export default Recomendaciones;
