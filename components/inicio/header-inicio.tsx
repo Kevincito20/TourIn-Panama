@@ -8,7 +8,7 @@ interface HeaderInicioProps {
 export const HeaderInicio: React.FC<HeaderInicioProps> = ({ onMenuPress }) => {
   return (
     <View style={styles.header}>
-      <Text style={styles.appName}>TourIn-Panama</Text>
+      <Text style={styles.appName}>TourIn-Panama </Text>
 
       <TouchableOpacity
         onPress={onMenuPress}

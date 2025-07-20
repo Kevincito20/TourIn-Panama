@@ -8,10 +8,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router'; 
+import { useRouter } from 'expo-router';
+import { colors } from '@/constants/Colors';
 
 const Itinerario = () => {
-  const router = useRouter(); 
+  const router = useRouter();
 
   const actividades = [
     {
@@ -21,7 +22,7 @@ const Itinerario = () => {
       horario: '10:00 AM - 12:00 PM',
       ubicacion: 'Plaza Independencia',
       icon: 'business-outline',
-      iconColor: '#6366F1',
+      iconColor: colors.primaryBlue,
       estado: 'Ahora',
     },
     {
@@ -31,7 +32,7 @@ const Itinerario = () => {
       horario: '01:00 PM',
       ubicacion: 'Cinta Costera',
       icon: 'restaurant-outline',
-      iconColor: '#EF4444',
+      iconColor: colors.warmOrange,
       estado: null,
     },
     {
@@ -41,7 +42,7 @@ const Itinerario = () => {
       horario: '03:30 PM',
       ubicacion: 'Amador',
       icon: 'flower-outline',
-      iconColor: '#F97316',
+      iconColor: colors.warmYellow,
       estado: null,
     },
   ];
@@ -50,11 +51,11 @@ const Itinerario = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Ionicons name="calendar-outline" size={24} color="#4F46E5" />
-          <Text style={styles.headerTitle}>Tu itinerario</Text>
+          <Ionicons name="calendar-outline" size={24} color={colors.primaryBlue} />
+          <Text style={styles.headerTitle}>Itinerario</Text>
         </View>
         <View style={styles.actividadesBadge}>
-          <Text style={styles.actividadesText}>5 actividades</Text>
+          <Text style={styles.actividadesText}>{actividades.length} actividades</Text>
         </View>
       </View>
 
@@ -63,12 +64,13 @@ const Itinerario = () => {
           <View key={actividad.id} style={styles.actividadContainer}>
             <View style={styles.actividadCard}>
               <View style={styles.iconContainer}>
-                <View style={[styles.iconBackground, { backgroundColor: actividad.iconColor + '20' }]}>
-                  <Ionicons
-                    name={actividad.icon as any}
-                    size={24}
-                    color={actividad.iconColor}
-                  />
+                <View
+                  style={[
+                    styles.iconBackground,
+                    { backgroundColor: actividad.iconColor + '22' },
+                  ]}
+                >
+                  <Ionicons name={actividad.icon as any} size={24} color={actividad.iconColor} />
                 </View>
               </View>
 
@@ -83,7 +85,7 @@ const Itinerario = () => {
                 </View>
 
                 <View style={styles.detalleContainer}>
-                  <Ionicons name="time-outline" size={14} color="#6B7280" />
+                  <Ionicons name="time-outline" size={14} color={colors.textSecondary} />
                   <Text style={styles.detalleText}>
                     {actividad.horario} • {actividad.ubicacion}
                   </Text>
@@ -100,9 +102,9 @@ const Itinerario = () => {
 
       <TouchableOpacity
         style={styles.verCompleto}
-        onPress={() => router.push('/modales/ScreenRadio')}
+        onPress={() => router.push('/modales/ScreenItinerario')}
       >
-        <Text style={styles.verCompletoText}>Ver itinerario completo</Text>
+        <Text style={styles.verCompletoText}>Ver formulario completo</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
     </SafeAreaView>
@@ -112,7 +114,7 @@ const Itinerario = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -130,19 +132,19 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontWeight: '700',
+    color: colors.textPrimary,
     marginLeft: 8,
   },
   actividadesBadge: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: colors.lightBlue + '22',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
   },
   actividadesText: {
     fontSize: 12,
-    color: '#4F46E5',
+    color: colors.primaryBlue,
     fontWeight: '500',
   },
   content: {
@@ -156,17 +158,14 @@ const styles = StyleSheet.create({
   actividadCard: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 8,
+    marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 3,
   },
   iconContainer: {
     marginRight: 12,
@@ -190,14 +189,15 @@ const styles = StyleSheet.create({
   actividadTitulo: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.textPrimary,
     flex: 1,
   },
   estadoBadge: {
-    backgroundColor: '#4F8FF7',
-    paddingHorizontal: 12,
+    backgroundColor: colors.primaryBlue,
+    paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
+    marginLeft: 8,
   },
   estadoText: {
     fontSize: 12,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   detalleText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.textSecondary,
     marginLeft: 4,
   },
   conectorLinea: {
@@ -218,17 +218,17 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: '#E5E7EB',
     marginLeft: 43,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   verCompleto: {
-    backgroundColor: '#4F8FF7',
+    backgroundColor: colors.primaryBlue,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
     marginHorizontal: 20,
     marginVertical: 20,
-    borderRadius: 12,
+    borderRadius: 14,
   },
   verCompletoText: {
     color: 'white',

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+/* import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,7 +39,7 @@ export default function IndexPage() {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          {/* Logo o icono de la app */}
+       
           <View style={styles.logoContainer}>
             <Text style={styles.logo}>🏝️</Text>
             <Text style={styles.logoText}>PANAMA</Text>
@@ -48,7 +48,7 @@ export default function IndexPage() {
           <Text style={styles.title}>Tour in Panama</Text>
           <Text style={styles.subtitle}>Descubre la belleza de Panamá</Text>
           
-          {/* Indicador de carga */}
+         
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#FFFFFF" />
             <Text style={styles.loadingText}>Iniciando aplicación...</Text>
@@ -60,7 +60,7 @@ export default function IndexPage() {
     );
   }
 
-  // Esta parte normalmente no se verá debido a las redirecciones
+  
   return null;
 }
 
@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
   },
-});
+}); */

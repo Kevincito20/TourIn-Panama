@@ -8,18 +8,26 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#000000', // fondo negro
+
+          backgroundColor: '#000000',
           height: 65,
-          borderTopWidth: 0,          
+          borderTopWidth: 0,
+    
+          borderRadius: 15,
         },
-        tabBarActiveTintColor: '#ffffff',     // ícono activo blanco
-        tabBarInactiveTintColor: '#888888',   // ícono inactivo gris
+        tabBarActiveTintColor: '#ffffff',
+        tabBarInactiveTintColor: '#888888',
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',
         },
+        tabBarItemStyle: {
+          justifyContent: 'center', 
+          alignItems: 'center',    
+        },
       }}
     >
+
       <Tabs.Screen
         name="pantalla_home"
         options={{
@@ -31,7 +39,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="pantalla_mapa_copy"
+        name="pantalla_mapa copy"
         options={{
           title: 'Actividades',
           tabBarIcon: ({ color }) => (

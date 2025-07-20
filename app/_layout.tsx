@@ -5,12 +5,12 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar 
-      backgroundColor='black'
-      style="light"
+      backgroundColor='#ffffffff'
+      style='dark'
 
       />
       <Stack>
-        {/* Pantallas de autenticación */}
+        
         <Stack.Screen 
           name="(autenticacion)" 
           options={{ 
@@ -18,7 +18,7 @@ export default function RootLayout() {
           }} 
         />
         
-        {/* Pantallas principales con tabs */}
+  
         <Stack.Screen 
           name="(tabs)" 
           options={{ 
