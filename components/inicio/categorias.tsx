@@ -7,6 +7,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { colors } from '@/constants/Colors';
 
 export interface ActivityItem {
   id: string;
@@ -113,12 +114,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 24,
     marginTop: 50,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1F2937',
+    color: colors.textPrimary,
     marginBottom: 12,
   },
   grid: {
@@ -146,10 +147,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+    color: colors.iconPrimary,
   },
   label: {
     fontSize: 14,
     fontWeight: '700',
-    color: 'white',
+    color: colors.white,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
 });

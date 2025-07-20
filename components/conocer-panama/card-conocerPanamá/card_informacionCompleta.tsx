@@ -23,6 +23,7 @@ export function CardsInformacionPanama({ provinciaSeleccionada }: Props) {
           key={item.id}
           titulo={item.titulo}
           descripcion={item.descripcion}
+          informacion={item.informacion}
           imagen={item.imagen}
           provincia={item.provincia}
           categoria={item.categoria}

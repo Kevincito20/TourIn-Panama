@@ -22,6 +22,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 //prueba
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from "expo-status-bar";
 
 //prueba
 // Tipo de datos
@@ -201,7 +202,7 @@ export default function Map() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+
 <View style={styles.container}>
       {origin ? (
         <GestureHandlerRootView>
@@ -289,9 +290,10 @@ export default function Map() {
       ) : (
         <Text style={styles.texto}>Obteniendo ubicación...</Text>
       )}
+      <StatusBar style="dark" />
+
     </View>
-    </SafeAreaView>
-    
+
   );
 }
 
