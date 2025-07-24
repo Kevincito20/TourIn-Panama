@@ -1,4 +1,4 @@
-// COMPONENTES DE DISEÑO REACT 
+/*// COMPONENTES DE DISEÑO REACT 
 //useCallback
 import { useMemo, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
@@ -36,14 +36,14 @@ export default function ScreenConocerPanama() {
     <View style={styles.page}>
       <View style={styles.Mapcontainer}>
 
-        {/*ESTILOS DEL MAPA */}
+        {/*ESTILOS DEL MAPA 
         <MapboxGL.MapView
           style={styles.map}
           zoomEnabled={true}
           rotateEnabled={true}
           styleURL='mapbox://styles/mapbox/streets-v12'
         >
-          {/* CONFIGURACION DE LA CAMARA. OSEA PERSPECTIVA DEL MAPA  */}
+          {/* CONFIGURACION DE LA CAMARA. OSEA PERSPECTIVA DEL MAPA  
 
           <MapboxGL.Camera
             centerCoordinate={coordenadaSeleccionada}
@@ -52,7 +52,7 @@ export default function ScreenConocerPanama() {
             animationDuration={1500}
           />
 
-          {/* CREACION DE PUNTOS DE INTEREZ DEL MAPA. */}
+          {/* CREACION DE PUNTOS DE INTEREZ DEL MAPA. 
 
           {puntosDeInteres.map(({ id, coord }) => (
             <MapboxGL.PointAnnotation key={id} id={id} coordinate={coord}
@@ -77,17 +77,17 @@ export default function ScreenConocerPanama() {
           ))}
 
 
-          {/* EXTRACCION DE DATOS DEL GEOJSON */}
+          {/* EXTRACCION DE DATOS DEL GEOJSON 
           <MapboxGL.ShapeSource id="provincias" shape={provinciasPanamaLimpio}>
 
 
-            {/* VAINA DEL FONDO NO SE COMO SE TRADUCE AL ESPAÑOL */}
+            {/* VAINA DEL FONDO NO SE COMO SE TRADUCE AL ESPAÑOL 
             <MapboxGL.FillLayer
               id="fill"
               style={{ fillColor: 'rgba(255, 255, 255, 0)' }}
             />
 
-            {/* LINEAS QUE DIVIDEN LAS PROVINCIAS */}
+            {/* LINEAS QUE DIVIDEN LAS PROVINCIAS 
 
             <MapboxGL.LineLayer
               id="lines"
@@ -131,7 +131,7 @@ export default function ScreenConocerPanama() {
       >
         <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
 
-          {/* <CardsConocerPanama provinciaSeleccionada={provinciaSeleccionada} />  */}
+          {/* <CardsConocerPanama provinciaSeleccionada={provinciaSeleccionada} />  
 
 
           <CardsInformacionPanama provinciaSeleccionada={provinciaSeleccionada} />
@@ -172,3 +172,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+*/

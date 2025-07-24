@@ -5,8 +5,8 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar 
-      backgroundColor='#ffffffff'
-      style='dark'
+      backgroundColor='black'
+      style="light"
 
       />
       <Stack>
@@ -32,6 +32,7 @@ export default function RootLayout() {
           headerShown: false,
         }}
         />
+  
  
       </Stack>
     </>

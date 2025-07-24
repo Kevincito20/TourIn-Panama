@@ -1,9 +1,9 @@
 
-import { Ionicons } from "@expo/vector-icons"
-import { useRouter } from "expo-router"
-import { useState } from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
-
+import { Ionicons } from "@expo/vector-icons";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 type PropActivity = {
   id: number
   encabezado: string
@@ -56,7 +56,7 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
       mapRef.current?.animateCamera(panamaView, { duration: 1000 })
       bottomSheetRef.current?.snapToIndex(0)
       router.push({
-        pathname: "/pantalla_mapa copy",
+        pathname: "/pantalla_mapa_copy",
         params: {
           lat: String(marker.latitud),
           lng: String(marker.longitud),
@@ -69,7 +69,7 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
       })
       bottomSheetRef.current?.snapToIndex(0)
       router.push({
-        pathname: "/pantalla_mapa copy",
+        pathname: "/pantalla_mapa_copy",
         params: {
           lat: String(0),
           lng: String(0),
@@ -84,7 +84,7 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
       seguir(true)
       bottomSheetRef.current?.snapToIndex(0)
       router.push({
-        pathname: "/pantalla_mapa copy",
+        pathname: "/pantalla_mapa_copy",
         params: {
           lat: String(marker.latitud),
           lng: String(marker.longitud),
@@ -95,7 +95,7 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
       seguir(false)
       bottomSheetRef.current?.snapToIndex(0)
       router.push({
-        pathname: "/pantalla_mapa copy",
+        pathname: "/pantalla_mapa_copy",
         params: {
           lat: String(0),
           lng: String(0),
@@ -103,7 +103,12 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
       })
     }
   }
-
+//navigate-outline
+/*<Ionicons
+                    name={siguiendoRuta ? "close" : "navigate-outline"}
+                    size={20}
+                    color={siguiendoRuta ? "#fff" : "#2563eb"}
+                  />*/
   return (
     <>
       {!mostrarSoloCuerpo && (
@@ -117,11 +122,8 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
             >
               <View style={styles.buttonContent}>
                 <View style={[styles.iconContainer, siguiendoRuta && styles.activeIconContainer]}>
-                  <Ionicons
-                    name={siguiendoRuta ? "close" : "navigate-outline"}
-                    size={20}
-                    color={siguiendoRuta ? "#fff" : "#2563eb"}
-                  />
+                  <MaterialCommunityIcons name="sign-direction" size={24} color="white" />
+                  
                 </View>
                 <Text style={[styles.buttonText, siguiendoRuta && styles.activeButtonText]}>
                   {siguiendoRuta ? "Cancelar" : "Indicaciones"}
@@ -140,7 +142,7 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
                   <Ionicons
                     name={siguiendo ? "close" : "location-outline"}
                     size={20}
-                    color={siguiendo ? "#fff" : "#059669"}
+                    color={siguiendo ? "#fff" : "#ffffffff"}
                   />
                 </View>
                 <Text style={[styles.buttonText, siguiendo && styles.activeButtonText]}>
@@ -158,12 +160,11 @@ export function ComponenteDiseño({ marker, mapRef, seguir, mostrarSoloCuerpo, b
 export const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 12,
-    left: 16,
-    right: 16,
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    paddingVertical: 12,
+    width:'100%',
+    backgroundColor: "#ffffff05",
+    borderBottomEndRadius:16,
+    borderBottomLeftRadius:16,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     zIndex: 10,
     elevation: 8,
@@ -184,19 +185,19 @@ export const styles = StyleSheet.create({
   actionButton: {
     flex: 1,
     borderRadius: 12,
-    paddingVertical: 12,
+    paddingVertical: 6,
     paddingHorizontal: 16,
-    borderWidth: 1.5,
-    backgroundColor: "#f8fafc",
+    borderWidth: 15,
+    backgroundColor: "#007af3ff",
     
   },
 
   directionsButton: {
-    borderColor: "#2563eb",
+    borderColor: "#000000ff",
   },
 
   followButton: {
-    borderColor: "#059669",
+    borderColor: "#000000ff",
   },
 
   activeButton: {
@@ -216,7 +217,7 @@ export const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#000000ff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -228,7 +229,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#374151",
+    color: "#ffffffff",
     textAlign: "center",
   },
 

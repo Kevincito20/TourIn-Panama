@@ -2,11 +2,11 @@ import Categorias from '@/components/inicio/categorias';
 import Historia from '@/components/inicio/historia';
 import Itinerario from '@/components/inicio/itinerario';
 import Recomendaciones from '@/components/inicio/recomendaciones';
+import InicioScreen from '@/components/inicio/Screen-header';
+import { colors } from '@/constants/Colors';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import InicioScreen from '@/components/inicio/Screen-header';
-import { colors } from '@/constants/Colors';
 
 export default function PantallaHome() {
   return (
@@ -36,7 +36,7 @@ export default function PantallaHome() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.primaryBlue, 
+    backgroundColor: colors.navIndicaciones, 
   },
   section: {
     paddingTop: 0,

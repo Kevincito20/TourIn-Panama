@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router'; 
 import FormularioLogin from '../../components/autenticacion/FormularioLogin';
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
 });
 
 export default PantallaInicioSesion;
- 
+ */

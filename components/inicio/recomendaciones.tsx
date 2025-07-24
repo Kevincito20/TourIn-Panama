@@ -1,21 +1,20 @@
+import { colors } from '@/constants/Colors';
+import { useDistancia } from '@/hooks/useDistancia';
+import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  ImageBackground,
   ActivityIndicator,
   Alert,
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity, View
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { fetchActividadesCercanas } from '../services/ActividadesCercanas';
-import { useRouter } from 'expo-router';
-import { useDistancia } from '@/hooks/useDistancia';
-import * as Location from 'expo-location';
-import { colors } from '@/constants/Colors';
 const { width } = Dimensions.get('window');
 
 type Actividad = {

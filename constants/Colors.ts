@@ -1,3 +1,4 @@
+
 export const colors = {
   // Colores principales
   primaryBlue: '#005F73',    // Azul Panamá fuerte, para encabezados, botones principales
@@ -14,4 +15,9 @@ export const colors = {
   textSecondary: '#0A9396', // Texto secundario o descripciones
   iconPrimary: '#FFFFFF',   // Iconos principales (sobre azul)
   iconAccent: '#F4D35E',    // Iconos destacados o acentos
+
+  //card
+  cardColor:'#cfe8e9ff', //color del fondo de la tearjeta de actividades 
+  navIndicaciones:'#77d6d8ff', //Botone de navegacion 
+
 };
