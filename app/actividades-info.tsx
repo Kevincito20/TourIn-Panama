@@ -3,7 +3,15 @@ import { Ionicons } from "@expo/vector-icons"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import type React from "react"
 import { useState } from "react"
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native"
 
 interface Props {
   actividad: ActividadesProps
@@ -12,7 +20,15 @@ interface Props {
 const { width } = Dimensions.get("window")
 
 const ActividadModalContent: React.FC<Props> = () => {
-  const { id, encabezado, descp, foto_url, latitud, longitud, rating } = useLocalSearchParams<{
+  const {
+    id,
+    encabezado,
+    descp,
+    foto_url,
+    latitud,
+    longitud,
+    rating,
+  } = useLocalSearchParams<{
     id: string
     encabezado: string
     descp: string
@@ -24,8 +40,23 @@ const ActividadModalContent: React.FC<Props> = () => {
 
   const [guardado, setGuardado] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
-  const toggleGuardar = () => setGuardado(!guardado)
   const router = useRouter()
+
+  const toggleGuardar = () => {
+    if (!guardado) {
+      router.push({
+        pathname: "/modales/ScreenFormulario",
+        params: {
+          id,
+          encabezado,
+          foto_url,
+          descp,
+        },
+      })
+    } else {
+      setGuardado(false)
+    }
+  }
 
   const renderStars = (rating: number) => {
     const stars = []
@@ -37,12 +68,21 @@ const ActividadModalContent: React.FC<Props> = () => {
     }
 
     if (hasHalfStar) {
-      stars.push(<Ionicons key="half" name="star-half" size={16} color="#F59E0B" />)
+      stars.push(
+        <Ionicons key="half" name="star-half" size={16} color="#F59E0B" />
+      )
     }
 
     const emptyStars = 5 - Math.ceil(rating)
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Ionicons key={`empty-${i}`} name="star-outline" size={16} color="#D1D5DB" />)
+      stars.push(
+        <Ionicons
+          key={`empty-${i}`}
+          name="star-outline"
+          size={16}
+          color="#D1D5DB"
+        />
+      )
     }
 
     return stars
@@ -55,12 +95,18 @@ const ActividadModalContent: React.FC<Props> = () => {
   ]
 
   return (
-    <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} bounces={true}>
+    <ScrollView
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+      bounces={true}
+    >
       {/* Header con título y rating */}
       <View style={styles.header}>
         <Text style={styles.title}>{encabezado}</Text>
         <View style={styles.ratingContainer}>
-          <View style={styles.starsContainer}>{renderStars(Number.parseFloat(rating) || 4.5)}</View>
+          <View style={styles.starsContainer}>
+            {renderStars(Number.parseFloat(rating) || 4.5)}
+          </View>
           <Text style={styles.ratingText}>{rating || "4.5"}</Text>
         </View>
       </View>
@@ -81,7 +127,7 @@ const ActividadModalContent: React.FC<Props> = () => {
         </View>
       </View>
 
-      {/* Galería mejorada */}
+      {/* Galería */}
       <View style={styles.gallerySection}>
         <Text style={styles.sectionTitle}>Galería</Text>
         <ScrollView
@@ -90,13 +136,19 @@ const ActividadModalContent: React.FC<Props> = () => {
           style={styles.gallery}
           pagingEnabled
           onMomentumScrollEnd={(event) => {
-            const index = Math.round(event.nativeEvent.contentOffset.x / (width * 0.8))
+            const index = Math.round(
+              event.nativeEvent.contentOffset.x / (width * 0.8)
+            )
             setActiveImageIndex(index)
           }}
         >
           {[1, 2, 3].map((i, index) => (
             <View key={i} style={styles.imageContainer}>
-              <Image source={{ uri: foto_url }} style={styles.galleryImage} resizeMode="cover" />
+              <Image
+                source={{ uri: foto_url }}
+                style={styles.galleryImage}
+                resizeMode="cover"
+              />
               <View style={styles.imageOverlay}>
                 <Text style={styles.imageCounter}>{index + 1}/3</Text>
               </View>
@@ -104,10 +156,16 @@ const ActividadModalContent: React.FC<Props> = () => {
           ))}
         </ScrollView>
 
-        {/* Indicadores de imagen */}
+        {/* Indicadores */}
         <View style={styles.imageIndicators}>
           {[1, 2, 3].map((_, index) => (
-            <View key={index} style={[styles.indicator, activeImageIndex === index && styles.activeIndicator]} />
+            <View
+              key={index}
+              style={[
+                styles.indicator,
+                activeImageIndex === index && styles.activeIndicator,
+              ]}
+            />
           ))}
         </View>
       </View>
@@ -118,7 +176,9 @@ const ActividadModalContent: React.FC<Props> = () => {
           <Ionicons name="document-text-outline" size={20} color="#6366F1" />
           <Text style={styles.sectionTitle}>Descripción</Text>
         </View>
-        <Text style={styles.descripcion}>{descp || "Sin descripción disponible para esta actividad."}</Text>
+        <Text style={styles.descripcion}>
+          {descp || "Sin descripción disponible para esta actividad."}
+        </Text>
       </View>
 
       {/* Ubicación */}
@@ -127,12 +187,14 @@ const ActividadModalContent: React.FC<Props> = () => {
           <Ionicons name="location-outline" size={20} color="#EF4444" />
           <Text style={styles.sectionTitle}>Ubicación</Text>
         </View>
-        <Text style={styles.descripcion}>Provincia de Panamá, Cerro Ancón</Text>
+        <Text style={styles.descripcion}>
+          Provincia de Panamá, Cerro Ancón
+        </Text>
         <TouchableOpacity
           style={styles.mapaBtn}
           onPress={() =>
             router.push({
-              pathname: "/pantalla_mapa",
+              pathname: "/(tabs)/pantalla_mapa copy",
               params: {
                 lat: String(latitud),
                 lng: String(longitud),
@@ -156,7 +218,11 @@ const ActividadModalContent: React.FC<Props> = () => {
           {activities.map((activity, index) => (
             <View key={index} style={styles.activityItem}>
               <View style={styles.activityIcon}>
-                <Ionicons name={activity.icon as any} size={18} color="#10B981" />
+                <Ionicons
+                  name={activity.icon as any}
+                  size={18}
+                  color="#10B981"
+                />
               </View>
               <Text style={styles.activityText}>{activity.text}</Text>
             </View>
@@ -172,20 +238,29 @@ const ActividadModalContent: React.FC<Props> = () => {
         </View>
         <View style={styles.factContainer}>
           <Text style={styles.descripcion}>
-            Este sendero fue usado por comunidades indígenas como ruta espiritual hacia la cima.
+            Este sendero fue usado por comunidades indígenas como ruta espiritual
+            hacia la cima.
           </Text>
         </View>
       </View>
 
-      {/* Botón de guardar mejorado */}
+      {/* Botón Guardar / Enviar al Formulario */}
       <TouchableOpacity
         style={[styles.guardarBtn, guardado && styles.guardarBtnActive]}
         onPress={toggleGuardar}
         activeOpacity={0.8}
       >
         <View style={styles.buttonContent}>
-          <Ionicons name={guardado ? "bookmark" : "bookmark-outline"} size={22} color="white" />
-          <Text style={styles.guardarText}>{guardado ? "Guardado en tu itinerario" : "Guardar en Itinerario"}</Text>
+          <Ionicons
+            name={guardado ? "bookmark" : "bookmark-outline"}
+            size={22}
+            color="white"
+          />
+          <Text style={styles.guardarText}>
+            {guardado
+              ? "Guardado en tu itinerario"
+              : "Guardar en Itinerario "}
+          </Text>
         </View>
         {guardado && (
           <View style={styles.checkmark}>

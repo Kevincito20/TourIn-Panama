@@ -1,465 +1,207 @@
-import React, { useState } from 'react';
+import { Ionicons } from "@expo/vector-icons"
+import { useLocalSearchParams, router } from "expo-router"
+import React, { useState } from "react"
 import {
   View,
   Text,
   StyleSheet,
-  Modal,
+  Image,
   TouchableOpacity,
-  TextInput,
-  Alert,
   ScrollView,
   Platform,
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+  Alert,
+  TextInput,
+} from "react-native"
+import DateTimePicker from "@react-native-community/datetimepicker"
+import { colors } from "@/constants/Colors"
+import { guardarActividadEnItinerario } from "@/components/services/itinerarioService"
 
-interface ItineraryFormData {
-  date: Date;
-  time: Date;
-  notes: string;
-}
+const ScreenFormulario = () => {
+  const { id, encabezado, foto_url, descp } = useLocalSearchParams<{
+    id: string
+    encabezado: string
+    foto_url: string
+    descp: string
+  }>()
 
-interface ItineraryFormProps {
-  visible: boolean;
-  onClose: () => void;
-  onSave: (data: ItineraryFormData) => void;
-  activityName?: string;
-}
+  const [fecha, setFecha] = useState<Date>(new Date())
+  const [hora, setHora] = useState<Date>(new Date())
+  const [notas, setNotas] = useState<string>("")
 
-const useItineraryForm = () => {
-  const [formData, setFormData] = useState<ItineraryFormData>({
-    date: new Date(),
-    time: new Date(),
-    notes: '',
-  });
-  
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [showFechaPicker, setShowFechaPicker] = useState(false)
+  const [showHoraPicker, setShowHoraPicker] = useState(false)
 
-  const validateForm = (): boolean => {
-    const newErrors: {[key: string]: string} = {};
-    
-    // Validar que la fecha no sea anterior a hoy
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const selectedDate = new Date(formData.date);
-    selectedDate.setHours(0, 0, 0, 0);
-    
-    if (selectedDate < today) {
-      newErrors.date = 'La fecha no puede ser anterior a hoy';
-    }
-    
-    // Validar que si es hoy, la hora no sea anterior a la actual
-    if (selectedDate.getTime() === today.getTime()) {
-      const now = new Date();
-      const selectedDateTime = new Date(formData.date);
-      selectedDateTime.setHours(formData.time.getHours(), formData.time.getMinutes());
-      
-      if (selectedDateTime < now) {
-        newErrors.time = 'La hora no puede ser anterior a la actual';
+  const handleGuardar = async () => {
+    try {
+      const datos = {
+        //fecha es tipo Date
+        fecha: fecha.toISOString().split("T")[0], 
+        hora: hora.toTimeString().split(" ")[0], 
+        nota: notas,
+        id_act: 3,    
+        id_u: 4,       
       }
+
+      await guardarActividadEnItinerario(datos)
+      Alert.alert("Éxito", "Actividad guardada en el itinerario.")
+      router.back()
+    } catch (error) {
+      Alert.alert("Error", "No se pudo guardar la actividad.")
     }
-    
-    // Validar notas (opcional pero si se ingresa, mínimo 3 caracteres)
-    if (formData.notes.trim() && formData.notes.trim().length < 3) {
-      newErrors.notes = 'Las notas deben tener al menos 3 caracteres';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const resetForm = () => {
-    setFormData({
-      date: new Date(),
-      time: new Date(),
-      notes: '',
-    });
-    setErrors({});
-    setShowDatePicker(false);
-    setShowTimePicker(false);
-  };
-
-  return {
-    formData,
-    setFormData,
-    showDatePicker,
-    setShowDatePicker,
-    showTimePicker,
-    setShowTimePicker,
-    errors,
-    validateForm,
-    resetForm,
-  };
-};
-
-const ItineraryForm: React.FC<ItineraryFormProps> = ({
-  visible,
-  onClose,
-  onSave,
-  activityName = 'esta actividad',
-}) => {
-  const {
-    formData,
-    setFormData,
-    showDatePicker,
-    setShowDatePicker,
-    showTimePicker,
-    setShowTimePicker,
-    errors,
-    validateForm,
-    resetForm,
-  } = useItineraryForm();
-
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
-    if (selectedDate) {
-      setFormData(prev => ({ ...prev, date: selectedDate }));
-    }
-  };
-
-  const handleTimeChange = (event: any, selectedTime?: Date) => {
-    setShowTimePicker(Platform.OS === 'ios');
-    if (selectedTime) {
-      setFormData(prev => ({ ...prev, time: selectedTime }));
-    }
-  };
-
-  const handleSave = () => {
-    if (validateForm()) {
-      onSave(formData);
-      resetForm();
-      onClose();
-      Alert.alert('¡Éxito!', 'Actividad guardada en el itinerario');
-    }
-  };
-
-  const handleClose = () => {
-    resetForm();
-    onClose();
-  };
-
-  const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (time: Date): string => {
-    return time.toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+  }
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={handleClose}
-    >
-      <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* Header */}
-            <View style={styles.header}>
-              <Text style={styles.title}>Agregar al Itinerario</Text>
-              <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>✕</Text>
-              </TouchableOpacity>
-            </View>
+    <ScrollView contentContainerStyle={styles.scroll}>
+      <View style={styles.card}>
+        <Image source={{ uri: foto_url }} style={styles.image} />
+        <Text style={styles.title}>{encabezado}</Text>
+        <Text style={styles.desc}>{descp || "Sin descripción disponible"}</Text>
 
-            {/* Activity Name */}
-            <View style={styles.section}>
-              <Text style={styles.activityName}>{activityName}</Text>
-            </View>
+        {/* Fecha */}
+        <Text style={styles.label}>Fecha del Itinerario</Text>
+        <TouchableOpacity
+          style={styles.inputButton}
+          onPress={() => setShowFechaPicker(true)}
+        >
+          <Ionicons name="calendar-outline" size={20} color={colors.primaryBlue} />
+          <Text style={styles.inputText}>{fecha.toDateString()}</Text>
+        </TouchableOpacity>
+        {showFechaPicker && (
+          <DateTimePicker
+            value={fecha}
+            mode="date"
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={(event, selectedDate) => {
+              setShowFechaPicker(false)
+              if (selectedDate) setFecha(selectedDate)
+            }}
+          />
+        )}
 
-            {/* Date Section */}
-            <View style={styles.section}>
-              <Text style={styles.label}>Fecha</Text>
-              <TouchableOpacity
-                style={[styles.input, errors.date && styles.inputError]}
-                onPress={() => setShowDatePicker(true)}
-              >
-                <Text style={styles.inputText}>
-                  {formatDate(formData.date)}
-                </Text>
-              </TouchableOpacity>
-              {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
-            </View>
+        {/* Hora */}
+        <Text style={styles.label}>Hora</Text>
+        <TouchableOpacity
+          style={styles.inputButton}
+          onPress={() => setShowHoraPicker(true)}
+        >
+          <Ionicons name="time-outline" size={20} color={colors.primaryBlue} />
+          <Text style={styles.inputText}>
+            {hora.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </Text>
+        </TouchableOpacity>
+        {showHoraPicker && (
+          <DateTimePicker
+            value={hora}
+            mode="time"
+            is24Hour={false}
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={(event, selectedTime) => {
+              setShowHoraPicker(false)
+              if (selectedTime) setHora(selectedTime)
+            }}
+          />
+        )}
 
-            {/* Time Section */}
-            <View style={styles.section}>
-              <Text style={styles.label}>Hora</Text>
-              <TouchableOpacity
-                style={[styles.input, errors.time && styles.inputError]}
-                onPress={() => setShowTimePicker(true)}
-              >
-                <Text style={styles.inputText}>
-                  {formatTime(formData.time)}
-                </Text>
-              </TouchableOpacity>
-              {errors.time && <Text style={styles.errorText}>{errors.time}</Text>}
-            </View>
+        {/* Notas */}
+        <Text style={styles.label}>Notas (opcional)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ej. Llevar cámara, zapatos cómodos..."
+          value={notas}
+          onChangeText={setNotas}
+          multiline
+        />
 
-            {/* Notes Section */}
-            <View style={styles.section}>
-              <Text style={styles.label}>Notas adicionales (opcional)</Text>
-              <TextInput
-                style={[
-                  styles.textAreaInput,
-                  errors.notes && styles.inputError
-                ]}
-                multiline
-                numberOfLines={4}
-                placeholder="Agrega cualquier detalle importante..."
-                placeholderTextColor="#999"
-                value={formData.notes}
-                onChangeText={(text) =>
-                  setFormData(prev => ({ ...prev, notes: text }))
-                }
-                textAlignVertical="top"
-              />
-              {errors.notes && <Text style={styles.errorText}>{errors.notes}</Text>}
-            </View>
-
-            {/* Action Buttons */}
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={handleClose}
-              >
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={styles.saveButton}
-                onPress={handleSave}
-              >
-                <Text style={styles.saveButtonText}>Guardar</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-
-          {/* Date Picker */}
-          {showDatePicker && (
-            <DateTimePicker
-              value={formData.date}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
-
-          {/* Time Picker */}
-          {showTimePicker && (
-            <DateTimePicker
-              value={formData.time}
-              mode="time"
-              display="default"
-              onChange={handleTimeChange}
-            />
-          )}
-        </View>
+        <TouchableOpacity style={styles.saveButton} onPress={handleGuardar}>
+          <Ionicons name="checkmark-circle-outline" size={22} color={colors.white} />
+          <Text style={styles.saveButtonText}>Guardar en Itinerario</Text>
+        </TouchableOpacity>
       </View>
-    </Modal>
-  );
-};
-
-// Componente principal que muestra cómo usar el formulario
-const ItineraryScreen: React.FC = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState('');
-
-  const handleSaveActivity = (activityName: string) => {
-    setSelectedActivity(activityName);
-    setShowForm(true);
-  };
-
-  const handleFormSave = (data: ItineraryFormData) => {
-    console.log('Actividad guardada:', {
-      activity: selectedActivity,
-      date: data.date,
-      time: data.time,
-      notes: data.notes,
-    });
-    // Aquí puedes guardar en tu estado global, AsyncStorage, API, etc.
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.screenTitle}>Mi Itinerario</Text>
-      
-      {/* Ejemplo de botones de actividades */}
-      <TouchableOpacity
-        style={styles.activityButton}
-        onPress={() => handleSaveActivity('Visita al Museo de Historia')}
-      >
-        <Text style={styles.activityButtonText}>Guardar: Visita al Museo</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.activityButton}
-        onPress={() => handleSaveActivity('Caminata por el Parque Central')}
-      >
-        <Text style={styles.activityButtonText}>Guardar: Caminata</Text>
-      </TouchableOpacity>
-
-      <ItineraryForm
-        visible={showForm}
-        onClose={() => setShowForm(false)}
-        onSave={handleFormSave}
-        activityName={selectedActivity}
-      />
-    </View>
-  );
-};
+    </ScrollView>
+  )
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 16,
-  },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  activityButton: {
-    backgroundColor: '#007AFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  activityButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    borderRadius: 16,
+  scroll: {
+    flexGrow: 1,
+    justifyContent: "center",
+    backgroundColor: colors.background,
     padding: 20,
-    width: '90%',
-    maxWidth: 400,
-    maxHeight: '80%',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  image: {
+    width: "100%",
+    height: 180,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 22,
+    fontWeight: "bold",
+    color: colors.primaryBlue,
+    marginBottom: 4,
+    textAlign: "center",
   },
-  closeButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    fontSize: 18,
-    color: '#666',
-  },
-  activityName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#007AFF',
-    textAlign: 'center',
-    backgroundColor: '#f8f9ff',
-    padding: 12,
-    borderRadius: 8,
-  },
-  section: {
+  desc: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: "center",
     marginBottom: 20,
   },
   label: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: colors.primaryBlue,
+    marginBottom: 6,
+  },
+  inputButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 12,
+    backgroundColor: "#F4F4F4",
+    marginBottom: 14,
+  },
+  inputText: {
+    marginLeft: 10,
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    color: colors.textPrimary,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  inputError: {
-    borderColor: '#ff3b30',
-  },
-  inputText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  textAreaInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 16,
-    backgroundColor: '#fff',
-    fontSize: 16,
-    color: '#333',
-    minHeight: 100,
-  },
-  errorText: {
-    color: '#ff3b30',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 16,
-    borderRadius: 8,
-    marginRight: 8,
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 15,
+    backgroundColor: "#F9F9F9",
+    marginBottom: 20,
+    textAlignVertical: "top",
   },
   saveButton: {
-    flex: 1,
-    backgroundColor: '#34c759',
-    padding: 16,
-    borderRadius: 8,
-    marginLeft: 8,
+    flexDirection: "row",
+    backgroundColor: colors.lightBlue,
+    padding: 14,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
   },
   saveButtonText: {
-    color: 'white',
+    color: colors.white,
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "bold",
+    marginLeft: 8,
   },
-});
+})
 
-export default ItineraryScreen;
+export default ScreenFormulario

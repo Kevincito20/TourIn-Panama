@@ -2,6 +2,7 @@ import { colors } from "@/constants/Colors";
 import IconSymbol from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import React from "react";
+
 export default function TabLayout() {
   return (
     <Tabs
@@ -11,22 +12,21 @@ export default function TabLayout() {
           backgroundColor: colors.primaryBlue,
           height: 65,
           borderTopWidth: 0,
-          borderTopLeftRadius: 20, 
-          borderTopRightRadius: 20, 
           overflow: "hidden",
-          position: "absolute",
-          
+          paddingBottom: 5, 
+          paddingTop: 5,     
         },
-
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#888888",
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "500",
+          marginBottom: 2, // Mejor espaciado del texto
         },
         tabBarItemStyle: {
           justifyContent: "center",
           alignItems: "center",
+          paddingVertical: 4, // Espaciado vertical para los íconos
         },
       }}
     >
@@ -43,12 +43,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="pantalla_mapa copy"
         options={{
-          title: "pantalla_mapa copy",
+          title: "Actividades",
           tabBarIcon: ({ color }) => (
             <IconSymbol name="location-outline" size={24} color={color} />
           ),
         }}
-      />
+      /> 
 
       <Tabs.Screen
         name="pantalla_conocer_panama"

@@ -10,7 +10,6 @@ const InicioScreen = () => {
   return (
     <View style={styles.container}>
       <HeaderInicio onMenuPress={() => setMenuVisible(true)} />
-
       <Modal
         visible={menuVisible}
         animationType="slide"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState } from 'react';
 import {
   View,
   Text,
@@ -8,47 +8,57 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '@/constants/Colors';
+import { verItinerario } from '@/components/services/verItinerarioService';
+import { ItinerarioItem } from '../types/Itinerario';
 
 const Itinerario = () => {
   const router = useRouter();
+  const [actividades, setActividades] = useState<ItinerarioItem[]>([]);
+  const [cargando, setCargando] = useState(true);
 
-  const actividades = [
-    {
-      id: 1,
-      tipo: 'tour',
-      titulo: 'Tour Casco Viejo',
-      horario: '10:00 AM - 12:00 PM',
-      ubicacion: 'Plaza Independencia',
-      icon: 'business-outline',
-      iconColor: colors.primaryBlue,
-      estado: 'Ahora',
-    },
-    {
-      id: 2,
-      tipo: 'almuerzo',
-      titulo: 'Almuerzo en Mercado de Mariscos',
-      horario: '01:00 PM',
-      ubicacion: 'Cinta Costera',
-      icon: 'restaurant-outline',
-      iconColor: colors.warmOrange,
-      estado: null,
-    },
-    {
-      id: 3,
-      tipo: 'visita',
-      titulo: 'Visita al Biomuseo',
-      horario: '03:30 PM',
-      ubicacion: 'Amador',
-      icon: 'flower-outline',
-      iconColor: colors.warmYellow,
-      estado: null,
-    },
-  ];
+
+  const cargarDatos = async () => {
+    setCargando(true);
+    try {
+      const userData = await AsyncStorage.getItem('usuario');
+      const usuario = userData ? JSON.parse(userData) : null;
+
+      if (usuario?.id_usuario) {
+        const idUsuario = Number(usuario.id_usuario);
+        const datos = await verItinerario(idUsuario);
+        console.log('Respuesta del itinerario:', datos);
+
+        if (Array.isArray(datos)) {
+          setActividades(datos);
+        } else if (datos && typeof datos === 'object') {
+          setActividades([datos]);
+        } else {
+          console.warn('Formato inesperado:', datos);
+          setActividades([]);
+        }
+      } else {
+        console.warn('No se encontró el ID del usuario en AsyncStorage');
+        setActividades([]);
+      }
+    } catch (error) {
+      console.error('Error al cargar el itinerario:', error);
+      setActividades([]);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      cargarDatos();
+    }, [])
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Ionicons name="calendar-outline" size={24} color={colors.primaryBlue} />
@@ -59,46 +69,52 @@ const Itinerario = () => {
         </View>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {actividades.map((actividad, index) => (
-          <View key={actividad.id} style={styles.actividadContainer}>
-            <View style={styles.actividadCard}>
-              <View style={styles.iconContainer}>
-                <View
-                  style={[
-                    styles.iconBackground,
-                    { backgroundColor: actividad.iconColor + '22' },
-                  ]}
-                >
-                  <Ionicons name={actividad.icon as any} size={24} color={actividad.iconColor} />
+      {cargando ? (
+        <Text style={{ textAlign: 'center', marginTop: 20 }}>Cargando...</Text>
+      ) : actividades.length === 0 ? (
+        <Text style={{ textAlign: 'center', marginTop: 20 }}>No tienes actividades programadas.</Text>
+      ) : (
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {actividades.map((actividad, index) => (
+            <View key={actividad.id_itinerario} style={styles.actividadContainer}>
+              <View style={styles.actividadCard}>
+                <View style={styles.iconContainer}>
+                  <View
+                    style={[
+                      styles.iconBackground,
+                      { backgroundColor: colors.primaryBlue + '22' },
+                    ]}
+                  >
+                    <Ionicons name="location-outline" size={24} color={colors.primaryBlue} />
+                  </View>
                 </View>
-              </View>
 
-              <View style={styles.actividadInfo}>
-                <View style={styles.tituloContainer}>
-                  <Text style={styles.actividadTitulo}>{actividad.titulo}</Text>
-                  {actividad.estado && (
-                    <View style={styles.estadoBadge}>
-                      <Text style={styles.estadoText}>{actividad.estado}</Text>
+                <View style={styles.actividadInfo}>
+                  <View style={styles.tituloContainer}>
+                    <Text style={styles.actividadTitulo}>{actividad.titulo_actividad}</Text>
+                  </View>
+
+                  <View style={styles.detalleContainer}>
+                    <Ionicons name="time-outline" size={14} color={colors.textSecondary} />
+                    <Text style={styles.detalleText}>
+                      {actividad.hora_itinerario} • {actividad.fecha_itinerario}
+                    </Text>
+                  </View>
+
+                  {actividad.nota_itinerario ? (
+                    <View style={styles.detalleContainer}>
+                      <Ionicons name="document-text-outline" size={14} color={colors.textSecondary} />
+                      <Text style={styles.detalleText}>Nota: {actividad.nota_itinerario}</Text>
                     </View>
-                  )}
-                </View>
-
-                <View style={styles.detalleContainer}>
-                  <Ionicons name="time-outline" size={14} color={colors.textSecondary} />
-                  <Text style={styles.detalleText}>
-                    {actividad.horario} • {actividad.ubicacion}
-                  </Text>
+                  ) : null}
                 </View>
               </View>
-            </View>
 
-            {index < actividades.length - 1 && (
-              <View style={styles.conectorLinea} />
-            )}
-          </View>
-        ))}
-      </ScrollView>
+              {index < actividades.length - 1 && <View style={styles.conectorLinea} />}
+            </View>
+          ))}
+        </ScrollView>
+      )}
 
       <TouchableOpacity
         style={styles.verCompleto}
@@ -107,7 +123,7 @@ const Itinerario = () => {
         <Text style={styles.verCompletoText}>Ver formulario completo</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -192,21 +208,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
   },
-  estadoBadge: {
-    backgroundColor: colors.primaryBlue,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginLeft: 8,
-  },
-  estadoText: {
-    fontSize: 12,
-    color: 'white',
-    fontWeight: '500',
-  },
   detalleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 4,
   },
   detalleText: {
     fontSize: 14,
