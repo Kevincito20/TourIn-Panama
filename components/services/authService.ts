@@ -20,8 +20,6 @@ export const loginUsuario = async ({ email, password }: propLogin): Promise<bool
 
     const data = await response.json();
     
-    console.log('Respuesta del servidor:', data);
-  
     if (data?.autenticado) {
       await AsyncStorage.setItem('usuario', JSON.stringify(data));
       return true;

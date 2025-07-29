@@ -26,14 +26,13 @@ export default function RootLayout() {
           }} 
         />
 
-        <Stack.Screen
-        name='modales'
-        options={{
-          headerShown: false,
-        }}
+        <Stack.Screen 
+          name="(modales)" 
+          options={{ 
+            headerShown: false
+          }} 
         />
-  
- 
+        
       </Stack>
     </>
   );
