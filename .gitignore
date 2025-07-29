@@ -41,3 +41,7 @@ app-example
 # Expo Prebuild (ignorar carpetas nativas)
 /android
 /ios
+
+# local env files
+.env
+.env*.local
