@@ -10,6 +10,7 @@ import { ScrollView, StyleSheet, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PantallaHome() {
+ 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar style='dark' backgroundColor={colors.white} />

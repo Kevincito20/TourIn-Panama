@@ -4,13 +4,14 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 export default function TabLayout() {
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.primaryBlue,
-          height: 65,
+          height: 75,
           borderTopWidth: 0,
           overflow: "hidden",
           paddingBottom: 5, 
@@ -41,7 +42,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="pantalla_mapa copy"
+        name="Actividades"
         options={{
           title: "Actividades",
           tabBarIcon: ({ color }) => (

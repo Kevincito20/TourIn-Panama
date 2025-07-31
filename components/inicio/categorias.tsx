@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useFiltroInicial } from "../mapa/FiltroActividades";
+import { handlePressCatActivity } from "../mapa/handlePress";
 
 export interface ActivityItem {
   id: string;
@@ -117,7 +117,7 @@ export default function Categorias() {
             backgroundColor={item.backgroundColor}
             backgroundImage={item.backgroundImage}
             onPress={() => {
-              useFiltroInicial(item.id, item.backgroundColor);
+              handlePressCatActivity(item.id);
             }}
           />
         ))}
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 50,
     backgroundColor: colors.background,
+ 
   },
   title: {
     fontSize: 20,
