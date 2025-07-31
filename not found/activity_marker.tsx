@@ -17,8 +17,12 @@ const CustomMarker= ({marker,onPress,color}:prop) =>{
             latitude: marker.latitud,
             longitude: marker.longitud,
             }}    
-            pinColor= {color}
-        />              
+          
+            pinColor={color}
+        >
+            
+  
+        </Marker>              
     );
 };
 

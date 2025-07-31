@@ -1,4 +1,4 @@
-//Listo, mejorable
+//Listo
 import { Image, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 type Props = {

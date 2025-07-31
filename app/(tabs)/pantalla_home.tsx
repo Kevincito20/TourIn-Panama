@@ -9,6 +9,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PantallaHome() {
+ 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
@@ -36,7 +37,7 @@ export default function PantallaHome() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.navIndicaciones, 
+    backgroundColor: colors.primaryBlue, 
   },
   section: {
     paddingTop: 0,

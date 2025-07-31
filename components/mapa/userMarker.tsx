@@ -1,22 +1,14 @@
-import { Ionicons } from '@expo/vector-icons'; // o 'react-native-vector-icons/Ionicons'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { View } from 'react-native';
 import { Marker } from 'react-native-maps';
 
 const CustomUserMarker = ({ coordinate }) => {
   return (
-    <Marker coordinate={coordinate}>
-      <View style={{
-        backgroundColor: 'white',
-        padding: 5,
-        borderRadius: 30,
-        borderWidth: 2,
-        borderColor: '#3880ff',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <Ionicons name="person-circle" size={40} color="#3880ff" />
-      </View>
+    <Marker coordinate={coordinate}
+    title="Custom Marker"
+      description="This is a custom marker"
+    >
+      <MaterialCommunityIcons name="navigation" size={30} color="black" />
     </Marker>
   );
 };

@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar 
-      backgroundColor='black'
+      backgroundColor='light'
       style="light"
 
       />

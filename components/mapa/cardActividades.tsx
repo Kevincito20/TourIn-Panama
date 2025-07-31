@@ -1,5 +1,4 @@
 //Listo
-//agregar la distancia desde el punto actual
 import { colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -21,13 +20,12 @@ interface props {
   marker: PropActivity;
 }
 
-const Actividades = ({ marker }: props) => {
+const CardActivity = ({ marker }: props) => {
   const router = useRouter();
 
   return (
     <View style={styles.card}>
       <TouchableOpacity
-        style={styles.actividadBtn}
         onPress={() =>
           router.push({
             pathname: "/actividades-info",
@@ -47,10 +45,6 @@ const Actividades = ({ marker }: props) => {
           {/* Imagen a la izquierda */}
           <View style={styles.imageContainer}>
             <Image source={{ uri: marker.foto_url }} style={styles.image} />
-            {/* 
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>Parque Nacional</Text>
-            </View>*/}
 
             <View style={styles.ratingBox}>
               <Ionicons name="star" size={14} color="#FFD700" />
@@ -61,12 +55,6 @@ const Actividades = ({ marker }: props) => {
           {/* Contenido a la derecha */}
           <View style={styles.content}>
             <Text style={styles.title}>{marker.encabezado}</Text>
-          {/* 
-
-            <View style={styles.distanceRow}>
-              <Ionicons name="location-outline" size={14} color="#888" />
-              <Text style={styles.distanceText}>2.3 km</Text>
-            </View> */}
 
             <Text numberOfLines={2} style={styles.description}>
               {marker.descp}
@@ -84,15 +72,12 @@ const styles = StyleSheet.create({
     bottom: 80,
     left: 10,
     right: 10,
-    backgroundColor: colors.cardColor,//mejorable
+    backgroundColor: colors.cardColor,
     borderRadius: 12,
     elevation: 5,
     shadowColor: "#333",
     shadowOpacity: 0.9,
     shadowOffset: { width: 0, height: 2 },
-  },
-  actividadBtn: {
-    width: "100%",
   },
   row: {
     flexDirection: "row",
@@ -137,20 +122,10 @@ const styles = StyleSheet.create({
     color: "#005F73",
     marginBottom: 2,
   },
-  distanceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 4,
-  },
-  distanceText: {
-    marginLeft: 4,
-    color: "#666",
-    fontSize: 13,
-  },
   description: {
     fontSize: 13,
     color: "#0A9396",
   },
 });
 
-export default Actividades;
+export default CardActivity;

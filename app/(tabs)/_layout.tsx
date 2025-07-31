@@ -3,18 +3,20 @@ import IconSymbol from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import React from "react";
 export default function TabLayout() {
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.primaryBlue,
-          height: 65,
+          height: 75,
           borderTopWidth: 0,
           borderTopLeftRadius: 20, 
           borderTopRightRadius: 20, 
           overflow: "hidden",
           position: "absolute",
+         
           
         },
 
@@ -23,6 +25,7 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "500",
+          
         },
         tabBarItemStyle: {
           justifyContent: "center",
@@ -41,9 +44,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="pantalla_mapa copy"
+        name="Actividades"
         options={{
-          title: "pantalla_mapa copy",
+          title: "Actividades",
           tabBarIcon: ({ color }) => (
             <IconSymbol name="location-outline" size={24} color={color} />
           ),

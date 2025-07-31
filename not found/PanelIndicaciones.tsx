@@ -1,10 +1,10 @@
 //Listo, mejorable
 //cambiar las ref de map para el movimiento de la camara
 import { colors } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import * as Haptics from "expo-haptics";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { cargarMapType, guardarMapType } from "./functions";
+import InfoViaje from "./infoViaje";
 
 //TYPE
 type PropActivity = {
@@ -35,6 +37,9 @@ interface Actividades2Props {
   mostrarSoloCuerpo: any;
   statusMapDirections: any;
   setDestination: any;
+  distancia: any;
+  duracion: any;
+  activarSeguimiento: any;
 }
 
 export function PanelIndicaciones({
@@ -42,9 +47,11 @@ export function PanelIndicaciones({
   mapRef,
   seguir,
   mostrarSoloCuerpo,
-
+  distancia,
+  duracion,
   statusMapDirections,
   setDestination,
+  activarSeguimiento,
 }: Actividades2Props) {
   const translateY = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(1)).current;
@@ -52,7 +59,41 @@ export function PanelIndicaciones({
   const [visible2, setVisible2] = useState(true);
 
   const [siguiendo, setSiguiendo] = useState(false);
+  const [mostrar, setmostrar] = useState(Boolean);
+  //new consts
+  const [destino, setDestino] = useState<latlng>();
+  const [pressSeguir, setpressSeguir] = useState(Boolean);
+  const [actividad, setActividad] = useState<PropActivity | null>(null);
+
+  //seguimiento
   const [siguiendoRuta, setSiguiendoRuta] = useState(false);
+
+  /*   useEffect(() => {
+   
+
+    if (siguiendo) {
+ 
+      guardarMapType({ lugar: "seguimiento", tipo: seguiActividad });
+      console.log("desde panel aplicaciones datos de seguimiento", seguiActividad);
+    }
+  }, [siguiendo]);
+ */
+
+  useEffect(() => {
+    cargarSeguimiento();
+  }, [pressSeguir]);
+
+  const cargarSeguimiento = async () => {
+    const { data, error } = await cargarMapType("seguimiento1");
+    console.log("dede el panel de indicaciones press seguir");
+    setSiguiendo(data[1]);
+    if (data[1] === true) {
+      setVisible2(false);
+      setSiguiendo(data[1]);
+      setmostrar(data[1]);
+    }
+    setVisible2(true);
+  };
 
   const panamaView = {
     center: {
@@ -75,19 +116,23 @@ export function PanelIndicaciones({
     heading: 0,
     altitude: 1000,
   };
+
   const handleIndicaciones = () => {
     if (!siguiendoRuta) {
       setSiguiendoRuta(true);
-      mostrarSoloCuerpo(true);
+      setmostrar(true);
       mapRef.current?.animateCamera(panamaView, { duration: 1000 });
       statusMapDirections(1);
+
+      //destino
       setDestination({
         latitude: marker.latitud,
         longitude: marker.longitud,
       });
+
       ocultarBoton();
     } else {
-      mostrarSoloCuerpo(false);
+      setmostrar(false);
       mostrarBoton();
       setSiguiendoRuta(false);
       statusMapDirections(0);
@@ -100,18 +145,32 @@ export function PanelIndicaciones({
   const handleSeguir = () => {
     if (!siguiendo) {
       setSiguiendo(true);
-      seguir(true);
-      statusMapDirections(1);
 
-      setDestination({
+      // setmostrar(true);
+
+      // statusMapDirections(1);
+
+      setDestino({
         latitude: marker.latitud,
         longitude: marker.longitud,
       });
+      setpressSeguir(true);
+      setActividad(marker);
+
+      const datos = [destino, pressSeguir, actividad];
+
+      guardarMapType({ lugar: "seguimiento1", tipo: datos });
+      activarSeguimiento(true);
+
       ocultarBoton2();
     } else {
       setSiguiendo(false);
       seguir(false);
+
+      guardarMapType({ lugar: "seguimiento", tipo: false });
+
       statusMapDirections(0);
+      setmostrar(false);
 
       setDestination({
         latitude: marker.latitud,
@@ -188,14 +247,10 @@ export function PanelIndicaciones({
   };
   return (
     <View style={styles.container}>
-      <View  >
+      <View>
         {visible2 && (
           <TouchableOpacity
-            style={[
-              styles.actionButton,
-              styles.directionsButton,
-              siguiendoRuta && styles.activeButton,
-            ]}
+            style={[styles.actionButton, siguiendoRuta && styles.activeButton]}
             onPress={handleIndicaciones}
           >
             <View style={styles.buttonContent}>
@@ -205,7 +260,7 @@ export function PanelIndicaciones({
                   siguiendoRuta && styles.activeIconContainer,
                 ]}
               >
-                <FontAwesome5 name="directions" size={24} color="black" />
+                <FontAwesome5 name="directions" size={25} color="black" />
               </View>
               <Text
                 style={[
@@ -220,7 +275,7 @@ export function PanelIndicaciones({
         )}
       </View>
 
-      <View >
+      <View>
         {visible && (
           <Animated.View
             style={[
@@ -241,11 +296,7 @@ export function PanelIndicaciones({
               ]}
             >
               <TouchableOpacity
-                style={[
-                  styles.actionButton,
-                
-                  siguiendo && styles.activeButton,
-                ]}
+                style={[styles.actionButton, siguiendo && styles.activeButton]}
                 onPress={handleSeguir}
                 activeOpacity={0.8}
               >
@@ -256,11 +307,16 @@ export function PanelIndicaciones({
                       siguiendo && styles.activeIconContainer,
                     ]}
                   >
-                    <Ionicons
-                      name={siguiendo ? "close" : "navigate-outline"}
-                      size={30}
+                    <MaterialIcons
+                      name={siguiendo ? "close" : "navigation"}
+                      size={24}
                       color={siguiendo ? "#fff" : "#000000ff"}
                     />
+                    {/* <Ionicons
+                      name={siguiendo ? "close" : "navigate-circle-sharp"}
+                      size={25}
+                      color={siguiendo ? "#fff" : "#000000ff"}
+                    />*/}
                   </View>
                   <Text
                     style={[
@@ -276,80 +332,46 @@ export function PanelIndicaciones({
           </Animated.View>
         )}
       </View>
+
+      {mostrar && <InfoViaje distancia={distancia} duracion={duracion} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // position: "absolute",
-    width: 94,
-    //top:30,
-   // margin: 8,
-    
-    //backgroundColor: colors.primaryBlue,
-    borderRadius: 24,
-    padding: 5,
-    gap:5,
-    //elevation: 8,
-    /*shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,*/
+    flexDirection: "row",
+    alignContent: "center",
+    borderRadius: 12,
+    padding: 8,
+    gap: 10,
   },
-
   botonAnimado: {
     borderRadius: 8,
   },
-  texto: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   actionButton: {
-    backgroundColor:colors.cardColor ,
-
-    flex: 1,
-    //width:50,
-    //height:50,
-
+    elevation: 5,
+    backgroundColor: colors.navIndicaciones,
     borderRadius: 16,
     paddingVertical: 6,
     paddingHorizontal: 5,
-    //borderWidth: 5,
-    //backgroundColor: "#007af3ff",
-    elevation: 8,
-shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
   },
-  directionsButton: {
-    //borderColor: "#000000ff",
-  },
+
   activeButton: {
     backgroundColor: "#ef4444",
     borderColor: "#ef4444",
     transform: [{ scale: 0.98 }],
   },
   buttonContent: {
-    
-    flexDirection: "column",
+    padding: 3,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
   },
   iconContainer: {
     width: 32,
     height: 32,
     borderRadius: 8,
-    //backgroundColor: "#ff0000ff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -357,8 +379,7 @@ shadowColor: "#000",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   buttonText: {
-    fontSize: 10,
-    fontWeight: "600",
+    fontSize: 12,
     color: "#000000ff",
     textAlign: "center",
   },
