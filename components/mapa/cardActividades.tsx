@@ -28,7 +28,7 @@ const CardActivity = ({ marker }: props) => {
       <TouchableOpacity
         onPress={() =>
           router.push({
-            pathname: "/actividades-info",
+            pathname: "/(modales)/actividades-info",
             params: {
               id: marker.id,
               encabezado: marker.encabezado,

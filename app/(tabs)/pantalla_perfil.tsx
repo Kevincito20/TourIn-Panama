@@ -1,119 +1,80 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/Colors'; // Usa tu archivo Colors.ts
+import React, { useState, useRef, useEffect } from 'react';
+import { View, StatusBar, ScrollView, Animated } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign, Feather, Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { PerfilHeader } from '@/components/perfil/perfilHeader';
+import { OpcionPerfil } from '@/components/perfil/opcionesPerfil';
+import { styles } from '@/components/styles/perfilStyles';
+import { usePerfil } from '@/hooks/usePerfil';
+import { defaultPerfilImage } from '@/constants/defaultPerfil';
+import { useUsuario } from '@/hooks/useUsuario';
+import { useRouter } from 'expo-router';
 
-export default function PerfilScreen() {
-  const nombreUsuario = 'Kevin González';
-  const fotoPerfil = 'https://i.pravatar.cc/150?img=3'; // Simulación
+export default function PantallaPerfil() {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const [profileImageUri, setProfileImageUri] = useState(defaultPerfilImage);
+  const { handleLogout } = usePerfil();
+  const { usuario } = useUsuario();
+  const router = useRouter();
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: 8,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, []);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-      {/* Header con foto y nombre */}
-      <View style={styles.header}>
-        <Image source={{ uri: fotoPerfil }} style={styles.avatar} />
-        <Text style={styles.nombre}>{nombreUsuario}</Text>
-        <Text style={styles.ubicacion}>📍 Panamá</Text>
-      </View>
+    <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
+      <StatusBar barStyle="light-content" backgroundColor="#0f766e" />
 
-      {/* Estadísticas */}
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statNumber}>8</Text>
-          <Text style={styles.statLabel}>Itinerarios</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statNumber}>24</Text>
-          <Text style={styles.statLabel}>Actividades</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statNumber}>12</Text>
-          <Text style={styles.statLabel}>Favoritos</Text>
-        </View>
-      </View>
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <PerfilHeader
+            profileImageUri={usuario?.foto || profileImageUri}
+            setProfileImageUri={setProfileImageUri}
+            animatedValue={animatedValue}
+          />
 
-      {/* Opciones del perfil */}
-      <View style={styles.section}>
-        <Opcion icon="create-outline" texto="Editar perfil" />
-        <Opcion icon="calendar-outline" texto="Mi itinerario" />
-        <Opcion icon="heart-outline" texto="Mis favoritos" />
-        <Opcion icon="settings-outline" texto="Configuración" />
-        <Opcion icon="log-out-outline" texto="Cerrar sesión" color="red" />
-      </View>
-    </ScrollView>
+          <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+            <OpcionPerfil
+              icon={<Ionicons name="calendar-outline" size={24} color="#0f766e" />}
+              label="Ver itinerario"
+              onPress={() => router.push('/')}
+            />
+
+            <OpcionPerfil
+              icon={<Feather name="edit-2" size={24} color="#0f766e" />}
+              label="Editar perfil"
+              onPress={() => router.push('/')}
+            />
+
+            <OpcionPerfil
+              icon={<FontAwesome5 name="comments" size={22} color="#0f766e" />}
+              label="Mis comentarios"
+              onPress={() => router.push('/')}
+            />
+
+            <OpcionPerfil
+              icon={<Feather name="settings" size={24} color="#0f766e" />}
+              label="Configuración"
+              onPress={() => router.push('/')}
+            />
+
+            <OpcionPerfil
+              icon={<AntDesign name="logout" size={24} color="#dc2626" />}
+              label="Cerrar sesión"
+              onPress={handleLogout}
+              color="#dc2626"
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
-
-function Opcion({ icon, texto, color = colors.textPrimary }: { icon: any; texto: string; color?: string }) {
-  return (
-    <TouchableOpacity style={styles.option}>
-      <Ionicons name={icon} size={22} color={color} />
-      <Text style={[styles.optionText, { color }]}>{texto}</Text>
-    </TouchableOpacity>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    alignItems: 'center',
-    paddingTop: 40,
-    paddingBottom: 30,
-    backgroundColor: colors.primaryBlue,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: 'white',
-    marginBottom: 10,
-  },
-  nombre: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: 'white',
-  },
-  ubicacion: {
-    color: colors.iconAccent,
-    fontSize: 14,
-    marginTop: 2,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 20,
-  },
-  statBox: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.primaryBlue,
-  },
-  statLabel: {
-    fontSize: 13,
-    color: colors.textSecondary,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginTop: 30,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderBottomWidth: 0.5,
-    borderColor: '#E5E7EB',
-  },
-  optionText: {
-    marginLeft: 15,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
