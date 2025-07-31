@@ -15,7 +15,7 @@ export interface ActivityItem {
 export const activityItems: ActivityItem[] = [
   {
     id: "1",
-    title: "Naturaleza y Aventura",
+    title: "Naturaleza y Aventura ",
     icon: "leaf-outline",
     type: "tour",
     backgroundColor: "#34D399",
@@ -24,7 +24,7 @@ export const activityItems: ActivityItem[] = [
   },
   {
     id: "2",
-    title: "Actividades Acuáticas",
+    title: "Actividades Acuáticas ",
     icon: "water-outline",
     type: "parque",
     backgroundColor: "#60A5FA",
@@ -33,7 +33,7 @@ export const activityItems: ActivityItem[] = [
   },
   {
     id: "3",
-    title: "Historia y Cultura",
+    title: "Historia y Cultura ",
     icon: "book-outline",
     type: "museo",
     backgroundColor: "#FBBF24",
@@ -42,7 +42,7 @@ export const activityItems: ActivityItem[] = [
   },
   {
     id: "4",
-    title: "Arte y Entretenimiento",
+    title: "Arte y Entretenimiento ",
     icon: "musical-notes-outline",
     type: "mirador",
     backgroundColor: "#F472B6",
@@ -51,7 +51,7 @@ export const activityItems: ActivityItem[] = [
   },
   {
     id: "5",
-    title: "Compras y Artesanía",
+    title: "Compras y Artesanía ",
     icon: "cart-outline",
     type: "comida",
     backgroundColor: "#A78BFA",
@@ -69,7 +69,7 @@ export const activityItems: ActivityItem[] = [
   },
   {
     id: "6",
-    title: "Vida Urbana y Nocturna",
+    title: "Vida Urbana y Nocturna ",
     icon: "moon-outline",
     type: "comida",
     backgroundColor: "#d971f8ff",

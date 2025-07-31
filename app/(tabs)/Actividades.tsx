@@ -28,7 +28,7 @@ export default function Map() {
   const [press, setPress] = useState(false);
   const [mapType, setMapType] = useState<MapType>("standard");
   const [traffic, setTraffic] = useState(Boolean);
-/* --------------variables----------------*/
+  /* --------------variables----------------*/
   const { id_cat } = useLocalSearchParams();
   const [origin, setOrigin] = useState<LatLng>();
   const [destination, setDestination] = useState<LatLng>();
@@ -36,49 +36,50 @@ export default function Map() {
   const [distancia, setDistancia] = useState("");
   const mapRef = useRef<MapView | null>(null);
   const watchRef = useRef<Location.LocationSubscription | null>(null);
-/*   const [activarEfecto, setActivarEfecto] = useState(Boolean || null); */
+  /*   const [activarEfecto, setActivarEfecto] = useState(Boolean || null); */
   const [statusMapViewDirections, setStatusMapViewDirections] = useState(false);
   const [selectedId, setSelectedId] = useState<PropActivity | null>(null);
   const [seguiActividad, setSeguirActividad] = useState<PropActivity>();
   const [siguiendoRuta, setSiguiendoRuta] = useState(Boolean || null);
 
 
-useEffect(() => {
-  if (press) {
-    const cargarTodo = async () => {
-      const [{ data: tipoMapa }, { data: trafico }] = await Promise.all([
-        cargarMapType("maptype"),
-        cargarMapType("traffic"),
-      ]);
-
-      setMapType(tipoMapa);
-      setTraffic(trafico);
+  useEffect(() => {
+    if (press) {
+      cargar();
+      cargar2();
       setPress(false);
-    };
+    }
+  }, [press]);
 
-    cargarTodo();
-  }
-}, [press]);
+  const cargar = async () => {
+    const { data, error } = await cargarMapType("maptype");
+    setMapType(data);
+  };
+
+  const cargar2 = async () => {
+    const { data, error } = await cargarMapType("traffic");
+    setTraffic(data);
+  };
 
 
 
-  
+
 
   useEffect(() => {
     if (siguiendoRuta) {
       cargar3();
-     
+
     }
     cargar3();
   }, [siguiendoRuta]);
 
   const cargar3 = async () => {
     const { data, error } = await cargarMapType("seguimiento");
-    const [activar,actividad] = data;
+    const [activar, actividad] = data;
 
     setStatusMapViewDirections(activar);
     setSeguirActividad(activar);
-    setDestination({latitude:actividad.latitud,longitude:actividad.longitud});    
+    setDestination({ latitude: actividad.latitud, longitude: actividad.longitud });
     if (activar) {
       setSelectedId(actividad);
       setSeguirActividad(actividad);
@@ -88,16 +89,16 @@ useEffect(() => {
   useEffect(() => {
     if (statusMapViewDirections == true) {
       const iniciarSeguimiento = async () => {
-       /*  const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          alert("Permiso denegado");
-          return;
-        } */
+        /*  const { status } = await Location.requestForegroundPermissionsAsync();
+         if (status !== "granted") {
+           alert("Permiso denegado");
+           return;
+         } */
 
         watchRef.current = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1000, // ⏱️ Actualizar cada 1 segundo
+            timeInterval: 1000, // ⏱ Actualizar cada 1 segundo
             distanceInterval: 0,
           },
           (location) => {
@@ -147,7 +148,7 @@ useEffect(() => {
         altitude: 1000,
       });
     })();
- 
+
     cargar3();
   }, []);
 
@@ -210,7 +211,7 @@ useEffect(() => {
               longitudeDelta: 0.9,
             }}
           >
-         
+
             {statusMapViewDirections && destination && (
               <CustomPolyline
                 origin={origin}
@@ -233,7 +234,7 @@ useEffect(() => {
           <View style={styles.nav2}>
             {selectedId && (
               <NewPanelIndicaciones
-               /*  seguir={setActivarEfecto} */
+                /*  seguir={setActivarEfecto} */
                 mapRef={mapRef}
                 marker={selectedId}
                 setDestination={setDestination}

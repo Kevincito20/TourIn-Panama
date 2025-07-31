@@ -50,7 +50,7 @@ export default function RegionesList() {
               (currentIndex + 1) % region.provincias.length;
             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
             setCurrentIndex(nextIndex);
-          }, 2000);
+          }, 5000);
           return () => clearInterval(interval);
         }, [currentIndex]);
 
