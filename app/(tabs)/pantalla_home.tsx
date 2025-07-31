@@ -4,13 +4,15 @@ import Itinerario from '@/components/inicio/itinerario';
 import {Recomendaciones} from '@/components/inicio/recomendaciones';
 import InicioScreen from '@/components/inicio/Screen-header';
 import { colors } from '@/constants/Colors';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PantallaHome() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <StatusBar style='dark' backgroundColor={colors.white} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -40,7 +42,7 @@ export default function PantallaHome() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.primaryBlue,
+    backgroundColor: colors.white,
   },
   container: {
     flex: 1,

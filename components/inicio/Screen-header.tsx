@@ -1,32 +1,56 @@
-import React, { useState } from 'react';
-import { View, Modal, StyleSheet } from 'react-native';
-import MenuHamburguesa from '../ui/InformacionPanama';
-import { HeaderInicio } from './header-inicio';
+import React from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
-
-const InicioScreen = () => {
-  const [menuVisible, setMenuVisible] = useState(false);
+export default function InicioScreen() {
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <HeaderInicio onMenuPress={() => setMenuVisible(true)} />
-      <Modal
-        visible={menuVisible}
-        animationType="slide"
-        onRequestClose={() => setMenuVisible(false)}
-      >
-        
-        <MenuHamburguesa onClose={() => setMenuVisible(false)} />
-      </Modal>
+      <View style={styles.header}>
+        <Text style={styles.title}>Explora</Text>
+        <TouchableOpacity
+          onPress={() => router.push('/(modales)/InformacionPanama')}
+        >
+          <View style={styles.menuIcon}>
+            <View style={styles.menuLine} />
+            <View style={styles.menuLine} />
+            <View style={styles.menuLine} />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-};
-
-export default InicioScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#F7F7F7',
+    paddingHorizontal: 20,
+    backgroundColor: '#feffffff',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1A5F7A',
+    letterSpacing: -0.5,
+    marginLeft: 8,
+  },
+
+  menuIcon: {
+    width: 18,
+    height: 14,
+    justifyContent: 'space-between',
+  },
+  menuLine: {
+    width: '100%',
+    height: 2,
+    backgroundColor: '#1A5F7A',
+    borderRadius: 1,
   },
 });

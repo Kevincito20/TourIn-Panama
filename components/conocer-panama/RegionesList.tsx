@@ -1,7 +1,6 @@
 import { regiones } from '@/components/conocer-panama/regionesData';
 import { colors } from '@/constants/Colors';
-import { useNavigation } from '@react-navigation/native';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -11,6 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useRouter } from 'expo-router';
+
 
 const screenWidth = Dimensions.get('window').width;
 const CARD_WIDTH = screenWidth * 0.89;
@@ -18,17 +19,19 @@ const CARD_HEIGHT = 200;
 
 export default function RegionesList() {
   const [activeIndices, setActiveIndices] = useState<{ [key: string]: number }>({});
-  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Conoce Panamá</Text>
-        <Text style={styles.subtitle}>Historia / Geografía / Tradiciones / Datos Curiosos</Text>
+        <Text style={styles.title}>🌎 Conoce Panamá</Text>
+        <Text style={styles.subtitle}>Explora su historia, geografía y cultura</Text>
+        <View style={styles.divider} />
       </View>
 
       {regiones.map((region, index) => {
         const flatListRef = useRef<FlatList>(null);
+        const [currentIndex, setCurrentIndex] = useState(0);
 
         const onViewRef = useRef(({ viewableItems }: any) => {
           if (viewableItems.length > 0) {
@@ -40,6 +43,16 @@ export default function RegionesList() {
         });
 
         const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            const nextIndex =
+              (currentIndex + 1) % region.provincias.length;
+            flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+            setCurrentIndex(nextIndex);
+          }, 2000);
+          return () => clearInterval(interval);
+        }, [currentIndex]);
 
         return (
           <View
@@ -61,7 +74,12 @@ export default function RegionesList() {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.card}
-                  onPress={() => navigation.navigate('PantallaDetalleProvincia', { provincia: item.nombre })}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/PantallaDetalleProvincia',
+                      params: { provincia: item.nombre },
+                    })
+                  }
                 >
                   <Image source={{ uri: item.imagen }} style={styles.image} />
                   <View style={styles.textOverlay}>
@@ -98,17 +116,25 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingTop: 10,
-    marginBottom: 10,
+    marginBottom: 14,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 22,
+    fontWeight: 'bold',
     color: colors.primaryBlue,
-    marginBottom: 6,
   },
   subtitle: {
     fontSize: 14,
-    color: colors.lightBlue,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+  divider: {
+    marginTop: 10,
+    width: 60,
+    height: 4,
+    backgroundColor: colors.primaryBlue,
+    borderRadius: 2,
   },
   regionContainer: {
     marginBottom: 20,
@@ -129,7 +155,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    
   },
   textOverlay: {
     position: 'absolute',
@@ -164,7 +189,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
   },
   activeDot: {
-    backgroundColor: '#ffffffff',
+    backgroundColor: '#ffffff',
     width: 10,
     height: 10,
     borderRadius: 5,

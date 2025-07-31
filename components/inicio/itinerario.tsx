@@ -21,7 +21,7 @@ const Itinerario = () => {
   return (
     <View>
       <ItinerarioHeader total={actividades.length} />
-      <EstadoItinerario actividades={actividades} cargando={cargando} limite={3 } />
+      <EstadoItinerario actividades={actividades} cargando={cargando} limite={3} />
 
       <TouchableOpacity
         style={styles.verCompleto}

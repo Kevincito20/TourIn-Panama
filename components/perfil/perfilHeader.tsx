@@ -28,7 +28,7 @@ export const PerfilHeader = ({
   const { usuario, cargando } = useUsuario();
 
   if (cargando) {
-    return <Text>Cargando...</Text>;
+    return <Text style={{ textAlign: "center", marginTop: 20 }}>Cargando...</Text>;
   }
 
   return (
@@ -45,7 +45,7 @@ export const PerfilHeader = ({
           style={styles.profileImageWrapper}
         >
           <LinearGradient
-            colors={[colors.primaryBlue, '#0f766e']}
+            colors={[colors.primaryBlue, '#5ffdf0ff']}
             style={styles.gradientBorder}
           >
             <Image
@@ -59,17 +59,15 @@ export const PerfilHeader = ({
           </LinearGradient>
         </TouchableOpacity>
 
-        <Text style={styles.userName}>{usuario?.nombre_usuario +' '+ usuario?.apellido_usuario}</Text>
-
-        <View style={styles.locationContainer}>
-          <Ionicons name="location" size={16} color="#a7f3d0" />
-          <Text style={styles.location}>Panamá</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.userName}>
+            {usuario?.nombre_usuario} {usuario?.apellido_usuario}
+          </Text>
+          <Text style={styles.userUsername}>
+            @{usuario?.cuenta_usuario}
+          </Text>
         </View>
 
-        <View style={styles.premiumBadge}>
-          <Ionicons name="trophy" size={14} color="#b45309" />
-          <Text style={styles.premiumText}>Explorador Premium</Text>
-        </View>
       </View>
     </LinearGradient>
   );

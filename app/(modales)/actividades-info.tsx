@@ -6,14 +6,19 @@ import {
   View,
   Image,
   ActivityIndicator,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ModalContenido } from "@/components/actividades/ModalContenido";
-import { ModalHeader } from "@/components/actividades/ModalHeader";
 import { colors } from "@/constants/Colors";
 import { useComentariosActividad } from "@/hooks/useComentarios";
 import { Comentario } from "@/components/services/ObtenerComentariosService";
 import { useUsuario } from "@/hooks/useUsuario";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { ModalContenido } from "@/components/actividades/ModalContenido";
+import ComentarioItem from "@/components/ui/Comentario";
 
 type Params = {
   id: string;
@@ -21,138 +26,154 @@ type Params = {
   descp: string;
   foto_url: string;
   rating: string;
+  latitud: string;
+  longitud: string;
 };
 
-type ComentarioItemProps = {
-  comentario: Comentario;
-};
-
-
-const ComentarioItem = ({ comentario }: ComentarioItemProps) => (
-  <View style={styles.commentItem}>
-    <Image source={{ uri: comentario.foto }} style={styles.commentFoto} />
-    <View style={{ flex: 1, marginLeft: 10 }}>
-      <Text style={styles.commentAuthor}>
-        {comentario.nombre_usuario} {comentario.apellido_usuario}
-      </Text>
-      <Text style={styles.commentEncabezado}>{comentario.encabezado}</Text>
-      <Text style={styles.commentText}>{comentario.opinion}</Text>
-      <Text style={styles.commentFecha}>{comentario.fecha_creacion}</Text>
-    </View>
-  </View>
-);
-
-const ActividadDetalleScreen = () => {
-  const { id, encabezado, descp, foto_url, rating } = useLocalSearchParams<Params>();
+export default function ActividadDetalleScreen() {
+  const { id, encabezado, descp, foto_url, rating, latitud, longitud } =
+    useLocalSearchParams<Params>();
   const router = useRouter();
 
   const { usuario } = useUsuario();
   const id_usuario = usuario?.id_usuario || 0;
   const id_actividad = Number(id);
 
-  const { comentarios, loading, error } = useComentariosActividad(id_usuario, id_actividad);
+  const { comentarios, loading, error } = useComentariosActividad(
+    id_usuario,
+    id_actividad
+  );
 
   const renderComentario = ({ item }: { item: Comentario }) => (
     <ComentarioItem comentario={item} />
   );
 
-  if (loading) {
-    return (
-      <>
-        <ModalHeader title={encabezado} imageUrl={foto_url} onClose={() => router.back()} />
-        <ActivityIndicator size="large" color={colors.primaryBlue} style={styles.centered} />
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <ModalHeader title={encabezado} imageUrl={foto_url} onClose={() => router.back()} />
-        <Text style={[styles.errorText, styles.centered]}>{error}</Text>
-      </>
-    );
-  }
+  const handleGuardarEnItinerario = () => {
+    router.push({
+      pathname: "/(modales)/ScreenFormulario",
+      params: { id, encabezado, foto_url, descp },
+    });
+  };
 
   return (
-    <>
-      <ModalHeader title={encabezado} imageUrl={foto_url} onClose={() => router.back()} />
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: foto_url }} style={styles.image} />
 
-      <FlatList
-        data={comentarios}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={renderComentario}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No hay comentarios aún.</Text>
-        }
-        ListHeaderComponent={
-          <ModalContenido
-            description={descp}
-            ubicacion="Cinta Costera, Panamá"
-            rating={Number(rating)}
-            onCrearComentario={() =>
-              router.push({
-                pathname: "/(modales)/ScreenComentario",
-                params: { id_usuario, id_actividad }
-              })
-            }
-            onGuardarEnItinerario={() =>
-              router.push({
-                pathname: "/(modales)/ScreenFormulario",
-                params: { id, encabezado, foto_url, descp },
-              })
-            }
+        {/* Botón Cerrar */}
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="close" size={24} color="#fff" />
+        </TouchableOpacity>
+
+        {/* Botón Guardar */}
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={handleGuardarEnItinerario}
+        >
+          <Ionicons name="bookmark" size={24} color="#fff" />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>{encabezado}</Text>
+      </View>
+
+      <View style={styles.spacing} />
+
+      <View style={styles.contentBox}>
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color={colors.primaryBlue}
+            style={styles.centered}
           />
-        }
-        contentContainerStyle={{ paddingBottom: 40 }}
-        style={styles.list}
-      />
-    </>
+        ) : error ? (
+          <Text style={[styles.errorText, styles.centered]}>{error}</Text>
+        ) : (
+          <FlatList
+            data={comentarios}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={renderComentario}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>No hay comentarios aún.</Text>
+            }
+            ListHeaderComponent={
+              <ModalContenido
+                description={descp}
+                ubicacion="Ubicación de la actividad"
+                rating={Number(rating)}
+                latitud={Number(latitud)}
+                longitud={Number(longitud)}
+                onCrearComentario={() =>
+                  router.push({
+                    pathname: "/(modales)/ScreenComentario",
+                    params: { id_usuario, id_actividad },
+                  })
+                }
+              />
+            }
+            contentContainerStyle={{ paddingBottom: 40 }}
+            style={{ flex: 1 }}
+          />
+        )}
+      </View>
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  list: {
+  container: {
+    flex: 1,
     backgroundColor: "#FAFAFA",
+  },
+  imageContainer: {
+    position: "relative",
+    height: 240,
+    width: "100%",
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: "cover",
+  },
+  closeButton: {
+    position: "absolute",
+    top: Platform.OS === "android" ? StatusBar.currentHeight! + 10 : 50,
+    left: 16,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 20,
+    padding: 8,
+    zIndex: 2,
+  },
+  saveButton: {
+    position: "absolute",
+    top: Platform.OS === "android" ? StatusBar.currentHeight! + 10 : 50,
+    right: 16,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 20,
+    padding: 8,
+    zIndex: 2,
+  },
+  title: {
+    position: "absolute",
+    bottom: 16,
+    left: 16,
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+    zIndex: 2,
+  },
+  spacing: {
+    height: 0,
+  },
+  contentBox: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 10,
   },
   centered: {
     marginTop: 20,
     alignSelf: "center",
-  },
-  commentItem: {
-    flexDirection: "row",
-    marginHorizontal: 20,
-    marginBottom: 15,
-    backgroundColor: "#F5F5F5",
-    padding: 10,
-    borderRadius: 8,
-  },
-  commentFoto: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  commentAuthor: {
-    fontWeight: "700",
-    color: colors.textPrimary,
-    fontSize: 14,
-  },
-  commentEncabezado: {
-    fontWeight: "600",
-    color: colors.primaryBlue,
-    fontSize: 13,
-    marginTop: 2,
-  },
-  commentText: {
-    color: colors.textSecondary,
-    fontSize: 13,
-    marginTop: 2,
-  },
-  commentFecha: {
-    color: colors.textSecondary,
-    fontSize: 11,
-    marginTop: 4,
-    fontStyle: "italic",
   },
   emptyText: {
     fontStyle: "italic",
@@ -166,5 +187,3 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-
-export default ActividadDetalleScreen;

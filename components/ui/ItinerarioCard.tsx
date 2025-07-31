@@ -10,6 +10,21 @@ type Props = {
   esUltima: boolean;
 };
 
+export function formatFecha(fechaStr: string): string {
+  const date = new Date(fechaStr);
+  const dia = date.getDate().toString().padStart(2, '0');
+  const mes = (date.getMonth() + 1).toString().padStart(2, '0');
+  const anio = date.getFullYear();
+  return `${dia}/${mes}/${anio}`;
+}
+
+export function formatHora12(horaStr: string): string {
+  const [horas, minutos] = horaStr.split(':').map(Number);
+  const ampm = horas >= 12 ? 'PM' : 'AM';
+  const horas12 = horas % 12 === 0 ? 12 : horas % 12;
+  return `${horas12}:${minutos.toString().padStart(2, '0')} ${ampm}`;
+}
+
 export const ItinerarioCard = ({ actividad, esUltima }: Props) => (
   <View style={styles.actividadContainer}>
     <View style={styles.actividadCard}>
@@ -26,7 +41,7 @@ export const ItinerarioCard = ({ actividad, esUltima }: Props) => (
         <View style={styles.detalleContainer}>
           <Ionicons name="time-outline" size={14} color={colors.textSecondary} />
           <Text style={styles.detalleText}>
-            {actividad.hora_itinerario} • {actividad.fecha_itinerario}
+            {formatHora12(actividad.hora_itinerario)} • {formatFecha(actividad.fecha_itinerario)}
           </Text>
         </View>
         {actividad.nota_itinerario && (
@@ -41,6 +56,7 @@ export const ItinerarioCard = ({ actividad, esUltima }: Props) => (
     {!esUltima && <View style={styles.conectorLinea} />}
   </View>
 );
+
 
 const styles = StyleSheet.create({
   actividadContainer: {

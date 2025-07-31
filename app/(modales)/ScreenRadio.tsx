@@ -6,11 +6,14 @@ import { MapaConRadio } from '@/components/inicio/radio/MapaRadio';
 import { SelectorDeRadio } from '@/components/inicio/radio/SelectorRadio';
 import { obtenerRadioKm, guardarRadioKm } from '@/components/inicio/radio/RadioStorage';
 import { Ionicons } from '@expo/vector-icons';
+import { useToast } from '@/hooks/useMensajeExito';
 
 export default function SeleccionarRadioScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [radioKm, setRadioKm] = useState(10);
   const router = useRouter();
+  const mostrarMensaje = useToast();
+
 
   useEffect(() => {
     (async () => {
@@ -30,11 +33,16 @@ export default function SeleccionarRadioScreen() {
 
   const handleConfirmar = async () => {
     await guardarRadioKm(radioKm);
-    router.push({
-      pathname: '/(tabs)/pantalla_home',
-      params: { nuevaDistancia: radioKm * 1000 },
-    });
+    mostrarMensaje('Radio guardado');
+    setTimeout(() => {
+      router.push({
+        pathname: '/(tabs)/pantalla_home',
+        params: { nuevaDistancia: radioKm * 1000 },
+      });
+    }, 2200); 
   };
+
+
 
   const handleVolver = () => {
     router.back();
@@ -51,7 +59,7 @@ export default function SeleccionarRadioScreen() {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-      
+
       <TouchableOpacity onPress={handleVolver} style={styles.botonVolver}>
         <Ionicons name="arrow-back" size={28} color="white" />
       </TouchableOpacity>
@@ -68,7 +76,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    backgroundColor: '#000', 
+    backgroundColor: '#000',
   },
   center: {
     flex: 1,

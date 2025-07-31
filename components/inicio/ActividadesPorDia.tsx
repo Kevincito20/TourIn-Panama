@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ItinerarioItem } from '../types/Itinerario';
 import { colors } from '@/constants/Colors';
+import { formatFecha, formatHora12 } from '@/components/ui/ItinerarioCard';
 
 type Props = {
   actividades: ItinerarioItem[];
@@ -17,7 +18,7 @@ export const ActividadesSemanales = ({ actividades, onCompletar, onEliminar }: P
           <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>{actividad.titulo_actividad}</Text>
             <Text style={styles.cardDetails}>
-              {actividad.fecha_itinerario} — {actividad.hora_itinerario}
+              {formatFecha(actividad.fecha_itinerario)} — {formatHora12(actividad.hora_itinerario)}
             </Text>
             {actividad.nota_itinerario ? (
               <Text style={[styles.cardDetails, { fontStyle: 'italic' }]}>

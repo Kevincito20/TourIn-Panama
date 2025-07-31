@@ -7,86 +7,129 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/constants/Colors";
+import MapView, { Marker } from "react-native-maps";
+import { useRouter } from "expo-router";
 
 interface ModalContenidoProps {
   description: string;
   ubicacion: string;
   rating: number;
+  latitud: number;
+  longitud: number;
   onCrearComentario: () => void;
-  onGuardarEnItinerario: () => void;
+  
 }
 
 export function ModalContenido({
   description,
   ubicacion,
   rating,
+  latitud,
+  longitud,
   onCrearComentario,
-  onGuardarEnItinerario,
 }: ModalContenidoProps) {
+  const router = useRouter();
+
+  const handleAbrirMapa = () => {
+    router.push({
+      pathname: "/(tabs)/pantalla_mapa copy", 
+      params: {
+        latitud: latitud.toString(),
+        longitud: longitud.toString(),
+        titulo: ubicacion,
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Descripción</Text>
       <Text style={styles.description}>{description}</Text>
 
-      <View style={styles.infoRow}>
-        <Ionicons name="location-outline" size={20} color={colors.textPrimary} />
-        <Text style={styles.infoText}>{ubicacion}</Text>
-      </View>
+      <TouchableOpacity onPress={handleAbrirMapa} activeOpacity={0.9}>
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: latitud,
+            longitude: longitud,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          scrollEnabled={false}
+          zoomEnabled={false}
+        >
+          <Marker coordinate={{ latitude: latitud, longitude: longitud }} />
+        </MapView>
+        <Text style={styles.mapLabel}>
+          <Ionicons name="location-outline" size={16} /> {ubicacion}
+        </Text>
+      </TouchableOpacity>
 
-      <View style={styles.infoRow}>
-        <Ionicons name="star-outline" size={20} color={colors.warmYellow} />
-        <Text style={styles.infoText}>{rating.toFixed(1)} / 5</Text>
+      <View style={styles.ratingRow}>
+        <Ionicons name="star-outline" size={18} color={colors.warmYellow} />
+        <Text style={styles.ratingText}>{rating.toFixed(1)} / 5</Text>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={onCrearComentario}>
-        <Ionicons name="chatbubble-ellipses-outline" size={20} color={colors.white} />
+        <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.white} />
         <Text style={styles.buttonText}>Escribir comentario </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: colors.primaryBlue }]}
-        onPress={onGuardarEnItinerario}
-      >
-        <Ionicons name="calendar-outline" size={20} color={colors.white} />
-        <Text style={styles.buttonText}>Guardar en itinerario </Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 30,
+    backgroundColor: "#fff",
   },
   sectionTitle: {
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 6,
     color: colors.textPrimary,
   },
   description: {
-    fontSize: 15,
-    marginBottom: 10,
+    fontSize: 14.5,
     color: colors.textSecondary,
+    marginBottom: 12,
+    lineHeight: 20,
   },
-  infoRow: {
+  map: {
+    width: "100%",
+    height: 160,
+    borderRadius: 12,
+  },
+  mapLabel: {
+    marginTop: 6,
+    fontSize: 14,
+    color: colors.textPrimary,
+    fontWeight: "500",
+  },
+  ratingRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    marginTop: 14,
+    marginBottom: 10,
   },
-  infoText: {
+  ratingText: {
     marginLeft: 6,
-    color: colors.textPrimary,
     fontSize: 14,
+    fontWeight: "500",
+    color: colors.textPrimary,
   },
   button: {
     flexDirection: "row",
     backgroundColor: colors.lightBlue,
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 12,
   },
   buttonText: {
     color: colors.white,

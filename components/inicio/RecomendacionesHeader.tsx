@@ -12,7 +12,7 @@ type Props = {
 export const RecomendacionesHeader = ({ distancia, onPress }: Props) => (
   <View style={styles.header}>
     <View style={styles.headerLeft}>
-      <Text style={styles.headerTitle}>Actividades cerca de ti</Text>
+      <Text style={styles.headerTitle}>Actividades cerca de ti </Text>
     </View>
 
     <TouchableOpacity style={styles.radioButton} onPress={onPress}>

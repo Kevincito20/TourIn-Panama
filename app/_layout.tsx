@@ -1,47 +1,17 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ToastProvider } from '@/hooks/useMensajeExito'; 
 
 export default function RootLayout() {
   return (
-    <>
-      <StatusBar 
-      backgroundColor='black'
-      style="light"
-
-      />
+    <ToastProvider> 
+      <StatusBar backgroundColor="black" style="light" />
       <Stack>
-        
-        <Stack.Screen 
-          name="(autenticacion)" 
-          options={{ 
-            headerShown: false
-          }} 
-        />
-        
-  
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ 
-            headerShown: false
-          }} 
-        />
-
-        <Stack.Screen 
-          name="(modales)" 
-          options={{ 
-            headerShown: false
-          }} 
-        />
-        
+        <Stack.Screen name="(autenticacion)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(modales)" options={{ headerShown: false }} />
+     
       </Stack>
-    </>
+    </ToastProvider>
   );
 }
-
-/* 
-        <Stack.Screen 
-          name="pantalla_mapa" 
-          options={{ 
-            headerShown: false
-          }} 
-        />*/

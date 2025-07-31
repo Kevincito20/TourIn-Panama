@@ -106,22 +106,19 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  premiumBadge: {
-    marginTop: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fef3c7', // amarillo claro para destacar
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 30,
+
+  userUsername: {
+    fontSize: 14,
+    color: '#d1fae5',
+    marginTop: 4,
+    fontStyle: 'italic',
   },
 
-  premiumText: {
-    marginLeft: 6,
-    fontWeight: '700',
-    fontSize: 14,
-    color: '#b45309',
+  textContainer: {
+    alignItems: 'center',
+    marginTop: 8,
   },
+
 
   optionRow: {
     flexDirection: 'row',

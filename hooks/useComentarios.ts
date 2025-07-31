@@ -11,7 +11,7 @@ export function useComentariosActividad(id_usuario: number | string, id_activida
     const userId = Number(id_usuario);
     const actividadId = Number(id_actividad);
 
-    // Validación de parámetros
+    
     if (!userId || isNaN(userId) || !actividadId || isNaN(actividadId)) {
       setError("Parámetros inválidos para obtener comentarios.");
       return;

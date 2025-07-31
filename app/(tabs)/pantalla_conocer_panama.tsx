@@ -1,17 +1,19 @@
-import PantallaDetalleProvincia from '@/components/conocer-panama/PantallaDetalleProvincia';
+import PantallaDetalleProvincia from '@/app/(modales)/PantallaDetalleProvincia';
 import RegionesList from '@/components/conocer-panama/RegionesList';
-import InicioScreen from '@/components/inicio/Screen-header';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
 function PantallaConocerPanamaScreen() {
   return (
-    <ScrollView style={styles.container}>
-      <InicioScreen />
-      <RegionesList />
-    </ScrollView>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <ScrollView style={styles.container}>
+        <RegionesList />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -33,8 +35,11 @@ export default function PantallaConocerPanama() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  container: {
+    flex: 1,
   },
 });

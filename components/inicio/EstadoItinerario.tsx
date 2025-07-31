@@ -18,7 +18,6 @@ export const EstadoItinerario = ({ actividades, cargando, limite }: Props) => {
   if (actividades.length === 0)
     return <Text style={styles.textCenter}>No tienes actividades programadas.</Text>;
 
-  // Mostrar solo las primeras `limite` actividades si se especifica
   const actividadesAMostrar = limite ? actividades.slice(0, limite) : actividades;
 
   return (
