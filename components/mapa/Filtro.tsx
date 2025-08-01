@@ -62,7 +62,7 @@ const Filtro = ({ setPress }: any) => {
       >
         <View style={styles.overlay}>
           <ImageBackground
-            source={require("./imagenes/fondoAnimales.png")}
+            source={require("./imagenes/fondoP5.png")}
             imageStyle={styles.modalImage}
           >
             <View style={styles.modal}>
@@ -155,7 +155,7 @@ const Filtro = ({ setPress }: any) => {
               </View>
             </View>
             <LinearGradient
-              colors={["transparent", "#014755ff"]}
+              colors={["#0e0e0e7a", "#0e0e0ea2"]}
               style={styles.background}
             />
           </ImageBackground>
@@ -167,10 +167,10 @@ const Filtro = ({ setPress }: any) => {
 
 const styles = StyleSheet.create({
   sectionStyle: {
-    borderBottomWidth: 2,
+
     paddingBottom: 10,
     borderRadius: 30,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
     elevation: 20,
   },
   contenedorIconos: {
@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
   },
   buttons: {
     backgroundColor: "#FFFFFF",
-    borderColor: "#DDDDDD",
-    borderWidth: 1,
+    borderColor: "#ffffffff",
+   
     width: 60,
     height: 60,
     borderRadius: 12,
@@ -224,8 +224,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     padding: 10,
-    backgroundColor: "#FFFFFF",
-    color: "#333333",
+    backgroundColor: "#ffffff57",
+    color: "#000000ff",
     fontWeight: "bold",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     padding: 12,
-    borderRadius: 20,
+
     width: "100%",
     gap: 12,
     zIndex: 2,

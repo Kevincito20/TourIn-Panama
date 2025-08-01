@@ -11,7 +11,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.primaryBlue,
-          height: 75,
+          height: 80,
           borderTopWidth: 0,
           overflow: "hidden",
           paddingBottom: 5, 

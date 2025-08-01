@@ -1,7 +1,7 @@
-//Listo, mejorable
-//cambiar las ref de map para el movimiento de la camara
+//Listo
+
 import { colors } from "@/constants/Colors";
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -17,6 +17,7 @@ interface Actividades2Props {
   distancia: any;
   duracion: any;
   activarSeguimiento: any;
+  setMode: any;
 }
 
 export function NewPanelIndicaciones({
@@ -27,6 +28,7 @@ export function NewPanelIndicaciones({
   setDestination,
   activarSeguimiento,
   statusMapDirections,
+  setMode,
 }: Actividades2Props) {
   const [pressSeguir, setpressSeguir] = useState(false);
   const [indicacionesBtn, setindicacionesBtn] = useState(true);
@@ -80,6 +82,7 @@ export function NewPanelIndicaciones({
       });
       setseguirbtn(false);
     } else {
+      Haptics.selectionAsync();
       setmostrar(false);
       setSiguiendoRuta(false);
       mapRef.current?.animateCamera(panamaView2, {
@@ -93,17 +96,15 @@ export function NewPanelIndicaciones({
   const handleSeguir = () => {
     if (!pressSeguir) {
       Haptics.selectionAsync();
-      const datos = [
-        true,
-        marker,
-      ];
+      const datos = [true, marker];
       guardarMapType({ lugar: "seguimiento", tipo: datos });
       setpressSeguir(true);
       activarSeguimiento(true);
       setindicacionesBtn(false);
       setmostrar(true);
     } else {
-      guardarMapType({ lugar: "seguimiento", tipo: [false,marker] });
+      Haptics.selectionAsync();
+      guardarMapType({ lugar: "seguimiento", tipo: [false, marker] });
       mapRef.current?.animateCamera(panamaView2, {
         duration: 1000,
       });
@@ -130,7 +131,11 @@ export function NewPanelIndicaciones({
                   siguiendoRuta && styles.activeIconContainer,
                 ]}
               >
-                <FontAwesome5 name="directions" size={25} color="black" />
+                <MaterialIcons
+                  name={siguiendoRuta ? "close" : "directions"}
+                  size={25}
+                  color="balck"
+                />
               </View>
               <Text
                 style={[
@@ -138,7 +143,7 @@ export function NewPanelIndicaciones({
                   siguiendoRuta && styles.activeButtonText,
                 ]}
               >
-                {siguiendoRuta ? "Cancelar" : "Indicaciones"}
+                {siguiendoRuta ? "" : "Indicaciones"}
               </Text>
             </View>
           </TouchableOpacity>
@@ -171,14 +176,16 @@ export function NewPanelIndicaciones({
                   pressSeguir && styles.activeButtonText,
                 ]}
               >
-                {pressSeguir ? "Cancelar" : "Seguir"}
+                {pressSeguir ? "" : " Seguir "}
               </Text>
             </View>
           </TouchableOpacity>
         )}
       </View>
 
-      {mostrar && <Info duracion={duracion} distancia={distancia} />}
+      {mostrar && (
+        <Info duracion={duracion} distancia={distancia} setMode={setMode} />
+      )}
     </View>
   );
 }
@@ -192,8 +199,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   actionButton: {
-    elevation: 5,
-    backgroundColor: colors.navIndicaciones,
+    elevation: 20,
+    backgroundColor: colors.background,
     borderRadius: 16,
     paddingVertical: 6,
     paddingHorizontal: 5,

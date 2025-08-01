@@ -1,4 +1,4 @@
-//Listo, Mejorable 
+//Listo
 export const fetchActividades = async () => {
   try {
     const response = await fetch("https://apitourinpanama.onrender.com/actividad/get");

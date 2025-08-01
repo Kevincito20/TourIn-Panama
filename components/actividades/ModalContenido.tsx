@@ -1,14 +1,15 @@
+import { colors } from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { colors } from "@/constants/Colors";
 import MapView, { Marker } from "react-native-maps";
-import { useRouter } from "expo-router";
+import { handlePressUbicacion } from "../mapa/handlePress";
 
 interface ModalContenidoProps {
   description: string;
@@ -30,14 +31,15 @@ export function ModalContenido({
   const router = useRouter();
 
   const handleAbrirMapa = () => {
-    router.push({
-      pathname: "/(tabs)/Actividades",
+    handlePressUbicacion(latitud,longitud)
+   /*  router.push({
+      pathname: "/(tabs)/Actividades", 
       params: {
         latitud: latitud.toString(),
         longitud: longitud.toString(),
         titulo: ubicacion,
       },
-    });
+    }); */
   };
 
   return (

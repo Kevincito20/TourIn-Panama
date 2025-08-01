@@ -1,85 +1,87 @@
-import CardActivity from "@/components/mapa/cardActividades";
 import { colors } from "@/constants/Colors";
 import * as Location from "expo-location";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { LatLng, MapType } from "react-native-maps";
 
 //local storage
 import { NewPanelIndicaciones } from "@/components/mapa/btnSuperiorMapa";
+import CardActivity from "@/components/mapa/cardActividades";
 import Filtro from "@/components/mapa/Filtro";
 import CustomPolyline from "@/components/mapa/FuncionSeguimiento";
 import { cargarMapType } from "@/components/mapa/functions";
+import LocationButtom from "@/components/mapa/locationButtom";
 import MarcadorAct, { PropActivity } from "@/components/mapa/MarcadorAct";
-import CustomUserMarker from "@/components/mapa/userMarker";
-
-type PropSeguimiento = {
-  destination: LatLng;
-  activarEfecto: boolean | null;
-  statusMapViewDirections: boolean;
-  selectedId: PropActivity | null;
-};
+import SolicitarUbicacionUnaVez from "@/components/mapa/permisoUbicacion";
 
 export default function Map() {
-  //local storage
-
+  const { id_cat, latitud, longitud } = useLocalSearchParams();
+  const [mapReady, setMapReady] = useState(false);
   const [press, setPress] = useState(false);
   const [mapType, setMapType] = useState<MapType>("standard");
   const [traffic, setTraffic] = useState(Boolean);
-  /* --------------variables----------------*/
-  const { id_cat } = useLocalSearchParams();
   const [origin, setOrigin] = useState<LatLng>();
   const [destination, setDestination] = useState<LatLng>();
   const [duracion, setDuracion] = useState("");
   const [distancia, setDistancia] = useState("");
   const mapRef = useRef<MapView | null>(null);
   const watchRef = useRef<Location.LocationSubscription | null>(null);
-  /*   const [activarEfecto, setActivarEfecto] = useState(Boolean || null); */
   const [statusMapViewDirections, setStatusMapViewDirections] = useState(false);
   const [selectedId, setSelectedId] = useState<PropActivity | null>(null);
   const [seguiActividad, setSeguirActividad] = useState<PropActivity>();
   const [siguiendoRuta, setSiguiendoRuta] = useState(Boolean || null);
+  const [ubicacionConcedida, setUbicacionConcedida] = useState(false);
+  const [loc, setLoc] = useState(Boolean);
+  const [mode, setMode] = useState(String);
 
+  useEffect(() => {
+    if (mapReady && latitud && longitud) {
+      const latitude = Number(latitud);
+      const longitude = Number(longitud);
+      mapRef.current?.animateCamera({
+        center: { latitude, longitude },
+        zoom: 20,
+        altitude: 1000,
+      });
+    }
+  }, [mapReady, origin]);
 
   useEffect(() => {
     if (press) {
-      cargar();
-      cargar2();
-      setPress(false);
+      const cargarTodo = async () => {
+        const [{ data: tipoMapa }, { data: trafico }] = await Promise.all([
+          cargarMapType("maptype"),
+          cargarMapType("traffic"),
+        ]);
+
+        setMapType(tipoMapa);
+        setTraffic(trafico);
+        setPress(false);
+      };
+
+      cargarTodo();
     }
   }, [press]);
 
-  const cargar = async () => {
-    const { data, error } = await cargarMapType("maptype");
-    setMapType(data);
-  };
-
-  const cargar2 = async () => {
-    const { data, error } = await cargarMapType("traffic");
-    setTraffic(data);
-  };
-
-
-
-
-
   useEffect(() => {
     if (siguiendoRuta) {
-      cargar3();
-
+      cargarDatosSeguimiento();
     }
-    cargar3();
+    cargarDatosSeguimiento();
   }, [siguiendoRuta]);
 
-  const cargar3 = async () => {
+  const cargarDatosSeguimiento = async () => {
     const { data, error } = await cargarMapType("seguimiento");
     const [activar, actividad] = data;
 
     setStatusMapViewDirections(activar);
     setSeguirActividad(activar);
-    setDestination({ latitude: actividad.latitud, longitude: actividad.longitud });
+    setDestination({
+      latitude: actividad.latitud,
+      longitude: actividad.longitud,
+    });
     if (activar) {
       setSelectedId(actividad);
       setSeguirActividad(actividad);
@@ -87,29 +89,76 @@ export default function Map() {
   };
 
   useEffect(() => {
-    if (statusMapViewDirections == true) {
-      const iniciarSeguimiento = async () => {
-        /*  const { status } = await Location.requestForegroundPermissionsAsync();
-         if (status !== "granted") {
-           alert("Permiso denegado");
-           return;
-         } */
+    const obtenerUbicacionInicial = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return;
+      }
 
+      setUbicacionConcedida(true);
+
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
+
+      const { latitude, longitude } = location.coords;
+      setOrigin({ latitude, longitude });
+      mapRef.current?.animateCamera({
+        center: { latitude, longitude },
+        zoom: 9,
+        altitude: 1000,
+      });
+    };
+
+    obtenerUbicacionInicial();
+    cargarDatosSeguimiento();
+  }, []);
+
+  useEffect(() => {
+    const intervalo = setInterval(async () => {
+      const { status } = await Location.getForegroundPermissionsAsync();
+
+      if (status === "granted") {
+        clearInterval(intervalo);
+        setUbicacionConcedida(true);
+
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+
+        const { latitude, longitude } = location.coords;
+        setOrigin({ latitude, longitude });
+
+        mapRef.current?.animateCamera({
+          center: { latitude, longitude },
+          zoom: 9,
+          altitude: 1000,
+        });
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalo);
+  }, []);
+
+  useEffect(() => {
+    if (statusMapViewDirections) {
+      const iniciarSeguimiento = async () => {
         watchRef.current = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1000, 
-            distanceInterval: 0,
+            timeInterval: 9000,
+            distanceInterval: 5,
           },
           (location) => {
             const { latitude, longitude } = location.coords;
             setOrigin({ latitude, longitude });
-           
+            setLoc(true);
             mapRef.current?.animateCamera({
-              center: { latitude, longitude },
+              center: {
+                latitude: latitude,
+                longitude: longitude,
+              },
               zoom: 15,
-              pitch: 0,
-              heading: 0,
               altitude: 1000,
             });
           }
@@ -126,33 +175,6 @@ export default function Map() {
     };
   }, [statusMapViewDirections]);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        alert("Permiso de ubicación denegado");
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
-
-      const { latitude, longitude } = location.coords;
-      setOrigin({ latitude, longitude });
-      mapRef.current?.animateCamera({
-        center: { latitude, longitude },
-        zoom: 9,
-        altitude: 1000,
-      });
-    })();
-
-    cargar3();
-  }, []);
-
-  /* Funciones*/
-
-  /* activar o desactivar el mapViewDirections */
   function handleValueChange(value: number) {
     if (value === 0 || value === 1) {
       setStatusMapViewDirections(Boolean(value));
@@ -160,39 +182,56 @@ export default function Map() {
       console.warn("Valor inválido para statusMapViewDirections:", value);
     }
   }
-
-  /*Funcion para saber si el usuario llego a la ubicacion*/
-  /*   function getDistanceInMeters(p1: LatLng, p2: LatLng): number {
-    const toRad = (value: number) => (value * Math.PI) / 180;
-    const R = 6371e3; // Radio de la Tierra en metros
-    const dLat = toRad(p2.latitude - p1.latitude);
-    const dLon = toRad(p2.longitude - p1.longitude);
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(p1.latitude)) *
-        Math.cos(toRad(p2.latitude)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c;
-  }
-
-  useEffect(() => {
-    if (origin && destination) {
-      const distance = getDistanceInMeters(origin, destination);
-      if (distance <= 100) {
-      }
-    }
-  }, [origin, destination]); */
-
+  const mapstyle = [
+    {
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        {
+          lightness: 100,
+        },
+        {
+          visibility: "simplified",
+        },
+      ],
+    },
+    {
+      featureType: "water",
+      elementType: "geometry",
+      stylers: [
+        {
+          visibility: "on",
+        },
+        {
+          color: "#C6E2FF",
+        },
+      ],
+    },
+    {
+      featureType: "poi",
+      elementType: "geometry.fill",
+      stylers: [
+        {
+          color: "#C5E3BF",
+        },
+      ],
+    },
+    {
+      featureType: "road",
+      elementType: "geometry.fill",
+      stylers: [
+        {
+          color: "#D1D1B8",
+        },
+      ],
+    },
+  ];
   return (
     <SafeAreaView style={styles.safeArea}>
-      {origin ? (
+      {ubicacionConcedida && origin ? (
         <GestureHandlerRootView>
           <MapView
+            customMapStyle={mapstyle}
             mapType={mapType}
             style={styles.map}
             ref={mapRef}
@@ -208,18 +247,18 @@ export default function Map() {
               latitudeDelta: 1.0,
               longitudeDelta: 0.9,
             }}
+            onMapReady={() => setMapReady(true)}
           >
-
             {statusMapViewDirections && destination && (
               <CustomPolyline
                 origin={origin}
                 destination={destination}
                 setDuration={setDuracion}
                 setDistance={setDistancia}
+                setMode={setMode}
+                Mode={mode}
               />
             )}
-
-            <CustomUserMarker coordinate={origin} />
 
             <MarcadorAct
               setIdSeleccionado={setSelectedId}
@@ -232,7 +271,6 @@ export default function Map() {
           <View style={styles.nav2}>
             {selectedId && (
               <NewPanelIndicaciones
-                /*  seguir={setActivarEfecto} */
                 mapRef={mapRef}
                 marker={selectedId}
                 setDestination={setDestination}
@@ -240,19 +278,38 @@ export default function Map() {
                 distancia={distancia}
                 duracion={duracion}
                 activarSeguimiento={setSiguiendoRuta}
+                setMode={setMode}
               />
             )}
           </View>
 
-          <View style={styles.filterContainer}>
-            <Filtro setPress={setPress} />
-          </View>
+          <View
+            style={{
+              left: 10,
+              right: 10,
+              position: "absolute",
+              bottom: 10,
+              flexDirection: "column",
+            }}
+          >
+            <View style={styles.filterContainer}>
+              <Filtro setPress={setPress} />
+              <LocationButtom mapRef={mapRef} origin={origin} estado={loc} />
+            </View>
 
-          {/*card actividades */}
-          {selectedId && <CardActivity marker={selectedId} />}
+            {selectedId && <CardActivity marker={selectedId} />}
+          </View>
         </GestureHandlerRootView>
       ) : (
-        <Text style={styles.texto}>Obteniendo ubicación...</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {!ubicacionConcedida && <SolicitarUbicacionUnaVez />}
+        </View>
       )}
     </SafeAreaView>
   );
@@ -260,15 +317,14 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   filterContainer: {
-    position: "absolute",
-    top: 630,
     alignContent: "center",
     alignItems: "flex-end",
-    right: 10,
+    gap: 10,
+    margin: 5,
   },
   safeArea: {
     flex: 1,
-    backgroundColor: colors.primaryBlue,
+    backgroundColor: colors.background,
   },
   nav2: {
     width: "100%",
@@ -278,9 +334,24 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
   },
-
   map: {
     flex: 1,
   },
   texto: { textAlign: "center", marginTop: 20 },
+  closeOpenBtn: {
+    backgroundColor: "white",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+  },
 });
