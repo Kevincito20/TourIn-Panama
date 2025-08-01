@@ -9,6 +9,7 @@ export interface Comentario {
     apellido_usuario: string;
     foto: string;
     sesion: boolean;
+    rating: number;
 }
 
 export async function obtenerComentariosActividad(

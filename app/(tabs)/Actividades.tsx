@@ -98,13 +98,13 @@ export default function Map() {
         watchRef.current = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1000, // ⏱ Actualizar cada 1 segundo
+            timeInterval: 1000, 
             distanceInterval: 0,
           },
           (location) => {
             const { latitude, longitude } = location.coords;
             setOrigin({ latitude, longitude });
-            /*  console.log("hello", origin);*/
+           
             mapRef.current?.animateCamera({
               center: { latitude, longitude },
               zoom: 15,
@@ -115,9 +115,7 @@ export default function Map() {
           }
         );
       };
-
       iniciarSeguimiento();
-      /*       console.log("hello", routeCoordinates); */
     }
 
     return () => {

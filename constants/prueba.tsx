@@ -53,7 +53,7 @@ const ImageUploader: React.FC = () => {
     }
 
     const data = await response.json();
-    console.log("Respuesta del backend:", data);
+    
     const publicUrl = data.url.nueva_url; 
     setImageUrl(publicUrl);
       

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ const CrearComentarioScreen: React.FC<Props> = ({ onComentarioCreado }) => {
   const [titulo, setTitulo] = useState("");
   const [comentario, setComentario] = useState("");
   const [calificacion, setCalificacion] = useState(0);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
 
   const mostrarMensaje = useToast();
   const router = useRouter();
@@ -35,7 +35,7 @@ const CrearComentarioScreen: React.FC<Props> = ({ onComentarioCreado }) => {
   const idUsuarioNum = Number(id_usuario);
   const idActividadNum = Number(id_actividad);
 
-  const { crearComentario, loading, error, success } = useCrearComentario();
+  const { crearComentario, loading, error } = useCrearComentario();
 
   const handleSubmit = async () => {
     if (!titulo.trim() || !comentario.trim() || calificacion === 0) {
@@ -43,7 +43,7 @@ const CrearComentarioScreen: React.FC<Props> = ({ onComentarioCreado }) => {
       return;
     }
 
-    await crearComentario({
+    const result = await crearComentario({
       id_usuario: idUsuarioNum,
       id_actividad: idActividadNum,
       titulo,
@@ -51,20 +51,16 @@ const CrearComentarioScreen: React.FC<Props> = ({ onComentarioCreado }) => {
       calificacion,
     });
 
-    setShowSuccessAlert(true);
-  };
-
-  useEffect(() => {
-    if (showSuccessAlert && success) {
+    if (result.success) {
       mostrarMensaje("Comentario enviado");
       setTitulo("");
       setComentario("");
       setCalificacion(0);
       onComentarioCreado?.();
-      setShowSuccessAlert(false);
-      setTimeout(() => router.back(), 1000);
+      router.back();
     }
-  }, [success, showSuccessAlert]);
+  };
+
 
   const renderStars = () => {
     return (
@@ -98,7 +94,7 @@ const CrearComentarioScreen: React.FC<Props> = ({ onComentarioCreado }) => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Nuevo comentario</Text>
-          <View style={{ width: 24 }} /> 
+          <View style={{ width: 24 }} />
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>

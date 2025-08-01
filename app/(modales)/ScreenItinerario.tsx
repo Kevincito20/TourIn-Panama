@@ -12,14 +12,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
 import { useItinerario } from '@/hooks/useItinerario';
 import { colors } from '@/constants/Colors';
 import { ActividadesSemanales } from '@/components/inicio/ActividadesPorDia';
+import {useRouter} from 'expo-router';
 
 export default function ItinerarioCompletoScreen() {
   const { actividades, cargando, cargarDatos } = useItinerario();
-  const navigation = useNavigation();
+  const router = useRouter();
 
   useEffect(() => {
     cargarDatos();
@@ -28,6 +28,14 @@ export default function ItinerarioCompletoScreen() {
   const handleCompletar = (id: number) => {
     Alert.alert('Completado', `Actividad ${id} marcada como completada.`);
   };
+
+  const handleBuscar = () => {
+    router.push('/(tabs)/Actividades');
+  }
+
+  const handleRegresar = () => {
+    router.back();
+  }
 
   const handleEliminar = (id: number) => {
     Alert.alert('Eliminar', `¿Deseas eliminar la actividad ${id}?`, [
@@ -40,7 +48,7 @@ export default function ItinerarioCompletoScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity onPress={handleRegresar} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={colors.primaryBlue} />
         </TouchableOpacity>
         <Text style={styles.title}>Itinerario semanal</Text>
@@ -54,13 +62,12 @@ export default function ItinerarioCompletoScreen() {
         ) : (
           <ActividadesSemanales
             actividades={actividades}
-            onCompletar={handleCompletar}
-            onEliminar={handleEliminar}
+        
           />
         )}
 
-        <TouchableOpacity style={styles.addButton} activeOpacity={0.8}>
-          <Text style={styles.addButtonText}>Agregar actividad</Text>
+        <TouchableOpacity onPress={handleBuscar} style={styles.addButton} activeOpacity={0.8}>
+          <Text style={styles.addButtonText}>Buscar Actividades </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

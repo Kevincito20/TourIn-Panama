@@ -11,9 +11,7 @@ export interface PropRegistro {
   identificacion: string;
 }
 
-
 const API_BASE_URL = 'https://apitourinpanama.onrender.com';
-
 
 export const RegistrarUsuario = async (datos: PropRegistro): Promise<boolean> => {
   try {

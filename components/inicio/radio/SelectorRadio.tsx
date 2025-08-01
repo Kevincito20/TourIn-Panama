@@ -15,10 +15,15 @@ export const SelectorDeRadio = ({ radioKm, setRadioKm, onConfirm }: Props) => (
       {opcionesKm.map((km) => (
         <TouchableOpacity
           key={km}
-          style={[styles.radioBtn, km === radioKm && styles.radioBtnSelected]}
+          style={[
+            styles.radioBtn,
+            km === radioKm && styles.radioBtnSelected,
+          ]}
           onPress={() => setRadioKm(km)}
         >
-          <Text style={km === radioKm ? styles.radioTextSelected : styles.radioText}>
+          <Text
+            style={km === radioKm ? styles.radioTextSelected : styles.radioText}
+          >
             {km} km
           </Text>
         </TouchableOpacity>
@@ -37,10 +42,14 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 20,
     right: 20,
-    backgroundColor: '#f9fafb',
+    backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 14,
     elevation: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
   },
   radioContainer: {
     flexDirection: 'row',
@@ -51,22 +60,21 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 14,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#e0f2f1', // azul claro apagado
   },
   radioBtnSelected: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#006d6fff',
   },
   radioText: {
-    color: '#1F2937',
+    color: '#005F73', 
     fontWeight: '500',
   },
   radioTextSelected: {
-    color: 'white',
-    fontWeight: '600',
+    color: '#ffffff',
+    fontWeight: '400',
   },
   confirmBtn: {
-    backgroundColor: '#4F46E5',
-    borderRadius: 14,
+    backgroundColor: '#005F73', 
     paddingVertical: 12,
     alignItems: 'center',
   },

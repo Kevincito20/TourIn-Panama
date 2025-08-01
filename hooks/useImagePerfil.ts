@@ -1,56 +1,58 @@
-import { Alert, Linking } from 'react-native';
+import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadImage } from '@/components/services/fotoPerfil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Usuario } from '@/components/types/Usuario';
+import { uploadImage } from '@/components/services/fotoPerfil';
 
-export const useImageUploader = (setImageUri?: (uri: string) => void) => {
-  const requestPermissions = async (): Promise<boolean> => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permiso denegado', 'Se requiere acceso a la galería.');
-      return false;
-    }
-    return true;
-  };
+export const useImagePerfil = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'error' | 'success'>('idle');
+  const [error, setError] = useState<string | null>(null);
 
   const selectImage = async () => {
-    const hasPermission = await requestPermissions();
-    if (!hasPermission) return;
+    try {
+      setIsLoading(true);
+      setStatus('idle');
+      setError(null);
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.7,
+      });
+      if (!result.canceled && result.assets.length > 0) {
+        const uri = result.assets[0].uri;
+       
+        const jsonValue = await AsyncStorage.getItem('usuario');
+        if (!jsonValue) throw new Error('Usuario no encontrado en almacenamiento local');
+        const usuario: Usuario = JSON.parse(jsonValue);
+  
+        // Subir imagen y obtener URL desde backend
+        const uploadResult = await uploadImage(uri, usuario.id_usuario);
 
-    if (result.canceled) return;
+        if (!uploadResult || !uploadResult.url) {
+          throw new Error('Error al subir la imagen al servidor');
+        }
 
-    const selectedImage = result.assets[0];
-    await handleImageUpload(selectedImage.uri);
-  };
+        usuario.foto = uploadResult.url.nueva_url;
 
-  const handleImageUpload = async (uri: string) => {
-    const usuario = await AsyncStorage.getItem('usuario');
-    const idUsuario = usuario ? JSON.parse(usuario) : null;
-    if (!idUsuario.id_usuario) {
-      Alert.alert('Error', 'No se encontró el usuario');
-      return;
+        await AsyncStorage.setItem('usuario', JSON.stringify(usuario));
+        setStatus('success');
+      }
+    } catch (e) {
+      console.error('Error en selectImage:', e);
+      setStatus('error');
+      setError(e instanceof Error ? e.message : 'Error desconocido al seleccionar imagen');
+    } finally {
+      setIsLoading(false);
     }
-    const response = await uploadImage(uri, idUsuario.id_usuario);
-    if (!response) {
-      Alert.alert('Error', 'No se pudo subir la imagen al servidor.');
-      return;
-    }
-
-    const urlPublica = response.url.nueva_url;
-    setImageUri?.(urlPublica);
-
-    Alert.alert(response.mensaje, '', [
-      { text: 'Ver imagen', onPress: () => Linking.openURL(urlPublica) },
-      { text: 'Cerrar', style: 'cancel' },
-    ]);
   };
 
-  return {
-    selectImage,
+  const resetState = () => {
+    setStatus('idle');
+    setError(null);
   };
+
+  return { selectImage, isLoading, status, error, resetState };
 };

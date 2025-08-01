@@ -12,7 +12,6 @@ export const useUsuario = () => {
       if (jsonValue) {
         const parsed = JSON.parse(jsonValue);
         setUsuario(parsed);
-        
       } else {
         setUsuario(null);
       }
@@ -28,5 +27,5 @@ export const useUsuario = () => {
     cargarUsuario();
   }, []);
 
-  return { usuario, cargando };
+  return { usuario, cargando, refetch: cargarUsuario };
 };

@@ -6,11 +6,9 @@ import { formatFecha, formatHora12 } from '@/components/ui/ItinerarioCard';
 
 type Props = {
   actividades: ItinerarioItem[];
-  onCompletar: (id: number) => void;
-  onEliminar: (id: number) => void;
 };
 
-export const ActividadesSemanales = ({ actividades, onCompletar, onEliminar }: Props) => {
+export const ActividadesSemanales = ({ actividades}: Props) => {
   return (
     <>
       {actividades.map((actividad) => (
@@ -25,14 +23,6 @@ export const ActividadesSemanales = ({ actividades, onCompletar, onEliminar }: P
                 Nota: {actividad.nota_itinerario}
               </Text>
             ) : null}
-          </View>
-          <View style={styles.actions}>
-            <TouchableOpacity onPress={() => onCompletar(actividad.id_itinerario)}>
-              <Text style={{ color: colors.lightBlue, fontWeight: '700' }}>✓</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => onEliminar(actividad.id_itinerario)}>
-              <Text style={{ color: colors.warmOrange, fontWeight: '700' }}>✗</Text>
-            </TouchableOpacity>
           </View>
         </View>
       ))}

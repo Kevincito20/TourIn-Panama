@@ -32,6 +32,7 @@ export function Input({ type = 'text', iconName, error, ...rest }: InputProps) {
         )}
 
         <TextInput
+          key={isSecure ? 'secure' : 'visible'}
           style={styles.input}
           placeholderTextColor="#aaa"
           secureTextEntry={type === 'password' ? isSecure : false}
@@ -39,6 +40,7 @@ export function Input({ type = 'text', iconName, error, ...rest }: InputProps) {
           autoCapitalize={type === 'email' ? 'none' : 'sentences'}
           {...rest}
         />
+
 
         {type === 'password' && (
           <Ionicons

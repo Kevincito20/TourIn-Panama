@@ -11,7 +11,7 @@ type prop ={
 export const guardarMapType = async ({lugar,tipo}:prop) => {
     try {
       await AsyncStorage.setItem(lugar, JSON.stringify(tipo));
-      //console.log("seguardo correctamente bro", tipo);
+    
     } catch (error) {
       console.error("Error guardando región:", error);
     }
@@ -43,7 +43,7 @@ type propBoolean ={
 export const guardarBoolean = async ({lugar,tipo}:propBoolean) => {
     try {
       await AsyncStorage.setItem(lugar, JSON.stringify(tipo));
-      console.log("seguardo correctamente bro", tipo);
+      
     } catch (error) {
       console.error("Error guardando región:", error);
     }

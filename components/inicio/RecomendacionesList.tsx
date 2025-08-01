@@ -1,4 +1,3 @@
-// RecomendacionesList.tsx
 import React from 'react';
 import {
   FlatList,
@@ -12,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/Colors';
 import { Actividad } from '../types/ActividadesRecomendadas';
+import { useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -19,42 +19,60 @@ type Props = {
   actividades: Actividad[];
 };
 
+export const RecomendacionesList = ({ actividades }: Props) => {
+  const router = useRouter();
 
-export const RecomendacionesList = ({ actividades }: Props) => (
-  <FlatList
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    snapToInterval={width * 0.8 + 16}
-    snapToAlignment="start"
-    decelerationRate="fast"
-    contentContainerStyle={styles.listContent}
-    data={actividades.slice(0, 10)}
-    keyExtractor={(item) => item.id.toString()}
-    renderItem={({ item }) => (
-      <TouchableOpacity activeOpacity={0.9} style={styles.card}>
-        <ImageBackground
-          source={{ uri: item.foto_url }}
-          style={styles.image}
-          imageStyle={styles.imageStyle}
-        >
-          <View style={styles.distanceBadge}>
-            <Ionicons name="location-outline" size={14} color={colors.white} />
-            <Text style={styles.badgeText}> {(item.distancia_m / 1000).toFixed(1)} km</Text>
-          </View>
+  const handlePress = (item: Actividad) => {
+    router.push({
+      pathname: '/(modales)/actividades-info',
+      params: {
+        id: item.id.toString(),
+        encabezado: item.encabezado,
+        foto_url: item.foto_url,
+        latitud: item.latitud.toString(),
+        longitud: item.longitud.toString(),
+        descp: item.descp,
+        rating: item.rating.toString(),
+      },
+    });
+  };
 
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={styles.nombreActividad}>{item.encabezado}</Text>
-          </View>
+  return (
+    <FlatList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={width * 0.8 + 16}
+      snapToAlignment="start"
+      decelerationRate="fast"
+      contentContainerStyle={styles.listContent}
+      data={actividades.slice(0, 10)}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity activeOpacity={0.9} style={styles.card} onPress={() => handlePress(item)}>
+          <ImageBackground
+            source={{ uri: item.foto_url }}
+            style={styles.image}
+            imageStyle={styles.imageStyle}
+          >
+            <View style={styles.distanceBadge}>
+              <Ionicons name="location-outline" size={14} color={colors.white} />
+              <Text style={styles.badgeText}> {(item.distancia_m / 1000).toFixed(1)} km</Text>
+            </View>
 
-          <View style={styles.ratingBadge}>
-            <Ionicons name="star" size={14} color={colors.warmYellow} />
-            <Text style={styles.badgeText}>{item.rating}</Text>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-    )}
-  />
-);
+            <View style={styles.titleContainer}>
+              <Text numberOfLines={1} style={styles.nombreActividad}>{item.encabezado}</Text>
+            </View>
+
+            <View style={styles.ratingBadge}>
+              <Ionicons name="star" size={14} color={colors.warmYellow} />
+              <Text style={styles.badgeText}>{item.rating}</Text>
+            </View>
+          </ImageBackground>
+        </TouchableOpacity>
+      )}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   listContent: {
@@ -95,12 +113,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 2,
-    maxWidth: width * 0.6, 
+    maxWidth: width * 0.6,
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
-
   ratingBadge: {
     position: 'absolute',
     right: 10,
