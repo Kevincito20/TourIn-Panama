@@ -68,10 +68,9 @@ const CardActivity = ({ marker }: props) => {
 
 const styles = StyleSheet.create({
   card: {
-    position: "absolute",
-    bottom: 80,
-    left: 10,
-    right: 10,
+    
+    
+    
     backgroundColor: colors.cardColor,
     borderRadius: 12,
     elevation: 5,
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: 120,
-    height: "100%",
+    height: 100,
     position: "relative",
   },
   image: {

@@ -1,24 +1,24 @@
-import React from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ActivityIndicator,
-  Platform,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { ModalContenido } from "@/components/actividades/ModalContenido";
+import { Comentario } from "@/components/services/ObtenerComentariosService";
+import ComentarioItem from "@/components/ui/Comentario";
 import { colors } from "@/constants/Colors";
 import { useComentariosActividad } from "@/hooks/useComentarios";
-import { Comentario } from "@/components/services/ObtenerComentariosService";
 import { useUsuario } from "@/hooks/useUsuario";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { ModalContenido } from "@/components/actividades/ModalContenido";
-import ComentarioItem from "@/components/ui/Comentario";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Params = {
   id: string;
