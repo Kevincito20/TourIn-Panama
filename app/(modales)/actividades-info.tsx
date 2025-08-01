@@ -19,10 +19,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { ModalContenido } from "@/components/actividades/ModalContenido";
-import ComentarioItem from "@/components/ui/Comentario";
-
 import { useFocusEffect } from "@react-navigation/native";
 
 type Params = {
