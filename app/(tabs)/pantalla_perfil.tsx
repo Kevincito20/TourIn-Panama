@@ -1,7 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StatusBar, ScrollView, Animated } from 'react-native';
+import { 
+  View, 
+  StatusBar, 
+  ScrollView, 
+  Animated, 
+  RefreshControl 
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign, Feather, Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { 
+  AntDesign, 
+  Feather, 
+  Ionicons, 
+  FontAwesome5 
+} from '@expo/vector-icons';
 import { PerfilHeader } from '@/components/perfil/perfilHeader';
 import { OpcionPerfil } from '@/components/perfil/opcionesPerfil';
 import { styles } from '@/components/styles/perfilStyles';
@@ -9,13 +20,17 @@ import { usePerfil } from '@/hooks/usePerfil';
 import { defaultPerfilImage } from '@/constants/defaultPerfil';
 import { useUsuario } from '@/hooks/useUsuario';
 import { useRouter } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
 export default function PantallaPerfil() {
   const animatedValue = useRef(new Animated.Value(0)).current;
-  const [profileImageUri, setProfileImageUri] = useState(defaultPerfilImage);
+  const [refreshing, setRefreshing] = useState(false);
   const { handleLogout } = usePerfil();
-  const { usuario } = useUsuario();
+  const { usuario, cargando, refetch } = useUsuario();
   const router = useRouter();
+
+  // Estado para manejar la imagen temporal mientras se sube
+  const [tempProfileImage, setTempProfileImage] = useState(defaultPerfilImage);
 
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -25,45 +40,38 @@ export default function PantallaPerfil() {
     }).start();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
+    <View style={perfilStyles.screenContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0f766e" />
 
-      <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
+      <SafeAreaView style={perfilStyles.safeArea} edges={['bottom', 'left', 'right']}>
         <ScrollView
-          style={styles.scrollView}
+          style={perfilStyles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#0f766e']}
+              tintColor="#0f766e"
+            />
+          }
         >
           <PerfilHeader
-            profileImageUri={usuario?.foto || profileImageUri}
-            setProfileImageUri={setProfileImageUri}
-            animatedValue={animatedValue}
           />
 
-          <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <View style={perfilStyles.optionsContainer}>
             <OpcionPerfil
               icon={<Ionicons name="calendar-outline" size={24} color="#0f766e" />}
               label="Ver itinerario"
-              onPress={() => router.push('/')}
-            />
-
-            <OpcionPerfil
-              icon={<Feather name="edit-2" size={24} color="#0f766e" />}
-              label="Editar perfil"
-              onPress={() => router.push('/')}
-            />
-
-            <OpcionPerfil
-              icon={<FontAwesome5 name="comments" size={22} color="#0f766e" />}
-              label="Mis comentarios"
-              onPress={() => router.push('/')}
-            />
-
-            <OpcionPerfil
-              icon={<Feather name="settings" size={24} color="#0f766e" />}
-              label="Configuración"
-              onPress={() => router.push('/')}
+              onPress={() => router.push('/(modales)/ScreenItinerario')}
             />
 
             <OpcionPerfil
@@ -78,3 +86,24 @@ export default function PantallaPerfil() {
     </View>
   );
 }
+
+const perfilStyles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  optionsContainer: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+    gap: 12, 
+  },
+});

@@ -9,7 +9,6 @@ export interface CrearComentarioPayload {
 export interface CrearComentarioResponse {
   success: boolean;
   mensaje?: string;
-  // Puedes agregar otros campos según la respuesta real
 }
 
 export async function crearComentarioActividad(payload: CrearComentarioPayload): Promise<CrearComentarioResponse> {
@@ -25,12 +24,25 @@ export async function crearComentarioActividad(payload: CrearComentarioPayload):
     if (!response.ok) {
       throw new Error(`Error al crear comentario: ${response.statusText}`);
     }
-
     const data = await response.json();
-    return data as CrearComentarioResponse;
+    if (Array.isArray(data)) {
+      return {
+        success: false,
+        mensaje: "Respuesta inesperada del servidor",
+      };
+    }
+
+    return {
+      success: data.success ?? true,
+      mensaje: data.mensaje ?? "Comentario creado correctamente",
+    };
 
   } catch (error) {
     console.error('Error al crear comentario:', error);
-    throw error;
+    return {
+      success: false,
+      mensaje: "Error inesperado al crear el comentario.",
+    };
   }
 }
+

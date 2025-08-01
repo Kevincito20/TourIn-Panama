@@ -27,7 +27,7 @@ const Itinerario = () => {
         style={styles.verCompleto}
         onPress={() => router.push('/(modales)/ScreenItinerario')}
       >
-        <Text style={styles.verCompletoText}>Ver formulario completo</Text>
+        <Text style={styles.verCompletoText}>Ver itinerario completo</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />
       </TouchableOpacity>
     </View>

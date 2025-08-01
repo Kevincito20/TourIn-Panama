@@ -13,8 +13,8 @@ import {
 import { router } from 'expo-router';
 import { Input } from '../ui/input';
 import { loginUsuario, propLogin } from '../services/authService';
-import Button from '../ui/boton'; 
-import { Ionicons } from '@expo/vector-icons'; 
+import Button from '../ui/boton';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function FormularioLogin() {
   const [email, setCorreo] = useState('');
@@ -37,14 +37,7 @@ export default function FormularioLogin() {
     setLoading(false);
 
     if (success) {
-      Alert.alert('Login exitoso', '¡Bienvenido!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.replace('/(tabs)/pantalla_home');
-          },
-        },
-      ]);
+      router.replace('/(tabs)/pantalla_home');
     } else {
       setError('Correo o contraseña incorrectos');
     }
@@ -60,81 +53,72 @@ export default function FormularioLogin() {
       style={styles.background}
       resizeMode="cover"
     >
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.overlay}>
-          <View>
-            <Text style={styles.titulo}>Iniciar Sesión</Text>
-            <Text style={styles.subtitulo}>Descubre la magia Panameña</Text>
-          </View>
 
-          <View style={styles.botones}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
-              <Input
-                type="email"
-                placeholder="Correo Electrónico"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                iconName="mail"
-                placeholderTextColor="#999"
-                value={email}
-                onChangeText={setCorreo}
-                error={error && !email.trim() ? error : undefined}
-              />
+      <View style={styles.overlay}>
+        <View>
+          <Text style={styles.titulo}>Iniciar Sesión</Text>
+          <Text style={styles.subtitulo}>Descubre la magia Panameña</Text>
+        </View>
 
-              <Input
-                type="password"
-                placeholder="Contraseña"
-                iconName="lock-closed"
-                secureTextEntry={true}
-                placeholderTextColor="#999"
-                value={password}
-                onChangeText={setContraseña}
-                error={error && !password.trim() ? error : undefined}
-              />
-
-              {error && email.trim() && password.trim() && (
-                <Text style={styles.errorText}>{error}</Text>
-              )}
-
-              <Text
-                style={{ color: '#fff', textAlign: 'right', marginBottom: 20 }}
-              >
-                ¿Olvidaste tu contraseña?
-              </Text>
-
-              <Button
-                title="Ingresar"
-                onPress={handleLogin}
-                loading={loading}
-                disabled={!email || !password}
-                style={{ marginTop: 5 }}
-              />
-            </KeyboardAvoidingView>
-
-            <Button
-              title="Continuar con Google"
-              onPress={() => {}}
-              backgroundColor="#fff"
-              textColor="#000"
-              icon={<Ionicons name="logo-google" size={18} color="#000" />}
-              style={{ marginTop: 15 }}
+        <View style={styles.botones}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
+            <Input
+              type="email"
+              placeholder="Correo Electrónico"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              iconName="mail"
+              placeholderTextColor="#999"
+              value={email}
+              onChangeText={setCorreo}
+              error={error && !email.trim() ? error : undefined}
             />
 
-          </View>
+            <Input
+              type="password"
+              placeholder="Contraseña"
+              iconName="lock-closed"
+              placeholderTextColor="#999"
+              value={password}
+              onChangeText={setContraseña}
+              error={error && !password.trim() ? error : undefined}
+            />
 
-      
-          <View>
-            <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
-              ¿No tienes cuenta?{' '}
-              <Text style={{ color: '#007AFF' }} onPress={handleRegistro}>
-                Regístrate aquí
-              </Text>
+
+            {error && email.trim() && password.trim() && (
+              <Text style={styles.errorText}>{error}</Text>
+            )}
+
+            <Text
+              style={{ color: '#fff', textAlign: 'right', marginBottom: 20 }}
+            >
+              ¿Olvidaste tu contraseña?
             </Text>
-          </View>
+
+            <Button
+              title="Ingresar"
+              onPress={handleLogin}
+              loading={loading}
+              disabled={!email || !password}
+              style={{ marginTop: 5 }}
+            />
+          </KeyboardAvoidingView>
+
         </View>
-      </SafeAreaView>
+
+
+        <View>
+          <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
+            ¿No tienes cuenta?{' '}
+            <Text style={{ color: '#007AFF' }} onPress={handleRegistro}>
+              Regístrate aquí
+            </Text>
+          </Text>
+        </View>
+      </View>
+
     </ImageBackground>
   );
 }

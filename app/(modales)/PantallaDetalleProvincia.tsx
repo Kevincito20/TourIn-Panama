@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -22,12 +23,15 @@ export default function PantallaDetalleProvincia() {
   const data = contentCards.filter((item) => item.provincia === provincia);
 
   return (
-    <View style={styles.container}>
-      
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
-      
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header sin fondo */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={colors.primaryBlue} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{provincia}</Text>
+      </View>
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {data.map((item) => (
           <View key={item.id} style={styles.card}>
@@ -49,25 +53,40 @@ export default function PantallaDetalleProvincia() {
           </View>
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 20,
-
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  backButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: colors.primaryBlue,
+    marginLeft: 10,
   },
   scrollContainer: {
-    paddingTop: 60,
     paddingBottom: 60,
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   card: {
     width: width * 0.89,
-    backgroundColor: '#ffffffff',
+    backgroundColor: '#fff',
     marginBottom: 15,
     borderRadius: 12,
     overflow: 'hidden',
@@ -108,14 +127,5 @@ const styles = StyleSheet.create({
   descripcion: {
     color: colors.lightBlue,
     fontSize: 13,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-    zIndex: 10,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    padding: 8,
-    borderRadius: 20,
   },
 });

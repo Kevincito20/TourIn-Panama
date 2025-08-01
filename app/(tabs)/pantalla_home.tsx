@@ -13,7 +13,8 @@ export default function PantallaHome() {
  
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <StatusBar style='dark' backgroundColor={colors.white} />
+      {/* //QUE TODO SEA OCURO EN EL STATUS BAR */}
+      <StatusBar style='dark'/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

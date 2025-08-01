@@ -18,7 +18,6 @@ interface ModalContenidoProps {
   latitud: number;
   longitud: number;
   onCrearComentario: () => void;
-  
 }
 
 export function ModalContenido({
@@ -45,8 +44,12 @@ export function ModalContenido({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Descripción</Text>
-      <Text style={styles.description}>{description}</Text>
+      {/* Ubicación */}
+      <Text style={styles.sectionTitle}>Ubicación</Text>
+      <View style={styles.mapRow}>
+        <Ionicons name="location-outline" size={16} color={colors.textSecondary} />
+        <Text style={styles.mapLabel}>{ubicacion}</Text>
+      </View>
 
       <TouchableOpacity onPress={handleAbrirMapa} activeOpacity={0.9}>
         <MapView
@@ -62,21 +65,24 @@ export function ModalContenido({
         >
           <Marker coordinate={{ latitude: latitud, longitude: longitud }} />
         </MapView>
-        <Text style={styles.mapLabel}>
-          <Ionicons name="location-outline" size={16} /> {ubicacion}
-        </Text>
       </TouchableOpacity>
 
-      <View style={styles.ratingRow}>
-        <Ionicons name="star-outline" size={18} color={colors.warmYellow} />
+      {/* Rating */}
+      <View style={[styles.ratingRow, { marginTop: 12 }]}>
+        <Ionicons name="star" size={16} color={colors.warmYellow} />
         <Text style={styles.ratingText}>{rating.toFixed(1)} / 5</Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onCrearComentario}>
-        <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.white} />
-        <Text style={styles.buttonText}>Escribir comentario </Text>
-      </TouchableOpacity>
+      {/* Descripción */}
+      <Text style={[styles.sectionTitle, { marginTop: 18 }]}>Descripción</Text>
+      <Text style={styles.description}>{description}</Text>
 
+      {/* Comentarios */}
+      <Text style={[styles.sectionTitle, { marginBottom: 8 }]}>Comentarios</Text>
+      <TouchableOpacity style={styles.button} onPress={onCrearComentario}>
+        <Ionicons name="chatbubble-outline" size={16} color={colors.primaryBlue} />
+        <Text style={styles.buttonText}>Escribir comentario</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -84,59 +90,61 @@ export function ModalContenido({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 30,
+    paddingTop: 18,
+    paddingBottom: 20,
     backgroundColor: "#fff",
   },
   sectionTitle: {
     fontWeight: "600",
     fontSize: 16,
-    marginBottom: 6,
     color: colors.textPrimary,
   },
-  description: {
-    fontSize: 14.5,
-    color: colors.textSecondary,
-    marginBottom: 12,
-    lineHeight: 20,
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  ratingText: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    marginLeft: 6,
   },
   map: {
     width: "100%",
     height: 160,
     borderRadius: 12,
+    marginTop: 6,
+  },
+  mapRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
   },
   mapLabel: {
-    marginTop: 6,
     fontSize: 14,
-    color: colors.textPrimary,
-    fontWeight: "500",
-  },
-  ratingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 14,
-    marginBottom: 10,
-  },
-  ratingText: {
+    color: colors.textSecondary,
     marginLeft: 6,
+  },
+  description: {
     fontSize: 14,
-    fontWeight: "500",
-    color: colors.textPrimary,
+    color: colors.textSecondary,
+    lineHeight: 20,
+    marginTop: 6,
+    marginBottom: 18,
   },
   button: {
-    flexDirection: "row",
-    backgroundColor: colors.lightBlue,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: colors.primaryBlue,
     borderRadius: 10,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginTop: 12,
+    alignSelf: "flex-start",
   },
   buttonText: {
-    color: colors.white,
-    fontSize: 15,
-    fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
+    fontSize: 14,
+    color: colors.primaryBlue,
+    fontWeight: "500",
   },
 });

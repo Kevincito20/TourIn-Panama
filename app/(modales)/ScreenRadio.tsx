@@ -7,42 +7,57 @@ import { SelectorDeRadio } from '@/components/inicio/radio/SelectorRadio';
 import { obtenerRadioKm, guardarRadioKm } from '@/components/inicio/radio/RadioStorage';
 import { Ionicons } from '@expo/vector-icons';
 import { useToast } from '@/hooks/useMensajeExito';
+import { useUsuario } from '@/hooks/useUsuario';
 
 export default function SeleccionarRadioScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [radioKm, setRadioKm] = useState(10);
   const router = useRouter();
   const mostrarMensaje = useToast();
+  const { usuario } = useUsuario();
 
-
+  // Solo ejecuta el efecto cuando el usuario esté cargado
   useEffect(() => {
+    if (!usuario?.id_usuario) return;
+
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permiso denegado', 'No se pudo obtener tu ubicación.');
-        return;
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permiso denegado', 'No se pudo obtener tu ubicación.');
+          return;
+        }
+
+        // Obtener radio guardado solo si hay usuario válido
+        const savedKm = await obtenerRadioKm(usuario.id_usuario);
+        setRadioKm(savedKm);
+       
+
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+      } catch (error) {
+        console.error('Error cargando datos de ubicación y radio:', error);
       }
-
-      const savedKm = await obtenerRadioKm();
-      setRadioKm(savedKm);
-
-      const currentLocation = await Location.getCurrentPositionAsync({});
-      setLocation(currentLocation);
     })();
-  }, []);
+  }, [usuario]);
 
   const handleConfirmar = async () => {
-    await guardarRadioKm(radioKm);
-    mostrarMensaje('Radio guardado');
-    setTimeout(() => {
-      router.push({
-        pathname: '/(tabs)/pantalla_home',
-        params: { nuevaDistancia: radioKm * 1000 },
-      });
-    }, 2200); 
+    if (!usuario?.id_usuario) return;
+
+    try {
+      await guardarRadioKm(usuario.id_usuario, radioKm);
+     
+      mostrarMensaje('Radio guardado');
+      setTimeout(() => {
+        router.push({
+          pathname: '/(tabs)/pantalla_home',
+          params: { nuevaDistancia: radioKm * 1000 },
+        });
+      }, 1000);
+    } catch (error) {
+      console.error('Error guardando radioKm:', error);
+    }
   };
-
-
 
   const handleVolver = () => {
     router.back();

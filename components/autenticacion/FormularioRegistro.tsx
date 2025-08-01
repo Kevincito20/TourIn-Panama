@@ -62,7 +62,7 @@ export default function FormularioRegistro() {
           {
             text: 'OK',
             onPress: () => {
-              router.replace('/(tabs)/pantalla_home');
+              router.replace('/(autenticacion)/pantalla_iniciar_sesion');
             },
           },
         ]);
@@ -86,7 +86,7 @@ export default function FormularioRegistro() {
       style={styles.background}
       resizeMode="cover"
     >
-      <SafeAreaView style={styles.safeArea}>
+      
         <View style={styles.overlay}>
           <View>
             <Text style={styles.titulo}>Registrate</Text>
@@ -131,7 +131,6 @@ export default function FormularioRegistro() {
               <Input
                 type="password"
                 placeholder="Contraseña"
-                secureTextEntry
                 placeholderTextColor="#999"
                 value={contrasena}
                 onChangeText={setContrasena}
@@ -141,7 +140,6 @@ export default function FormularioRegistro() {
               <Input
                 type="password"
                 placeholder="Confirmar contraseña"
-                secureTextEntry
                 placeholderTextColor="#999"
                 value={confirmarContrasena}
                 onChangeText={setConfirmarContrasena}
@@ -174,10 +172,7 @@ export default function FormularioRegistro() {
                 )}
               </TouchableOpacity>
             </KeyboardAvoidingView>
-
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Continuar con Google</Text>
-            </TouchableOpacity>
+            
           </View>
 
           <View>
@@ -192,7 +187,7 @@ export default function FormularioRegistro() {
             </Text>
           </View>
         </View>
-      </SafeAreaView>
+     
     </ImageBackground>
   );
 }

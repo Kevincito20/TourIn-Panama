@@ -2,23 +2,43 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Comentario } from '../services/ObtenerComentariosService';
 import { Ionicons } from '@expo/vector-icons';
+import { colors } from '@/constants/Colors'; // Asegúrate que la ruta sea correcta
 
 const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
   const esPropio = comentario.sesion;
 
+  const renderRating = (rating: number) => {
+    const estrellas = [];
+    for (let i = 1; i <= 5; i++) {
+      estrellas.push(
+        <Ionicons
+          key={i}
+          name={i <= rating ? 'star' : 'star-outline'}
+          size={16}
+          color={colors.warmYellow}
+          style={{ marginRight: 2 }}
+        />
+      );
+    }
+    return <View style={styles.rating}>{estrellas}</View>;
+  };
+
   return (
     <View style={[styles.container, esPropio && styles.propioContainer]}>
       <Image source={{ uri: comentario.foto }} style={styles.avatar} />
-      
+
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.author}>
-            {comentario.nombre_usuario} {comentario.apellido_usuario}
-          </Text>
-          <Text style={styles.date}>{comentario.fecha_creacion}</Text>
+          <View style={styles.userInfo}>
+            <Text style={styles.author}>
+              {comentario.nombre_usuario} {comentario.apellido_usuario}
+            </Text>
+            <Text style={styles.date}>{comentario.fecha_creacion}</Text>
+          </View>
+
           {esPropio && (
             <TouchableOpacity style={styles.options}>
-              <Ionicons name="ellipsis-vertical" size={18} color="#444" />
+              <Ionicons name="ellipsis-vertical" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -28,6 +48,8 @@ const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
         ) : null}
 
         <Text style={styles.body}>{comentario.opinion}</Text>
+
+        {renderRating(comentario.rating)}
       </View>
     </View>
   );
@@ -36,22 +58,22 @@ const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderColor: '#eee',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   propioContainer: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#e6f7f8',
     borderLeftWidth: 4,
-    borderLeftColor: '#0A9396', // Azul claro de tu paleta
+    borderLeftColor: colors.lightBlue,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginTop: 5,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginTop: 4,
   },
   content: {
     flex: 1,
@@ -60,31 +82,39 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 4,
+  },
+  userInfo: {
+    flex: 1,
   },
   author: {
     fontWeight: 'bold',
-    fontSize: 14,
-    marginRight: 8,
-    color: '#222',
+    fontSize: 15,
+    color: colors.primaryBlue,
   },
   date: {
     fontSize: 12,
-    color: '#888',
+    color: '#777',
+    marginTop: 2,
   },
   options: {
-    marginLeft: 'auto',
     padding: 4,
   },
   title: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginTop: 4,
-    color: '#111',
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.textPrimary,
+    marginBottom: 4,
+    marginTop: 6,
   },
   body: {
     fontSize: 14,
-    marginTop: 2,
-    color: '#333',
+    color: colors.textSecondary,
+    marginBottom: 6,
+  },
+  rating: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

@@ -6,7 +6,7 @@ import { useComentariosActividad } from "@/hooks/useComentarios";
 import { useUsuario } from "@/hooks/useUsuario";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,6 +19,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Params = {
   id: string;
@@ -39,9 +40,18 @@ export default function ActividadDetalleScreen() {
   const id_usuario = usuario?.id_usuario || 0;
   const id_actividad = Number(id);
 
-  const { comentarios, loading, error } = useComentariosActividad(
-    id_usuario,
-    id_actividad
+  const {
+    comentarios,
+    loading,
+    error,
+    cargarComentarios,
+  } = useComentariosActividad(id_usuario, id_actividad);
+
+
+  useFocusEffect(
+    useCallback(() => {
+      cargarComentarios();
+    }, [cargarComentarios])
   );
 
   const renderComentario = ({ item }: { item: Comentario }) => (
@@ -120,7 +130,7 @@ export default function ActividadDetalleScreen() {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -154,23 +164,35 @@ const styles = StyleSheet.create({
     padding: 8,
     zIndex: 2,
   },
+  // styles
   title: {
     position: "absolute",
-    bottom: 16,
+    bottom: 48,  // lo subo un poco para que quede arriba del contentBox
     left: 16,
     color: "#fff",
     fontSize: 24,
     fontWeight: "bold",
-    zIndex: 2,
+    zIndex: 5,  // mayor que contentBox para que esté arriba
+  },
+
+  contentBox: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 20,
+    paddingHorizontal: 16,
+    marginTop: -20, // menos para que no tape el título
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 10,
   },
   spacing: {
     height: 0,
   },
-  contentBox: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 10,
-  },
+
   centered: {
     marginTop: 20,
     alignSelf: "center",

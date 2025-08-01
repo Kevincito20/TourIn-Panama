@@ -9,9 +9,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ViewToken,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-
 
 const screenWidth = Dimensions.get('window').width;
 const CARD_WIDTH = screenWidth * 0.89;
@@ -24,7 +24,7 @@ export default function RegionesList() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>🌎 Conoce Panamá</Text>
+        <Text style={styles.title}>Conoce Panamá</Text>
         <Text style={styles.subtitle}>Explora su historia, geografía y cultura</Text>
         <View style={styles.divider} />
       </View>
@@ -33,11 +33,11 @@ export default function RegionesList() {
         const flatListRef = useRef<FlatList>(null);
         const [currentIndex, setCurrentIndex] = useState(0);
 
-        const onViewRef = useRef(({ viewableItems }: any) => {
+        const onViewRef = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
           if (viewableItems.length > 0) {
             setActiveIndices((prev) => ({
               ...prev,
-              [region.titulo]: viewableItems[0].index,
+              [region.titulo]: viewableItems[0].index ?? 0,
             }));
           }
         });
@@ -46,13 +46,21 @@ export default function RegionesList() {
 
         useEffect(() => {
           const interval = setInterval(() => {
-            const nextIndex =
-              (currentIndex + 1) % region.provincias.length;
-            flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-            setCurrentIndex(nextIndex);
-          }, 2000);
+            const isLast = currentIndex === region.provincias.length - 1;
+
+            if (isLast) {
+           
+              flatListRef.current?.scrollToIndex({ index: 0, animated: false });
+              setCurrentIndex(0);
+            } else {
+              const nextIndex = currentIndex + 1;
+              flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+              setCurrentIndex(nextIndex);
+            }
+          }, 5000);
+
           return () => clearInterval(interval);
-        }, [currentIndex]);
+        }, [currentIndex, region.provincias.length]);
 
         return (
           <View

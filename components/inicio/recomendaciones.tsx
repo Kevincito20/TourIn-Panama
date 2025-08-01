@@ -1,19 +1,38 @@
-// Recomendaciones.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { colors } from '@/constants/Colors';
-import { useDistancia } from '@/hooks/useDistancia';
 import { useActividadesCercanas } from '@/hooks/useActividadesCercanas';
 import { RecomendacionesHeader } from './RecomendacionesHeader';
 import { RecomendacionesList } from './RecomendacionesList';
+import { obtenerRadioKm } from './radio/RadioStorage';
+import { useUsuario } from '@/hooks/useUsuario';
 
 export const Recomendaciones = () => {
-  const distancia = useDistancia();
-  const { actividades, loading } = useActividadesCercanas(distancia);
+  const [distancia, setDistancia] = useState(10000); 
+  const [cargandoDistancia, setCargandoDistancia] = useState(true);
   const router = useRouter();
+  const { usuario } = useUsuario();
 
-  if (loading) {
+  useEffect(() => {
+    if (!usuario?.id_usuario) return;
+
+    (async () => {
+      try {
+        const radioKm = await obtenerRadioKm(usuario.id_usuario);
+        setDistancia(radioKm * 1000);
+      } catch (error) {
+        console.error('Error obteniendo radioKm en Recomendaciones:', error);
+        setDistancia(10000); 
+      } finally {
+        setCargandoDistancia(false);
+      }
+    })();
+  }, [usuario]);
+
+  const { actividades, loading } = useActividadesCercanas(distancia);
+
+  if (cargandoDistancia || loading) {
     return (
       <View style={[styles.container, styles.center]}>
         <ActivityIndicator size="large" color={colors.primaryBlue} />
@@ -40,7 +59,6 @@ export const Recomendaciones = () => {
           });
         }}
       />
-
       <RecomendacionesList actividades={actividades} />
     </View>
   );
