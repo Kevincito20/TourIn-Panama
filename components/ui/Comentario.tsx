@@ -30,21 +30,21 @@ const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.userInfo}>
-            <Text style={styles.author}>
+            <Text style={styles.author} testID="comentario-autor">
               {comentario.nombre_usuario} {comentario.apellido_usuario}
             </Text>
-            <Text style={styles.date}>{comentario.fecha_creacion}</Text>
+            <Text style={styles.date} testID="comentario-fecha" >{comentario.fecha_creacion}</Text>
           </View>
 
           {esPropio && (
-            <TouchableOpacity style={styles.options}>
+            <TouchableOpacity style={styles.options} testID="comentario-opciones">
               <Ionicons name="ellipsis-vertical" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
 
         {comentario.encabezado ? (
-          <Text style={styles.title}>{comentario.encabezado}</Text>
+          <Text style={styles.title} testID="comentario-encabezado" >{comentario.encabezado}</Text>
         ) : null}
 
         <Text style={styles.body}>{comentario.opinion}</Text>

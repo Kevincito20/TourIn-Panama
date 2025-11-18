@@ -86,108 +86,127 @@ export default function FormularioRegistro() {
       style={styles.background}
       resizeMode="cover"
     >
-      
-        <View style={styles.overlay}>
-          <View>
-            <Text style={styles.titulo}>Registrate</Text>
-            <Text style={styles.subtitulo}>Únete a nuestra comunidad</Text>
-          </View>
 
-          <View style={styles.botones}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
-              <Input
-                type="text"
-                placeholder="Nombre"
-                autoCapitalize="words"
-                placeholderTextColor="#999"
-                value={nombre}
-                onChangeText={setNombre}
-                error={error && !nombre.trim() ? error : undefined}
-              />
-
-              <Input
-                type="text"
-                placeholder="Apellido"
-                autoCapitalize="words"
-                placeholderTextColor="#999"
-                value={apellido}
-                onChangeText={setApellido}
-                error={error && !apellido.trim() ? error : undefined}
-              />
-
-              <Input
-                type="email"
-                placeholder="Correo electrónico"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                placeholderTextColor="#999"
-                value={correo}
-                onChangeText={setCorreo}
-                error={error && !correo.trim() ? error : undefined}
-              />
-
-              <Input
-                type="password"
-                placeholder="Contraseña"
-                placeholderTextColor="#999"
-                value={contrasena}
-                onChangeText={setContrasena}
-                error={error && !contrasena.trim() ? error : undefined}
-              />
-
-              <Input
-                type="password"
-                placeholder="Confirmar contraseña"
-                placeholderTextColor="#999"
-                value={confirmarContrasena}
-                onChangeText={setConfirmarContrasena}
-                error={error && contrasena !== confirmarContrasena ? 'Las contraseñas no coinciden' : undefined}
-              />
-
-              <Input
-                type="text"
-                placeholder="Identificación"
-                keyboardType="numeric"
-                placeholderTextColor="#999"
-                value={identificacion}
-                onChangeText={setIdentificacion}
-                error={error && !identificacion.trim() ? error : undefined}
-              />
-
-              {error && (
-                <Text style={styles.errorText}>{error}</Text>
-              )}
-
-              <TouchableOpacity
-                style={[styles.button, loading && styles.buttonDisabled]}
-                onPress={handleRegistro}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={styles.buttonText}>Registrarse</Text>
-                )}
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
-            
-          </View>
-
-          <View>
-            <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
-              ¿Ya tienes cuenta?{' '}
-              <Text
-                style={{ color: '#007AFF' }}
-                onPress={handleLogin}
-              >
-                Inicia sesión aquí
-              </Text>
-            </Text>
-          </View>
+      <View style={styles.overlay}>
+        <View>
+          <Text style={styles.titulo}>Registrate</Text>
+          <Text style={styles.subtitulo}>Únete a nuestra comunidad</Text>
         </View>
-     
+
+        <View style={styles.botones}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
+            <Input
+              type="text"
+              placeholder="Nombre"
+              autoCapitalize="words"
+              placeholderTextColor="#999"
+              value={nombre}
+              onChangeText={setNombre}
+              error={error && !nombre.trim() ? error : undefined}
+
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputNombre"
+              accessible={true}
+            />
+
+            <Input
+              type="text"
+              placeholder="Apellido"
+              autoCapitalize="words"
+              placeholderTextColor="#999"
+              value={apellido}
+              onChangeText={setApellido}
+              error={error && !apellido.trim() ? error : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputApellido"
+              accessible={true}
+            />
+
+            <Input
+              type="email"
+              placeholder="Correo electrónico"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              placeholderTextColor="#999"
+              value={correo}
+              onChangeText={setCorreo}
+              error={error && !correo.trim() ? error : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputCorreo"
+              accessible={true}
+            />
+
+            <Input
+              type="password"
+              placeholder="Contraseña"
+              placeholderTextColor="#999"
+              value={contrasena}
+              onChangeText={setContrasena}
+              error={error && !contrasena.trim() ? error : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputContraseña"
+              accessible={true}
+            />
+
+            <Input
+              type="password"
+              placeholder="Confirmar contraseña"
+              placeholderTextColor="#999"
+              value={confirmarContrasena}
+              onChangeText={setConfirmarContrasena}
+              error={error && contrasena !== confirmarContrasena ? 'Las contraseñas no coinciden' : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputConfirmarContrasena"
+              accessible={true}
+            />
+
+            <Input
+              type="text"
+              placeholder="Identificación"
+              keyboardType="numeric"
+              placeholderTextColor="#999"
+              value={identificacion}
+              onChangeText={setIdentificacion}
+              error={error && !identificacion.trim() ? error : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputIdentificacion"
+              accessible={true}
+            />
+
+            {error && (
+              <Text style={styles.errorText}>{error}</Text>
+            )}
+
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={handleRegistro}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Registrarse</Text>
+              )}
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+
+        </View>
+
+        <View>
+          <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
+            ¿Ya tienes cuenta?{' '}
+            <Text
+              style={{ color: '#007AFF' }}
+              onPress={handleLogin}
+            >
+              Inicia sesión aquí
+            </Text>
+          </Text>
+        </View>
+      </View>
+
     </ImageBackground>
   );
 }

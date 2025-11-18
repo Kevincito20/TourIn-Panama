@@ -74,6 +74,9 @@ export default function FormularioLogin() {
               value={email}
               onChangeText={setCorreo}
               error={error && !email.trim() ? error : undefined}
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputCorreo"
+              accessible={true}
             />
 
             <Input
@@ -84,6 +87,12 @@ export default function FormularioLogin() {
               value={password}
               onChangeText={setContraseña}
               error={error && !password.trim() ? error : undefined}
+
+
+
+              // CODIGO PARA PROBARLO EN APPIUM
+              testID="inputContraseña"
+              accessible={true}
             />
 
 
