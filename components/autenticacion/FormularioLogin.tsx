@@ -5,16 +5,13 @@ import {
   View,
   Text,
   ImageBackground,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Input } from '../ui/input';
 import { loginUsuario, propLogin } from '../services/authService';
 import Button from '../ui/boton';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function FormularioLogin() {
   const [email, setCorreo] = useState('');
@@ -24,6 +21,7 @@ export default function FormularioLogin() {
 
   const handleLogin = async () => {
     setError(null);
+
     if (!email.trim() || !password.trim()) {
       setError('Por favor ingresa correo y contraseña');
       return;
@@ -52,18 +50,35 @@ export default function FormularioLogin() {
       source={require('../../assets/images/fondo_login.webp')}
       style={styles.background}
       resizeMode="cover"
+      testID="pantallaLogin"
+      accessibilityLabel="pantalla_login"
     >
 
       <View style={styles.overlay}>
+
         <View>
-          <Text style={styles.titulo}>Iniciar Sesión</Text>
-          <Text style={styles.subtitulo}>Descubre la magia Panameña</Text>
+          <Text
+            style={styles.titulo}
+            testID="tituloLogin"
+            accessibilityLabel="titulo_login"
+          >
+            Iniciar Sesión
+          </Text>
+
+          <Text
+            style={styles.subtitulo}
+            testID="subtituloLogin"
+            accessibilityLabel="subtitulo_login"
+          >
+            Descubre la magia Panameña
+          </Text>
         </View>
 
         <View style={styles.botones}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           >
+
             <Input
               type="email"
               placeholder="Correo Electrónico"
@@ -74,9 +89,8 @@ export default function FormularioLogin() {
               value={email}
               onChangeText={setCorreo}
               error={error && !email.trim() ? error : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
-              testID="inputCorreo"
-              accessible={true}
+              testID="inputLoginCorreo"
+              accessibilityLabel="input_login_correo"
             />
 
             <Input
@@ -87,21 +101,24 @@ export default function FormularioLogin() {
               value={password}
               onChangeText={setContraseña}
               error={error && !password.trim() ? error : undefined}
-
-
-
-              // CODIGO PARA PROBARLO EN APPIUM
-              testID="inputContraseña"
-              accessible={true}
+              testID="inputLoginContrasena"
+              accessibilityLabel="input_login_contrasena"
             />
 
-
             {error && email.trim() && password.trim() && (
-              <Text style={styles.errorText}>{error}</Text>
+              <Text
+                style={styles.errorText}
+                testID="mensajeErrorLogin"
+                accessibilityLabel="mensaje_error_login"
+              >
+                {error}
+              </Text>
             )}
 
             <Text
               style={{ color: '#fff', textAlign: 'right', marginBottom: 20 }}
+              testID="linkOlvidasteContrasena"
+              accessibilityLabel="link_olvidaste_contrasena"
             >
               ¿Olvidaste tu contraseña?
             </Text>
@@ -112,26 +129,35 @@ export default function FormularioLogin() {
               loading={loading}
               disabled={!email || !password}
               style={{ marginTop: 5 }}
+              testID="btnIngresar"
+              accessibilityLabel="boton_ingresar"
             />
-          </KeyboardAvoidingView>
 
+          </KeyboardAvoidingView>
         </View>
 
-
         <View>
-          <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
+          <Text
+            style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}
+            testID="textoNoTienesCuenta"
+            accessibilityLabel="texto_no_tienes_cuenta"
+          >
             ¿No tienes cuenta?{' '}
-            <Text style={{ color: '#007AFF' }} onPress={handleRegistro}>
+            <Text
+              style={{ color: '#007AFF' }}
+              onPress={handleRegistro}
+              testID="linkIrARegistro"
+              accessibilityLabel="link_ir_a_registro"
+            >
               Regístrate aquí
             </Text>
           </Text>
         </View>
-      </View>
 
+      </View>
     </ImageBackground>
   );
 }
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,

@@ -21,6 +21,12 @@ interface ButtonProps {
   loading?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
+
+  
+  // Necesarios para Appium
+  testID?: string;
+  accessibilityLabel?: string;
+  
 }
 
 export default function Button({

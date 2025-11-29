@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Comentario } from '../services/ObtenerComentariosService';
@@ -20,12 +21,16 @@ const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
         />
       );
     }
-    return <View style={styles.rating}>{estrellas}</View>;
+    return <View style={styles.rating} testID="comentario-rating">{estrellas}</View>;
   };
 
   return (
     <View style={[styles.container, esPropio && styles.propioContainer]}>
-      <Image source={{ uri: comentario.foto }} style={styles.avatar} />
+      <Image
+        source={{ uri: comentario.foto }}
+        style={styles.avatar}
+        testID="comentario-avatar"
+      />
 
       <View style={styles.content}>
         <View style={styles.header}>
@@ -47,7 +52,9 @@ const ComentarioItem = ({ comentario }: { comentario: Comentario }) => {
           <Text style={styles.title} testID="comentario-encabezado" >{comentario.encabezado}</Text>
         ) : null}
 
-        <Text style={styles.body}>{comentario.opinion}</Text>
+        <Text style={styles.body} testID="comentario-texto">
+          {comentario.opinion}
+        </Text>
 
         {renderRating(comentario.rating)}
       </View>

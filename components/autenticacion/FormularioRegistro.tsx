@@ -85,18 +85,35 @@ export default function FormularioRegistro() {
       source={require('../../assets/images/fondo_login.webp')}
       style={styles.background}
       resizeMode="cover"
+      testID="pantallaRegistro"
+      accessibilityLabel="pantalla_registro"
     >
 
       <View style={styles.overlay}>
+
         <View>
-          <Text style={styles.titulo}>Registrate</Text>
-          <Text style={styles.subtitulo}>Únete a nuestra comunidad</Text>
+          <Text
+            style={styles.titulo}
+            testID="tituloRegistro"
+            accessibilityLabel="titulo_registro"
+          >
+            Registrate
+          </Text>
+
+          <Text
+            style={styles.subtitulo}
+            testID="subtituloRegistro"
+            accessibilityLabel="subtitulo_registro"
+          >
+            Únete a nuestra comunidad
+          </Text>
         </View>
 
         <View style={styles.botones}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           >
+
             <Input
               type="text"
               placeholder="Nombre"
@@ -105,10 +122,8 @@ export default function FormularioRegistro() {
               value={nombre}
               onChangeText={setNombre}
               error={error && !nombre.trim() ? error : undefined}
-
-              // CODIGO PARA PROBARLO EN APPIUM
               testID="inputNombre"
-              accessible={true}
+              accessibilityLabel="input_nombre"
             />
 
             <Input
@@ -119,9 +134,8 @@ export default function FormularioRegistro() {
               value={apellido}
               onChangeText={setApellido}
               error={error && !apellido.trim() ? error : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
               testID="inputApellido"
-              accessible={true}
+              accessibilityLabel="input_apellido"
             />
 
             <Input
@@ -133,9 +147,8 @@ export default function FormularioRegistro() {
               value={correo}
               onChangeText={setCorreo}
               error={error && !correo.trim() ? error : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
               testID="inputCorreo"
-              accessible={true}
+              accessibilityLabel="input_correo"
             />
 
             <Input
@@ -145,9 +158,8 @@ export default function FormularioRegistro() {
               value={contrasena}
               onChangeText={setContrasena}
               error={error && !contrasena.trim() ? error : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
-              testID="inputContraseña"
-              accessible={true}
+              testID="inputContrasena"
+              accessibilityLabel="input_contrasena"
             />
 
             <Input
@@ -157,9 +169,8 @@ export default function FormularioRegistro() {
               value={confirmarContrasena}
               onChangeText={setConfirmarContrasena}
               error={error && contrasena !== confirmarContrasena ? 'Las contraseñas no coinciden' : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
               testID="inputConfirmarContrasena"
-              accessible={true}
+              accessibilityLabel="input_confirmar_contrasena"
             />
 
             <Input
@@ -170,46 +181,67 @@ export default function FormularioRegistro() {
               value={identificacion}
               onChangeText={setIdentificacion}
               error={error && !identificacion.trim() ? error : undefined}
-              // CODIGO PARA PROBARLO EN APPIUM
               testID="inputIdentificacion"
-              accessible={true}
+              accessibilityLabel="input_identificacion"
             />
 
             {error && (
-              <Text style={styles.errorText}>{error}</Text>
+              <Text
+                style={styles.errorText}
+                testID="mensajeErrorRegistro"
+                accessibilityLabel="mensaje_error_registro"
+              >
+                {error}
+              </Text>
             )}
 
             <TouchableOpacity
               style={[styles.button, loading && styles.buttonDisabled]}
               onPress={handleRegistro}
               disabled={loading}
+              testID="btnRegistrarse"
+              accessibilityLabel="boton_registrarse"
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color="#fff" testID="cargandoRegistro" />
               ) : (
-                <Text style={styles.buttonText}>Registrarse</Text>
+                <Text
+                  style={styles.buttonText}
+                  testID="textoRegistrarse"
+                  accessibilityLabel="texto_registrarse"
+                >
+                  Registrarse
+                </Text>
               )}
             </TouchableOpacity>
-          </KeyboardAvoidingView>
 
+          </KeyboardAvoidingView>
         </View>
 
         <View>
-          <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
+          <Text
+            style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}
+            testID="textoYaTieneCuenta"
+            accessibilityLabel="texto_ya_tiene_cuenta"
+          >
             ¿Ya tienes cuenta?{' '}
             <Text
               style={{ color: '#007AFF' }}
               onPress={handleLogin}
+              testID="linkIniciarSesion"
+              accessibilityLabel="link_iniciar_sesion"
             >
               Inicia sesión aquí
             </Text>
           </Text>
         </View>
+
       </View>
 
     </ImageBackground>
   );
 }
+
 
 const styles = StyleSheet.create({
   background: {

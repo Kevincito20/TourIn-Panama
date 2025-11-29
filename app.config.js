@@ -82,8 +82,8 @@ export default ({ config }) => ({
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
     router: {},
     eas: {
-      projectId: "348484c3-3eeb-4849-8980-5924f5f8e0dc",
+      projectId: "2fef32aa-0014-4541-8376-8336f1be84be",
     },
   },
-  owner: "kevin_2003",
+  owner: "electricforce",
 });
