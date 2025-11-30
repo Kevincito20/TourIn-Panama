@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   Alert,
@@ -89,9 +88,9 @@ export default function FormularioRegistro() {
       accessibilityLabel="pantalla_registro"
     >
 
-      <View style={styles.overlay}>
+      <View style={styles.overlay} testID="contenedorOverlay" accessibilityLabel="contenedor_overlay">
 
-        <View>
+        <View testID="contenedorTitulos" accessibilityLabel="contenedor_titulos">
           <Text
             style={styles.titulo}
             testID="tituloRegistro"
@@ -109,9 +108,11 @@ export default function FormularioRegistro() {
           </Text>
         </View>
 
-        <View style={styles.botones}>
+        <View style={styles.botones} testID="contenedorFormulario" accessibilityLabel="contenedor_formulario">
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            testID="keyboardViewRegistro"
+            accessibilityLabel="keyboard_view_registro"
           >
 
             <Input
@@ -218,7 +219,7 @@ export default function FormularioRegistro() {
           </KeyboardAvoidingView>
         </View>
 
-        <View>
+        <View testID="contenedorLogin" accessibilityLabel="contenedor_login">
           <Text
             style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}
             testID="textoYaTieneCuenta"
@@ -241,6 +242,7 @@ export default function FormularioRegistro() {
     </ImageBackground>
   );
 }
+
 
 
 const styles = StyleSheet.create({

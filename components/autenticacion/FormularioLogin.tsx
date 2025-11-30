@@ -53,10 +53,16 @@ export default function FormularioLogin() {
       testID="pantallaLogin"
       accessibilityLabel="pantalla_login"
     >
+      <View
+        style={styles.overlay}
+        testID="contenedorOverlay"
+        accessibilityLabel="contenedor_overlay"
+      >
 
-      <View style={styles.overlay}>
-
-        <View>
+        <View
+          testID="contenedorTitulos"
+          accessibilityLabel="contenedor_titulos"
+        >
           <Text
             style={styles.titulo}
             testID="tituloLogin"
@@ -74,9 +80,15 @@ export default function FormularioLogin() {
           </Text>
         </View>
 
-        <View style={styles.botones}>
+        <View
+          style={styles.botones}
+          testID="contenedorFormulario"
+          accessibilityLabel="contenedor_formulario"
+        >
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            testID="keyboardViewLogin"
+            accessibilityLabel="keyboard_view_login"
           >
 
             <Input
@@ -136,7 +148,7 @@ export default function FormularioLogin() {
           </KeyboardAvoidingView>
         </View>
 
-        <View>
+        <View testID="contenedorRegistro" accessibilityLabel="contenedor_registro">
           <Text
             style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}
             testID="textoNoTienesCuenta"
@@ -158,6 +170,7 @@ export default function FormularioLogin() {
     </ImageBackground>
   );
 }
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
