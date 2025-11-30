@@ -141,8 +141,9 @@ export default function FormularioLogin() {
               loading={loading}
               disabled={!email || !password}
               style={{ marginTop: 5 }}
-              testID="btnIngresar"
+              testID="boton_ingresar"
               accessibilityLabel="boton_ingresar"
+
             />
 
           </KeyboardAvoidingView>

@@ -5,7 +5,7 @@ import FormularioLogin from '../../components/autenticacion/FormularioLogin';
 const PantallaInicioSesion = () => {
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}  testID="pantallaInicioSesion" accessibilityLabel="pantalla_inicio_sesion">
       <FormularioLogin />
     </View>
   );

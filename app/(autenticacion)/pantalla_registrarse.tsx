@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import FormularioRegistro from '@/components/autenticacion/FormularioRegistro';
 export default function RegistroScreen() {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="pantallaRegistrarse" accessibilityLabel="pantalla_Registrarse">
       <FormularioRegistro />
     </View>
   );

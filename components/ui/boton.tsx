@@ -39,6 +39,8 @@ export default function Button({
   loading = false,
   disabled = false,
   icon,
+  testID,
+  accessibilityLabel
 }: ButtonProps) {
   const isDisabled = disabled || loading;
 
@@ -51,7 +53,8 @@ export default function Button({
       ]}
       onPress={onPress}
       activeOpacity={0.8}
-      disabled={isDisabled}
+      accessible={true}
+
     >
       {loading ? (
         <ActivityIndicator size="small" color="#fff" />
